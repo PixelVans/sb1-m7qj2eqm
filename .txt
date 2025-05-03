@@ -1,0 +1,18 @@
+*****frontend*******
+npm install @stripe/react-stripe-js @stripe/stripe-js
+npm install framer-motion
+
+
+
+
+
+*****backend ********
+npm install express stripe dotenv cors axios
+npm install --save-dev nodemon
+npm install @supabase/supabase-js
+stripe listen --forward-to localhost:5000/webhook
+
+
+
+
+> Ready! You are using Stripe API Version [2024-06-20]. Your webhook signing secret is whsec_1bc6fb66b87aec719f3bbd3c706efddd9c49a25657c18046d7498e8737975efb (^C to quit)

@@ -1,0 +1,102 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+ 
+@layer base {
+  :root {
+    --background: 0 0% 98%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 252 87% 67%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 252 12% 96%;
+    --secondary-foreground: 252 12% 40%;
+    --muted: 252 12% 96%;
+    --muted-foreground: 252 12% 40%;
+    --accent: 252 12% 96%;
+    --accent-foreground: 252 12% 40%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 252 12% 92%;
+    --input: 252 12% 92%;
+    --ring: 252 87% 67%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 263.4 70% 50.4%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 263.4 70% 50.4%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Custom gradient backgrounds */
+.gradient-bg-welcome {
+  @apply bg-gradient-to-r;
+  @apply from-purple-100 via-blue-50 to-purple-50;
+  @apply dark:from-purple-500/20 dark:via-blue-500/20 dark:to-purple-500/20;
+}
+
+.gradient-bg-card {
+  @apply bg-gradient-to-br;
+  @apply from-white to-purple-50/50;
+  @apply dark:from-white/5 dark:to-transparent;
+}
+
+.gradient-bg-upgrade {
+  @apply bg-gradient-to-r;
+  @apply from-amber-400 to-yellow-400;
+  @apply hover:from-amber-300 hover:to-yellow-300;
+  @apply dark:from-amber-500 dark:to-yellow-500;
+  @apply dark:hover:from-amber-400 dark:hover:to-yellow-400;
+}
+
+/* Custom shadows */
+.shadow-card {
+  @apply shadow-lg shadow-purple-500/5;
+  @apply dark:shadow-purple-500/10;
+}
+
+/* Custom transitions */
+.custom-transition {
+  transition: all 200ms ease-in-out;
+}
+
+/* Custom hover effects */
+.hover-lift {
+  transform: translateY(0);
+  transition: transform 200ms ease-in-out, box-shadow 200ms ease-in-out;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  @apply shadow-lg;
+}
