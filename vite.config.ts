@@ -15,3 +15,6 @@ export default defineConfig({
   },
   assetsInclude: ['**/*.png'], // Add this line to explicitly include PNG files
 });
+
+
+

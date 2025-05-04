@@ -121,18 +121,13 @@ export function MainLayout({ children }: MainLayoutProps) {
         </div>
 
         {/* Page Content */}
-        {/* <div className="flex-1 overflow-auto p-4 lg:p-8">{children}</div> */}
-        
-        
-     
-
         <div className="flex-1 overflow-auto relative p-4 lg:p-8">
           {/* Blurred background image anchored to top */}
           <div className="absolute top-0 left-0 w-full h-1/4 pointer-events-none z-0">
             <img
               src={boardtheme}
               alt="Background Event"
-              className="w-full h-full mt-[90px] blur-3xl object-cover  opacity-30"
+              className="w-full h-full mt-[150px] blur-3xl object-cover  opacity-30"
             />
           </div>
 
