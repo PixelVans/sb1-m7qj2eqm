@@ -9,6 +9,14 @@ export function cn(...inputs: ClassValue[]) {
 export function getLogoUrl() {
   return supabase.storage
     .from('assets')
-    .getPublicUrl('logo.jpg')
+    .getPublicUrl('mascot.png')
+    
+    .data.publicUrl;
+}
+
+export function getAssetUrl(fileName: string) {
+  return supabase.storage
+    .from('assets')
+    .getPublicUrl(fileName)
     .data.publicUrl;
 }

@@ -1,10 +1,11 @@
 import React from 'react';
+import CountUp from 'react-countup';
 import { Link } from 'react-router-dom';
 import { QrCode, BarChart2, Zap, Check, ArrowRight, Star, Users, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/lib/supabase';
 import { getLogoUrl } from '@/lib/utils';
-
+import dj from '../assets/djr.png'
 const features = [
   {
     icon: QrCode,
@@ -88,7 +89,7 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="container mx-auto px-6 py-24">
+      <section className="container mx-auto px-6 mt-5">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-600">
             Your Crowd, Your Playlist
@@ -98,7 +99,7 @@ export default function LandingPage() {
           <div className="relative w-full max-w-sm mx-auto mb-8">
             <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-purple-600/20 rounded-full filter blur-3xl"></div>
             <img
-              src={heroImageUrl}
+              src={dj}
               alt="DJ Platform"
               className="relative w-full h-auto rounded-lg shadow-xl"
             />
@@ -126,16 +127,17 @@ export default function LandingPage() {
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-24">
           <div className="gradient-bg-card p-6 rounded-xl shadow-card">
-            <div className="text-4xl font-bold text-primary mb-2">10,000+</div>
-            <div className="text-muted-foreground">Events Powered</div>
+            <div className="text-4xl font-bold text-primary mb-2">
+              <CountUp start={5000} end={10000} duration={3} delay={2} className='text-4xl font-bold text-primary mb-2'/>+</div>
+            <div  className="text-slate-800 text-xl font-bold">Events Powered</div>
           </div>
           <div className="gradient-bg-card p-6 rounded-xl shadow-card">
             <div className="text-4xl font-bold text-primary mb-2">1M+</div>
-            <div className="text-muted-foreground">Song Requests</div>
+            <div className="text-slate-800 text-xl font-bold">Song Requests</div>
           </div>
           <div className="gradient-bg-card p-6 rounded-xl shadow-card">
             <div className="text-4xl font-bold text-primary mb-2">98%</div>
-            <div className="text-muted-foreground">Happy DJs</div>
+            <div className="text-slate-800 text-xl font-bold">Happy DJs</div>
           </div>
         </div>
       </section>
@@ -156,8 +158,8 @@ export default function LandingPage() {
               <div className="flex items-start gap-6">
                 <feature.icon className="h-12 w-12 text-primary flex-shrink-0" />
                 <div>
-                  <h3 className="text-xl font-semibold mb-4">{feature.title}</h3>
-                  <p className="text-muted-foreground">{feature.description}</p>
+                  <h3 className="text-xl text-slate-900 font-rajdhani font-bold mb-4">{feature.title}</h3>
+                  <p className="text-slate-800 text-xl font-semibold">{feature.description}</p>
                 </div>
               </div>
             </div>
@@ -172,16 +174,16 @@ export default function LandingPage() {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {testimonials.map((testimonial, index) => (
-            <div key={index} className="gradient-bg-card p-8 rounded-xl shadow-card">
+            <div  key={index} className="gradient-bg-card p-8 rounded-xl shadow-card">
               <div className="flex gap-1 mb-4">
                 {[...Array(testimonial.rating)].map((_, i) => (
                   <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
                 ))}
               </div>
-              <blockquote className="text-lg mb-6">{testimonial.quote}</blockquote>
+              <blockquote className="text-lg mb-6 text-slate-800 font-semibold">{testimonial.quote}</blockquote>
               <div>
-                <div className="font-semibold">{testimonial.author}</div>
-                <div className="text-sm text-muted-foreground">{testimonial.role}</div>
+                <div className="font-semibold text-slate-900">{testimonial.author}</div>
+                <div className="text-sm text-slate-900">{testimonial.role}</div>
               </div>
             </div>
           ))}

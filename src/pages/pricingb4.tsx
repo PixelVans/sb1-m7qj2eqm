@@ -1,4 +1,4 @@
-import  { useState, } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Check, X, Rocket, CreditCard, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -7,7 +7,6 @@ import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/lib/supabase';
 import { toast } from 'sonner';
 import { Confetti } from '@/components/Confetti';
-import { loadStripe } from '@stripe/stripe-js';
 
 const plans = [
   {
@@ -60,84 +59,47 @@ export default function PricingPage() {
 
   const isNewUser = user?.user_metadata?.subscription_plan === undefined;
 
-  
-//define stripe publishable key
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
-  
-const handleSelectPlan = async (plan: 'free' | 'pro') => {
-  if (!user) return;
+  const handleSelectPlan = async (plan: 'free' | 'pro') => {
+    if (!user) return;
 
-  setLoading(true);
-
-  try {
-    if (plan === 'pro') {
-      const stripe = await stripePromise;
-
-      // Send request to your backend to create a Stripe Checkout session and upgrade the user to pro on payment success
-      const response = await fetch('https://heydj-pro.onrender.com/create-checkout-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId: user.id,
-          email: user.email,
-          plan,
-          period: isYearly ? 'yearly' : 'monthly',
-        }),
+    setLoading(true);
+    try {
+      // Update user metadata with selected plan
+      const { error } = await supabase.auth.updateUser({
+        data: {
+          subscription_plan: plan,
+          subscription_period: isYearly ? 'yearly' : 'monthly',
+        },
       });
 
-      const session = await response.json();
+      if (error) throw error;
 
-      if (!session.id) {
-        throw new Error('Failed to create Stripe session');
-      }
+      // Update local state
+      setPlan(plan);
+      resetEventsCreated();
 
-      // Redirect to Stripe Checkout
-      const result = await stripe?.redirectToCheckout({ sessionId: session.id });
-      if (result?.error) {
-        throw result.error;
-      }
+      // Show success feedback
+      setShowConfetti(true);
+      toast.success(`Welcome to Hey DJ ${plan.charAt(0).toUpperCase() + plan.slice(1)}!`, {
+        description: plan === 'free' 
+          ? 'You can now create your first event'
+          : 'You now have access to all premium features'
+      });
 
-      return; // Stripe to redirect
+      // Redirect after a short delay to show the confetti
+      setTimeout(() => {
+        navigate('/dashboard');
+      }, 2000);
+
+    } catch (error: any) {
+      console.error('Error selecting plan:', error);
+      toast.error('Failed to select plan', {
+        description: error.message
+      });
+    } finally {
+      setLoading(false);
     }
-
-    // --- FREE PLAN LOGIC ---
-    const { error } = await supabase.auth.updateUser({
-      data: {
-        subscription_plan: plan,
-        subscription_period: isYearly ? 'yearly' : 'monthly',
-      },
-    });
-
-    if (error) throw error;
-    //update the local state
-    setPlan(plan);
-    
-    resetEventsCreated();
-    setShowConfetti(true);
-
-    toast.success(`Welcome to Hey DJ Free!`, {
-      description: 'You can now create your first event',
-    });
-
-    setTimeout(() => {
-      navigate('/dashboard');
-    }, 2000);
-
-  } catch (error: any) {
-    console.error('Error selecting plan:', error);
-    toast.error('Failed to select plan', {
-      description: error.message,
-    });
-  } finally {
-    setLoading(false);
-  }
-};
-
-
-
-
-
-
+  };
 
   return (
     <div className="max-w-5xl mx-auto space-y-8">

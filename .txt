@@ -1,6 +1,9 @@
 *****frontend*******
 npm install @stripe/react-stripe-js @stripe/stripe-js
 npm install framer-motion
+npm install react-countup@^6.5.3
+npm install aos@^2.3.4
+npm install @emailjs/browser
 
 
 

@@ -57,8 +57,8 @@ app.post('/create-checkout-session', async (req, res) => {
           quantity: 1,
         },
       ],
-      success_url: 'http://localhost:5173/dashboard',
-      cancel_url: 'http://localhost:5173/events',
+      success_url: 'http://localhost:5173/success',
+      cancel_url: 'http://localhost:5173/failure',
       metadata: {
         userId,
         plan,

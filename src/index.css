@@ -100,3 +100,19 @@
   transform: translateY(-2px);
   @apply shadow-lg;
 }
+
+
+@keyframes marquee {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.marquee {
+  white-space: wrap;
+  display: inline-block;
+  animation: marquee 45s linear infinite;
+}

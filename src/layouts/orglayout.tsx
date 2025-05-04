@@ -1,19 +1,23 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
-  
+  LayoutDashboardIcon,
+  CalendarDaysIcon,
+  SettingsIcon,
   BellIcon,
   Moon,
   Sun,
-  
+  RocketIcon,
+  SparklesIcon,
+  HeadsetIcon,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ProfileDialog } from '@/components/ProfileDialog';
 import { ConnectionStatus } from '@/components/ConnectionStatus';
 import { useAuth } from '@/hooks/useAuth';
 import { useSettings } from '@/lib/store';
-
-import { Sidebar } from '@/components/SideBar';
+import { getLogoUrl } from '@/lib/utils';
+import { getAssetUrl } from '@/lib/utils';
 import { sub } from 'date-fns';
 
 interface MainLayoutProps {
@@ -24,11 +28,11 @@ export function MainLayout({ children }: MainLayoutProps) {
   const { user } = useAuth();
   const { theme, setTheme, subscription } = useSettings();
   const [profileOpen, setProfileOpen] = useState(false);
-  
+  const dj = getAssetUrl('djr.png');
   const avatarUrl = user?.user_metadata?.avatar_url;
   const djName = user?.user_metadata?.dj_name || 'DJ';
-  
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const logoUrl = getLogoUrl();
+
   return (
     <div
       className={`min-h-screen ${
@@ -36,33 +40,67 @@ export function MainLayout({ children }: MainLayoutProps) {
       } text-foreground flex`}
     >
       {/* Sidebar */}
-    
-       {/* Desktop Sidebar */}
-       <div className="hidden lg:block">
-        <Sidebar subscription={subscription} />
+      <div
+        className={`w-64 ${
+          theme === 'dark' ? 'bg-[#1a1a1a]' : 'bg-white'
+        } p-6 flex flex-col gap-8 border-r border-border`}
+      >
+        <div className="flex items-center gap-2">
+          <a href="/" className="flex gap-2">
+            <img src={logoUrl} alt="Hey DJ" className="h-8 w-8" />
+            <span className="text-xl font-bold font-audiowide">Hey Dj</span>
+          </a>
+        </div>
+
+        <nav className="flex-1 flex flex-col">
+          <div className="space-y-1">
+            <NavLink to="/dashboard" icon={LayoutDashboardIcon}>
+              Dashboard
+            </NavLink>
+            <NavLink to="/events" icon={CalendarDaysIcon}>
+              Events
+            </NavLink>
+            <NavLink to="/settings" icon={SettingsIcon}>
+              Settings
+            </NavLink>
+            <NavLink to="/contact" icon={HeadsetIcon}>
+              Contact
+            </NavLink>
+
+            {subscription.plan === 'free' && (
+              <Link
+                to="/pricing"
+                className="mt-4 flex items-center gap-3 px-4 py-3 rounded-lg bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-black transition-all relative overflow-hidden group"
+              >
+                <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IHgxPSI4MS4yNyUiIHkxPSI4MS4yNyUiIHgyPSIwJSIgeTI9IjAlIiBpZD0iYSI+PHN0b3Agc3RvcC1jb2xvcj0iI0ZGRiIgc3RvcC1vcGFjaXR5PSIwIiBvZmZzZXQ9IjAlIi8+PHN0b3Agc3RvcC1jb2xvcj0iI0ZGRiIgc3RvcC1vcGFjaXR5PSIuMDUiIG9mZnNldD0iMTAwJSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxwYXRoIGZpbGw9InVybCgjYSkiIGQ9Ik0wIDBoMjB2MjBIMHoiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPjwvc3ZnPg==')] opacity-50"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <RocketIcon className="h-5 w-5 text-amber-900 relative z-10" />
+                <div className="flex-1 relative z-10">
+                  <span className="font-semibold block text-amber-900 mt-2">
+                    Upgrade to Pro
+                  </span>
+                  <span className="text-xs text-amber-900/80 block">
+                    Unlock unlimited events
+                  </span>
+                </div>
+                <SparklesIcon className="h-4 w-4 text-amber-900 absolute top-1 right-1 animate-[pulse_3s_ease-in-out_infinite] z-10" />
+              </Link>
+            )}
+          </div>
+
+          <div className="mt-[50px] sm:mt-[100px] ">
+            <img src={dj} alt="" className="animate-bump" />
+          </div>
+          <h1 className="font-zenspot text-center font-extralight text-purple-300 mt-4">
+            Que it up
+          </h1>
+        </nav>
       </div>
-
-      {/* Mobile Sidebar */}
-      {mobileOpen && (
-        <>
-          <div className="fixed inset-0 bg-black/50 z-40" onClick={() => setMobileOpen(false)} />
-          <Sidebar subscription={subscription} isMobile onClose={() => setMobileOpen(false)} />
-        </>
-      )}
-
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
         {/* Top Bar */}
         <div className="h-16 border-b border-border flex items-center  px-8  ">
-           {/* Mobile hamburger */}
-           <div className="lg:hidden mr-2">
-            <button onClick={() => setMobileOpen(true)} className="p-2 hover:bg-accent rounded-md">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
-          </div>
           <div className="flex-1" />
 
           {/* subscription reminder */}
@@ -146,28 +184,3 @@ function NavLink({
     </Link>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

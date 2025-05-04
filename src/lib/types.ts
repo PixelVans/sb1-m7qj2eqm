@@ -16,6 +16,7 @@ export interface QRSize {
   quality: number;
 }
 
+
 export const QR_SIZES = [
   {
     label: 'Small (3")',

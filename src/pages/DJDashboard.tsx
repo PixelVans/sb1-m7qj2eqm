@@ -1,4 +1,4 @@
-import  { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CalendarDays, Music2, Lock, SparklesIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -7,6 +7,7 @@ import { supabase } from '@/lib/supabase';
 import type { Database } from '@/lib/supabase';
 import { useSettings } from '@/lib/store';
 import { TotalRequestsDialog } from '@/components/TotalRequestsDialog';
+import { getAssetUrl } from '@/lib/utils';
 
 type Event = Database['public']['Tables']['events']['Row'];
 type SongRequest = Database['public']['Tables']['song_requests']['Row'] & {
@@ -32,7 +33,7 @@ type RequestsByEvent = {
 export default function DJDashboard() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { subscription, setPlan } = useSettings();
+  const { subscription } = useSettings();
   const [stats, setStats] = useState<Stats>({
     activeEvents: 0,
     totalRequests: 0,
@@ -43,40 +44,17 @@ export default function DJDashboard() {
   const [showRequestsDialog, setShowRequestsDialog] = useState(false);
   const [requestsByEvent, setRequestsByEvent] = useState<RequestsByEvent[]>([]);
   const djName = user?.user_metadata?.dj_name || 'DJ';
-  
-
-  useEffect(() => {
-    if (user?.id) {
-      syncSubscription(); // fetch from Supabase and update Zustand
-      loadDashboardData();
-    }
-  }, [user?.id]);
-  
-  async function syncSubscription() {
-    const { data, error } = await supabase.auth.getUser();
-    if (error || !data?.user) return;
-    console.log(data?.user)
-    const latestPlan = data.user.user_metadata?.subscription_plan || 'free';
-    
-    console.log(latestPlan)
-    const currentPlan = useSettings.getState().subscription.plan;
-  
-    if (latestPlan !== currentPlan) {
-      setPlan(latestPlan); 
-    }
-  }
-  
+  const soundwaveImg = getAssetUrl('soundwave.png');
 
   useEffect(() => {
     if (user?.id) {
       loadDashboardData();
     }
   }, [user?.id]);
-  
 
   async function loadDashboardData() {
     if (!user?.id) return;
-    
+
     try {
       // Get active events count
       const { data: activeEvents } = await supabase
@@ -88,7 +66,8 @@ export default function DJDashboard() {
       // Get total requests count and breakdown by event
       const { data: events } = await supabase
         .from('events')
-        .select(`
+        .select(
+          `
           id,
           name,
           created_at,
@@ -98,39 +77,46 @@ export default function DJDashboard() {
           end_time,
           location,
           song_requests (count)
-        `)
+        `
+        )
         .eq('dj_id', user.id)
         .order('created_at', { ascending: false });
 
-      const totalRequests = events?.reduce((sum, event) => 
-        sum + (event.song_requests?.[0]?.count || 0), 0
-      ) || 0;
+      const totalRequests =
+        events?.reduce(
+          (sum, event) => sum + (event.song_requests?.[0]?.count || 0),
+          0
+        ) || 0;
 
-      const requestsBreakdown = events?.map(event => ({
-        event_name: event.name,
-        event_date: event.created_at,
-        total_requests: event.song_requests?.[0]?.count || 0,
-        active: event.active,
-      })) || [];
+      const requestsBreakdown =
+        events?.map((event) => ({
+          event_name: event.name,
+          event_date: event.created_at,
+          total_requests: event.song_requests?.[0]?.count || 0,
+          active: event.active,
+        })) || [];
 
       // Get top requests only for pro users
       let topRequests: SongRequest[] = [];
       if (subscription.plan === 'pro') {
         const { data: topRequestsData } = await supabase
           .from('song_requests')
-          .select(`
+          .select(
+            `
             *,
             events!inner (
               name
             )
-          `)
+          `
+          )
           .order('votes', { ascending: false })
           .limit(5);
 
-        topRequests = topRequestsData?.map(request => ({
-          ...request,
-          event_name: request.events.name
-        })) || [];
+        topRequests =
+          topRequestsData?.map((request) => ({
+            ...request,
+            event_name: request.events.name,
+          })) || [];
       }
 
       setStats({
@@ -154,7 +140,7 @@ export default function DJDashboard() {
     color: string;
     onClick?: () => void;
   };
-  const stats_data:Stat[] = [
+  const stats_data: Stat[] = [
     {
       label: 'Active Events',
       value: stats.activeEvents.toString(),
@@ -182,17 +168,32 @@ export default function DJDashboard() {
   return (
     <div className="space-y-8">
       {/* Welcome Section */}
-      <div className="bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-lg p-8">
-        <h1 className="text-3xl font-bold mb-2">Welcome back, {djName}!</h1>
-        <p className="text-gray-300">Manage your events and song requests from one place.</p>
-      </div>
+      <div className="relative bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-lg p-8 overflow-hidden">
+        {/* Absolute image on the right */}
+        <img
+          src={soundwaveImg}
+          alt="Soundwave"
+          className="absolute right-0 top-0 h-full object-contain pointer-events-none opacity-30"
+        />
 
+        <h1 className="text-3xl font-extralight mb-2 font-audiowide relative z-10">
+          Welcome back, <span className="text-yellow-300">{djName}!</span>
+        </h1>
+
+        <p className="text-gray-300 relative z-10">
+          Manage your events and song requests from one place.
+        </p>
+      </div>
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {stats_data.map((stat) => (
           <div
             key={stat.label}
-            className={`bg-white/5 rounded-lg p-6 ${stat.onClick ? 'cursor-pointer hover:bg-white/10 transition-colors' : ''}`}
+            className={`bg-white/5 rounded-lg p-6 ${
+              stat.onClick
+                ? 'cursor-pointer hover:bg-white/10 transition-colors'
+                : ''
+            }`}
             onClick={stat.onClick}
           >
             <div className={`inline-flex p-3 rounded-lg ${stat.color} mb-4`}>
@@ -206,7 +207,7 @@ export default function DJDashboard() {
 
       {/* Recent Events */}
       {recentEvents.length > 0 && (
-        <div className="bg-white/5 rounded-lg p-6">
+        <div data-aos="zoom-in" className="bg-white/5 rounded-lg p-6">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-bold">Recent Events</h2>
             <Button
@@ -258,7 +259,7 @@ export default function DJDashboard() {
             </div>
           )}
         </div>
-        
+
         {subscription.plan === 'free' ? (
           <div className="relative">
             {/* Blurred preview */}
@@ -274,7 +275,9 @@ export default function DJDashboard() {
                         #{index}
                       </span>
                       <div>
-                        <h3 className="font-medium text-white">Popular Song Title</h3>
+                        <h3 className="font-medium text-white">
+                          Popular Song Title
+                        </h3>
                         <div className="flex items-center gap-2 text-sm">
                           <span className="text-gray-400">Artist Name</span>
                         </div>
@@ -317,11 +320,15 @@ export default function DJDashboard() {
                       #{index + 1}
                     </span>
                     <div>
-                      <h3 className="font-medium text-white">{request.title}</h3>
+                      <h3 className="font-medium text-white">
+                        {request.title}
+                      </h3>
                       <div className="flex items-center gap-2 text-sm">
                         <span className="text-gray-400">{request.artist}</span>
                         <span className="text-gray-600">•</span>
-                        <span className="text-gray-400">{request.event_name}</span>
+                        <span className="text-gray-400">
+                          {request.event_name}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -347,7 +354,9 @@ export default function DJDashboard() {
               </div>
               <div>
                 <h3 className="font-medium text-white">Create an Event</h3>
-                <p className="text-gray-400">Start by creating a new event for your upcoming gig.</p>
+                <p className="text-gray-400">
+                  Start by creating a new event for your upcoming gig.
+                </p>
               </div>
             </div>
             <div className="flex items-start gap-4 p-4 bg-white/5 rounded-lg">
@@ -356,7 +365,10 @@ export default function DJDashboard() {
               </div>
               <div>
                 <h3 className="font-medium text-white">Share the QR Code</h3>
-                <p className="text-gray-400">Display the event QR code for attendees to scan and request songs.</p>
+                <p className="text-gray-400">
+                  Display the event QR code for attendees to scan and request
+                  songs.
+                </p>
               </div>
             </div>
             <div className="flex items-start gap-4 p-4 bg-white/5 rounded-lg">
@@ -365,7 +377,9 @@ export default function DJDashboard() {
               </div>
               <div>
                 <h3 className="font-medium text-white">Manage Requests</h3>
-                <p className="text-gray-400">View and manage song requests during your event.</p>
+                <p className="text-gray-400">
+                  View and manage song requests during your event.
+                </p>
               </div>
             </div>
           </div>

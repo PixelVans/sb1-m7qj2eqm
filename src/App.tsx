@@ -1,4 +1,7 @@
+import React from 'react';
 import { useEffect } from 'react';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import DJDashboard from '@/pages/DJDashboard';
 import EventsPage from '@/pages/EventsPage';
@@ -8,6 +11,7 @@ import Settings from '@/pages/Settings';
 import PricingPage from '@/pages/PricingPage';
 import Login from '@/pages/Login';
 import LandingPage from '@/pages/LandingPage';
+import ContactPage from './pages/ContactPage';
 import { useAuth } from '@/hooks/useAuth';
 import { useSettings } from '@/lib/store';
 import { performanceMonitor } from '@/lib/performance-monitor';
@@ -52,16 +56,25 @@ export default function App() {
   async function syncSubscription() {
     const { data, error } = await supabase.auth.getUser();
     if (error || !data?.user) return;
-    console.log(data?.user)
+    //console.log(data?.user)
     const latestPlan = data.user.user_metadata?.subscription_plan || 'free';
-    
-    console.log(latestPlan)
     const currentPlan = useSettings.getState().subscription.plan;
   
     if (latestPlan !== currentPlan) {
       setPlan(latestPlan); 
     }
   }
+
+  //Initialize aos
+  React.useEffect(() => {
+    AOS.init({
+      offset: 100,
+      duration: 800,
+      easing: 'ease-in-sine',
+      delay: 100,
+    });
+    AOS.refresh();
+  }, []);
 
   // Check if this is an attendee route
   const isAttendeeRoute = window.location.pathname.startsWith('/event/');
@@ -82,7 +95,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </div>
     );
@@ -101,6 +114,7 @@ export default function App() {
         <Route path="/pricing" element={<PricingPage />} />
         <Route path="/success" element={<StripeSuccessPage />} />
         <Route path="/failure" element={<StripeFailurePage />} />
+        <Route path="/contact" element={<ContactPage />} />
       </Routes>
     </MainLayout>
   );
