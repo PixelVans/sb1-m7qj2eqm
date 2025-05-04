@@ -42,7 +42,7 @@ const { theme,  } = useSettings();
     <div
         className={`w-64 ${
           theme === 'dark' ? 'bg-[#1a1a1a]' : 'bg-white'
-        } p-6 flex flex-col gap-8 border-r border-border min-h-full`}
+        } p-4 md:p-6 flex flex-col gap-8 border-r border-border min-h-full`}
       >
         <div className="flex items-center gap-2">
           <a href="/" className="flex gap-2">

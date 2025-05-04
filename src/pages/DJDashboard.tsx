@@ -9,6 +9,7 @@ import { useSettings } from '@/lib/store';
 import { TotalRequestsDialog } from '@/components/TotalRequestsDialog';
 import { getAssetUrl } from '@/lib/utils';
 
+
 type Event = Database['public']['Tables']['events']['Row'];
 type SongRequest = Database['public']['Tables']['song_requests']['Row'] & {
   event_name?: string;
@@ -152,6 +153,7 @@ export default function DJDashboard() {
       label: 'Total Requests',
       value: stats.totalRequests.toString(),
       icon: Music2,
+      
       color: 'bg-blue-500/20 text-blue-300',
       onClick: () => setShowRequestsDialog(true),
     },
@@ -177,33 +179,39 @@ export default function DJDashboard() {
         />
 
         <h1 className="text-3xl font-extralight mb-2 font-audiowide relative z-10">
-          Welcome back, <span className="text-yellow-300">{djName}!</span>
+          Welcome onboard, <span className="text-yellow-300">{djName}!</span>
         </h1>
 
         <p className="text-gray-300 relative z-10">
           Manage your events and song requests from one place.
         </p>
       </div>
+
+
       {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
         {stats_data.map((stat) => (
           <div
             key={stat.label}
             className={`bg-white/5 rounded-lg p-6 ${
-              stat.onClick
-                ? 'cursor-pointer hover:bg-white/10 transition-colors'
-                : ''
-            }`}
+              stat.onClick ? 'cursor-pointer hover:bg-white/10 transition-colors' : ''
+            } flex justify-between items-center`}
             onClick={stat.onClick}
           >
-            <div className={`inline-flex p-3 rounded-lg ${stat.color} mb-4`}>
-              <stat.icon className="h-6 w-6" />
+            {/* Left side: icon + text */}
+            <div>
+              <div className={`inline-flex p-3 rounded-lg ${stat.color} mb-4`}>
+                <stat.icon className="h-6 w-6" />
+              </div>
+              <h3 className="text-2xl font-bold">{stat.value}</h3>
+              <p className="text-gray-400">{stat.label}</p>
             </div>
-            <h3 className="text-2xl font-bold">{stat.value}</h3>
-            <p className="text-gray-400">{stat.label}</p>
+
+            
           </div>
         ))}
       </div>
+
 
       {/* Recent Events */}
       {recentEvents.length > 0 && (
