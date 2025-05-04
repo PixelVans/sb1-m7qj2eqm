@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { QrCode, BarChart2, Zap, Check, ArrowRight, Star, Users, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/lib/supabase';
-import { getLogoUrl } from '@/lib/utils';
+import { getAssetUrl, getLogoUrl } from '@/lib/utils';
 import dj from '../assets/djr.png'
 const features = [
   {
@@ -56,17 +56,17 @@ export default function LandingPage() {
     .getPublicUrl('hero-pic.png')
     .data.publicUrl;
   
-  const logoUrl = getLogoUrl();
+  const logoUrl = getAssetUrl('mascot.png');
 
   return (
     <div className="min-h-screen bg-gradient-welcome">
       {/* Navigation */}
-      <nav className="container mx-auto px-6 py-4">
+      <nav className="container mx-auto px-4 md:px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-8">
             <div className="flex items-center gap-2">
               <img src={logoUrl} alt="Hey DJ" className="h-8 w-8" />
-              <span className="text-2xl font-bold">Hey DJ</span>
+              <span className=" text-lg lg:text-2xl font-bold">Hey DJ</span>
             </div>
             <div className="hidden md:flex items-center gap-6">
               <a href="#features" className="text-sm font-medium hover:text-primary transition-colors">
@@ -99,7 +99,7 @@ export default function LandingPage() {
           <div className="relative w-full max-w-sm mx-auto mb-8">
             <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-purple-600/20 rounded-full filter blur-3xl"></div>
             <img
-              src={dj}
+              src={logoUrl}
               alt="DJ Platform"
               className="relative w-full h-auto rounded-lg shadow-xl"
             />
