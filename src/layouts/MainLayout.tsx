@@ -44,11 +44,23 @@ export function MainLayout({ children }: MainLayoutProps) {
 
       {/* Mobile Sidebar */}
       {mobileOpen && (
-        <>
-          <div className="fixed inset-0 bg-black/50 z-40" onClick={() => setMobileOpen(false)} />
-          <Sidebar subscription={subscription} isMobile onClose={() => setMobileOpen(false)} />
-        </>
-      )}
+          <>
+            {/* Dark backdrop */}
+            <div
+              className="fixed inset-0 bg-black/50 z-40"
+              onClick={() => setMobileOpen(false)}
+            />
+
+            {/* Sidebar overlays everything */}
+            <div className="fixed top-0 left-0 z-50 h-full w-64 bg-white dark:bg-[#1a1a1a] shadow-lg ">
+              <Sidebar
+                subscription={subscription}
+                isMobile
+                onClose={() => setMobileOpen(false)}
+              />
+            </div>
+          </>
+        )}
 
 
       {/* Main Content */}

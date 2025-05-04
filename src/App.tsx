@@ -96,6 +96,8 @@ export default function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="*" element={<Navigate to="/" />} />
+          <Route path="/success" element={<StripeSuccessPage />} />
+          <Route path="/failure" element={<StripeFailurePage />} />
         </Routes>
       </div>
     );
