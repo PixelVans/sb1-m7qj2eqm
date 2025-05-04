@@ -81,8 +81,8 @@ export default function LandingPage() {
             <Link to="/login" className="text-sm font-medium hover:text-primary transition-colors">
               Log in
             </Link>
-            <Link to="/login">
-              <Button>Get Started</Button>
+            <Link to="/login" >
+              <Button className=''>Get Started</Button>
             </Link>
           </div>
         </div>
@@ -91,21 +91,21 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section className="container mx-auto px-6 mt-5">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-600">
+          <h1 className="text-4xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-600">
             Your Crowd, Your Playlist
           </h1>
 
           {/* Hero Image */}
-          <div className="relative w-full max-w-sm mx-auto mb-8">
+          <div className="relative w-full max-w-sm mx-auto mb-2 md:mb-8">
             <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-purple-600/20 rounded-full filter blur-3xl"></div>
             <img
               src={logoUrl}
               alt="DJ Platform"
-              className="relative w-full h-auto rounded-lg shadow-xl"
+              className="relative w-4/5 h-auto rounded-lg shadow-xl mx-auto"
             />
           </div>
 
-          <p className="text-xl md:text-2xl text-muted-foreground mb-8">
+          <p className="text-xl md:text-2xl text-muted-foreground mb-6 md:mb-8">
             Transform how you handle song requests with our smart DJ platform. 
             Let your audience engage through QR codes and watch the magic happen in real-time.
           </p>
@@ -156,7 +156,7 @@ export default function LandingPage() {
               }`}
             >
               <div className="flex items-start gap-6">
-                <feature.icon className="h-12 w-12 text-primary flex-shrink-0" />
+                <feature.icon className="sm:h-12 sm:w-12 text-primary flex-shrink-0" />
                 <div>
                   <h3 className="text-xl text-slate-900 font-rajdhani font-bold mb-4">{feature.title}</h3>
                   <p className="text-slate-800 text-xl font-semibold">{feature.description}</p>
