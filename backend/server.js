@@ -57,8 +57,8 @@ app.post('/create-checkout-session', async (req, res) => {
           quantity: 1,
         },
       ],
-      success_url: 'http://localhost:5173/success',
-      cancel_url: 'http://localhost:5173/failure',
+      success_url: 'https://heydjtest.vercel.app/success',
+      cancel_url: 'https://heydjtest.vercel.app/failure',
       metadata: {
         userId,
         plan,
