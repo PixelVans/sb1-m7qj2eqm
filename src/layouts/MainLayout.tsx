@@ -65,7 +65,9 @@ export function MainLayout({ children }: MainLayoutProps) {
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
         {/* Top Bar */}
-        <div className="h-16 border-b border-border flex items-center p-3 lg:px-8  ">
+        <div className={`h-16 border-b border-border flex items-center p-3 lg:px-8 shadow-sm 
+          ${theme === 'dark' ? 'shadow-slate-700 ' : 'shadow-slate-400'} `}>
+        
            {/* Mobile hamburger */}
            <div className="lg:hidden mr-2">
             <button onClick={() => setMobileOpen(true)} className="p-2 hover:bg-accent rounded-md">
@@ -74,11 +76,12 @@ export function MainLayout({ children }: MainLayoutProps) {
               </svg>
             </button>
           </div>
-          <div className="flex-1" />
+       <div className="flex-1" />
 
           {/* subscription reminder */}
           <div className="relative overflow-hidden h-6 mr-1 lg:mr-9 w-full">
-            <div className="marquee text-md font-extralight font-rajdhani text-yellow-200">
+            
+            <div className={`marquee text-lg font-extralight font-rajdhani ${theme === 'dark' ? 'text-yellow-200' : 'text-black'} text-foreground flex`}  >
               {subscription.plan === 'pro'
                 ? `Welcome, ${djName}! You are a Pro DJ. Enjoy unlimited events, pre-event song requests, custom branding, analytics, and premium support to elevate every gig.`
                 : `Hey ${djName}, you're currently on the Free Plan. You can create 1 event with basic features. Upgrade to Pro for unlimited events, pre-event requests, custom branding, analytics, and more—only $9.99/month.`}
@@ -122,13 +125,14 @@ export function MainLayout({ children }: MainLayoutProps) {
 
         {/* Page Content */}
         <div className="flex-1 overflow-auto relative p-4 lg:p-8">
-          {/* Blurred background image anchored to top */}
+          {/* Blurred background image anchored to top for dark themes */}
           <div className="absolute top-0 left-0 w-full h-1/4 pointer-events-none z-0">
-            <img
+            {theme === 'dark' && <img
               src={boardtheme}
               alt="Background Event"
-              className="w-full h-full mt-[150px] blur-3xl object-cover  opacity-30"
-            />
+              className="w-full h-full mt-[150px] blur-3xl object-cover  opacity-40"
+              
+            />} 
           </div>
 
           {/* Foreground content above the image */}
@@ -173,6 +177,8 @@ function NavLink({
     </Link>
   );
 }
+
+
 
 
 

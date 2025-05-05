@@ -45,6 +45,7 @@ export default function DJDashboard() {
   const [showRequestsDialog, setShowRequestsDialog] = useState(false);
   const [requestsByEvent, setRequestsByEvent] = useState<RequestsByEvent[]>([]);
   const djName = user?.user_metadata?.dj_name || 'DJ';
+  const { theme } = useSettings();
   const soundwaveImg = getAssetUrl('soundwave.png');
 
   useEffect(() => {
@@ -170,19 +171,22 @@ export default function DJDashboard() {
   return (
     <div className="space-y-8">
       {/* Welcome Section */}
-      <div className="relative bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-lg p-8 overflow-hidden">
+      <div className={`relative  rounded-lg p-8 overflow-hidden  
+      ${theme === 'dark' ? ' bg-gradient-to-r from-purple-500/20 to-blue-500/20  ' : 'bg-white shadow-lg  '} `}>
+        
         {/* Absolute image on the right */}
         <img
           src={soundwaveImg}
           alt="Soundwave"
-          className="absolute right-0 top-0 h-full object-contain pointer-events-none opacity-30"
+          className="absolute right-0 top-0 h-full object-contain pointer-events-none opacity-80"
         />
 
         <h1 className="text-3xl font-extralight mb-2 font-audiowide relative z-10">
-          Welcome onboard, <span className="text-yellow-300">{djName}!</span>
+          Welcome onboard, <span className={`${theme === 'dark' ? 'text-yellow-300 ' : 'text-purple-700 '} `}>{djName}!</span>
         </h1>
 
-        <p className="text-gray-300 relative z-10">
+        
+        <p className={`relative z-10 ${theme === 'dark' ? ' text-gray-300  ' : ' text-gray-700   '} `}>
           Manage your events and song requests from one place.
         </p>
       </div>
@@ -193,18 +197,19 @@ export default function DJDashboard() {
         {stats_data.map((stat) => (
           <div
             key={stat.label}
-            className={`bg-white/5 rounded-lg p-6 ${
+            className={` rounded-lg p-6 ${
               stat.onClick ? 'cursor-pointer hover:bg-white/10 transition-colors' : ''
-            } flex justify-between items-center`}
+              } flex justify-between items-center ${theme === 'dark' ? ' bg-white/5 ' : 'bg-white shadow-lg '} `}
             onClick={stat.onClick}
           >
             {/* Left side: icon + text */}
             <div>
-              <div className={`inline-flex p-3 rounded-lg ${stat.color} mb-4`}>
+              <div className={`inline-flex p-3 rounded-lg  mb-4 ${theme === 'dark' ? `${stat.color} ` : ' text-primary'} `}>
+                
                 <stat.icon className="h-6 w-6" />
               </div>
               <h3 className="text-2xl font-bold">{stat.value}</h3>
-              <p className="text-gray-400">{stat.label}</p>
+              <p className={`${theme === 'dark' && ' text-gray-200'} `}>{stat.label}</p>
             </div>
 
             
@@ -215,7 +220,8 @@ export default function DJDashboard() {
 
       {/* Recent Events */}
       {recentEvents.length > 0 && (
-        <div data-aos="zoom-in" className="bg-white/5 rounded-lg p-6">
+        <div data-aos="zoom-in" className={` rounded-lg p-6 ${theme === 'dark' ? 'bg-white/5  ' : ' bg-white shadow-lg '} `} >
+          
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-bold">Recent Events</h2>
             <Button
@@ -235,9 +241,9 @@ export default function DJDashboard() {
                 onClick={() => navigate(`/events/${event.id}`)}
               >
                 <div>
-                  <h3 className="font-medium text-white">{event.name}</h3>
-                  <p className="text-sm text-gray-400">
-                    {new Date(event.created_at).toLocaleDateString()}
+                  <h3 className={`font-medium ${theme === 'dark' &&' white ' } `}>{event.name}</h3>
+                  <p  >
+                 {new Date(event.created_at).toLocaleDateString()}
                   </p>
                 </div>
                 <span
@@ -245,7 +251,7 @@ export default function DJDashboard() {
                     event.active
                       ? 'bg-green-500/20 text-green-300'
                       : 'bg-gray-500/20 text-gray-300'
-                  }`}
+                  }`} 
                 >
                   {event.active ? 'Active' : 'Ended'}
                 </span>
@@ -256,7 +262,8 @@ export default function DJDashboard() {
       )}
 
       {/* Top Requests */}
-      <div className="bg-white/5 rounded-lg p-6">
+      <div className={`rounded-lg p-6 ${theme === 'dark' ? ' bg-white/5  ' : ' bg-white shadow-lg'} `}>
+      
         <div className="flex items-center gap-2 mb-6">
           <Music2 className="h-5 w-5 text-blue-300" />
           <h2 className="text-xl font-bold">Top Requests</h2>
@@ -321,18 +328,18 @@ export default function DJDashboard() {
               stats.topRequests.map((request, index) => (
                 <div
                   key={request.id}
-                  className="flex items-center justify-between p-4 bg-white/5 rounded-lg"
+                  className={`flex items-center justify-between p-4  rounded-lg ${theme === 'dark' ? '  bg-white/5 ' : ' bg-white shadow-lg   '} `}
                 >
                   <div className="flex items-center gap-4">
                     <span className="text-2xl font-bold text-primary/50">
                       #{index + 1}
                     </span>
                     <div>
-                      <h3 className="font-medium text-white">
+                      <h3 className={`font-medium ${theme === 'dark' && ' text-white'} `} >
                         {request.title}
                       </h3>
                       <div className="flex items-center gap-2 text-sm">
-                        <span className="text-gray-400">{request.artist}</span>
+                        <span className={`${theme === 'dark' && ' text-gray-400'} `} >{request.artist}</span>
                         <span className="text-gray-600">•</span>
                         <span className="text-gray-400">
                           {request.event_name}

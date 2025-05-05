@@ -49,6 +49,7 @@ function SongRequestCard({ song, onStatusChange }: {
 
   return (
     <div
+      data-aos="zoom-in"
       ref={setNodeRef}
       style={style}
       className="flex items-center justify-between p-4 bg-white/5 rounded-lg group"
