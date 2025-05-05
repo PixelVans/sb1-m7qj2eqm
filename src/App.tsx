@@ -52,6 +52,21 @@ export default function App() {
       
     }
   }, [user?.id]);
+
+
+  //ensure that any changes to the subscription status  are respected even after idle or tab switch.
+  useEffect(() => {
+    const handleFocus = () => {
+      if (user?.id) {
+        syncSubscription();
+      }
+    };
+  
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
+  }, [user?.id]);
+
+
   
   async function syncSubscription() {
     const { data, error } = await supabase.auth.getUser();
