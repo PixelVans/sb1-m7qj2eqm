@@ -8,7 +8,8 @@ import type { Database } from '@/lib/supabase';
 import { useSettings } from '@/lib/store';
 import { TotalRequestsDialog } from '@/components/TotalRequestsDialog';
 import { getAssetUrl } from '@/lib/utils';
-
+import music from '../assets/music.png'
+import party from '../assets/party.png'
 
 type Event = Database['public']['Tables']['events']['Row'];
 type SongRequest = Database['public']['Tables']['song_requests']['Row'] & {
@@ -139,6 +140,7 @@ export default function DJDashboard() {
     label: string;
     value: string;
     icon: any;
+    img: string,
     color: string;
     onClick?: () => void;
   };
@@ -147,6 +149,7 @@ export default function DJDashboard() {
       label: 'Active Events',
       value: stats.activeEvents.toString(),
       icon: CalendarDays,
+      img: party,
       color: 'bg-purple-500/20 text-purple-300',
       onClick: () => navigate('/events?filter=active'),
     },
@@ -154,7 +157,7 @@ export default function DJDashboard() {
       label: 'Total Requests',
       value: stats.totalRequests.toString(),
       icon: Music2,
-      
+      img: music,
       color: 'bg-blue-500/20 text-blue-300',
       onClick: () => setShowRequestsDialog(true),
     },
@@ -211,7 +214,8 @@ export default function DJDashboard() {
               <h3 className="text-2xl font-bold">{stat.value}</h3>
               <p className={`${theme === 'dark' && ' text-gray-200'} `}>{stat.label}</p>
             </div>
-
+           {/* Right side: image */}
+          <img src={stat.img} alt={stat.label} className="h-32 w-auto mr-6 opacity-80" />
             
           </div>
         ))}

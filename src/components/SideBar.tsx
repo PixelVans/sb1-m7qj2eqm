@@ -41,13 +41,13 @@ const { theme,  } = useSettings();
   return (
     <div
         className={`w-64 ${
-          theme === 'dark' ? 'bg-[#1a1a1a]' : 'bg-white'
+          theme === 'dark' ? 'bg-[#1a1a1a]' : 'bg-white shadow-lg '
         } p-4 md:p-6 flex flex-col gap-8 border-r border-border min-h-full`}
       >
         <div className="flex items-center gap-2">
           <a href="/" className="flex gap-2">
             <img src={logoUrl} alt="Hey DJ" className="h-8 w-8" />
-            <span className="text-xl font-bold font-audiowide">Hey Dj</span>
+            <span className="text-2xl font-bold font-rajdhani">Hey Dj</span>
           </a>
         </div>
 
@@ -87,10 +87,13 @@ const { theme,  } = useSettings();
             )}
           </div>
 
-          <div className="mt-[50px] sm:mt-[100px] ">
-            <img src={dj} alt="" className="animate-bump" />
+          <div className="mt-[80px] lg:mt-[170px] ">
+          <img src={dj} alt="" className={`${theme === 'dark' ? ' animate-bump opacity-30  ' : ' hidden   '} `} />
+         
           </div>
-          <h1 className="font-zenspot text-center font-extralight text-purple-300 mt-4">
+        <h1 className={`font-zenspot text-center font-extralight 
+          ${theme === 'dark' ? ' text-purple-300 mt-4  ' : 'hidden '} `}>
+       
             Que it up
           </h1>
         </nav>
