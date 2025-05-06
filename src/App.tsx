@@ -12,6 +12,7 @@ import PricingPage from '@/pages/PricingPage';
 import Login from '@/pages/Login';
 import LandingPage from '@/pages/LandingPage';
 import ContactPage from './pages/ContactPage';
+import NotificationPage from './pages/NotificationsPage';
 import { useAuth } from '@/hooks/useAuth';
 import { useSettings } from '@/lib/store';
 import { performanceMonitor } from '@/lib/performance-monitor';
@@ -131,7 +132,9 @@ export default function App() {
         <Route path="/pricing" element={<PricingPage />} />
         <Route path="/success" element={<StripeSuccessPage />} />
         <Route path="/failure" element={<StripeFailurePage />} />
+        <Route path="/failure" element={<StripeFailurePage />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/notifications" element={<NotificationPage />} />
       </Routes>
     </MainLayout>
   );

@@ -66,8 +66,7 @@ const { theme,  } = useSettings();
             <NavLink to="/contact" icon={HeadsetIcon}>
               Contact
             </NavLink>
-
-            {subscription.plan === 'free' && (
+           {subscription.plan === 'free' && (
               <Link
                 to="/pricing"
                 className="mt-4 flex items-center gap-3 px-4 py-3 rounded-lg bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-black transition-all relative overflow-hidden group"
