@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import { getAssetUrl, getLogoUrl } from '@/lib/utils';
 import { useSettings } from '@/lib/store';
-
+import dj from '../assets/q.png'
 interface SidebarProps {
   subscription: any;
   onClose?: () => void;
@@ -17,7 +17,8 @@ interface SidebarProps {
 export function Sidebar({ subscription, onClose, isMobile = false }: SidebarProps) {
   const location = useLocation();
   const logoUrl = getLogoUrl();
-  const dj = getAssetUrl('djr.png');
+ // const dj = getAssetUrl('djr.png');
+ 
 const { theme,  } = useSettings(); 
     
   const NavLink = ({ to, icon: Icon, children }: any) => {
@@ -87,14 +88,13 @@ const { theme,  } = useSettings();
             )}
           </div>
 
-          <div className="mt-[80px] lg:mt-[170px] ">
-          <img src={dj} alt="" className={`${theme === 'dark' ? ' animate-bump opacity-30  ' : ' hidden   '} `} />
+          <div className="mt-[80px] lg:mt-[150px] ">
+          <img src={dj} alt="" className={`${theme === 'dark' ? ' animate-bump opacity-40 h-52 w-auto ml-2' : ' hidden   '} `} />
          
           </div>
         <h1 className={`font-zenspot text-center font-extralight 
-          ${theme === 'dark' ? ' text-purple-300 mt-4  ' : 'hidden '} `}>
-       
-            Que it up
+          ${theme === 'dark' ? ' text-purple-300' : 'hidden '} `}>
+          Que it up Dj
           </h1>
         </nav>
       </div>

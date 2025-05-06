@@ -48,6 +48,8 @@ export default function DJDashboard() {
   const djName = user?.user_metadata?.dj_name || 'DJ';
   const { theme } = useSettings();
   const soundwaveImg = getAssetUrl('soundwave.png');
+  const music = getAssetUrl('music.png');
+  const party = getAssetUrl('party.png');
 
   useEffect(() => {
     if (user?.id) {
@@ -181,8 +183,10 @@ export default function DJDashboard() {
         <img
           src={soundwaveImg}
           alt="Soundwave"
-          className="absolute right-0 top-0 h-full object-contain pointer-events-none opacity-80"
+          className='absolute right-0 top-0 h-full object-contain pointer-events-none opacity-35 md:opacity-80 mt-10 md:mt-0'
+            
         />
+       
 
         <h1 className="text-3xl font-extralight mb-2 font-audiowide relative z-10">
           Welcome onboard, <span className={`${theme === 'dark' ? 'text-yellow-300 ' : 'text-purple-700 '} `}>{djName}!</span>
@@ -215,7 +219,7 @@ export default function DJDashboard() {
               <p className={`${theme === 'dark' && ' text-gray-200'} `}>{stat.label}</p>
             </div>
            {/* Right side: image */}
-          <img src={stat.img} alt={stat.label} className="h-32 w-auto mr-6 opacity-80" />
+          <img src={stat.img} alt={stat.label} className="h-24 sm:h-32 w-auto  sm:mr-6 opacity-65 sm:opacity-70" />
             
           </div>
         ))}
