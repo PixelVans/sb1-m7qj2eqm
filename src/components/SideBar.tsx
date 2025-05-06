@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import { getAssetUrl, getLogoUrl } from '@/lib/utils';
 import { useSettings } from '@/lib/store';
-import dj from '../assets/q.png'
+import dj from '../assets/q-min.png'
 interface SidebarProps {
   subscription: any;
   onClose?: () => void;
