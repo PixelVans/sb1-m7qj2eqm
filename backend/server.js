@@ -169,6 +169,62 @@ app.post('/webhook', async (req, res) => {
   res.status(200).json({ received: true });
 });
 
+
+
+
+//cron job to downgrade users if the plan expires
+app.post('/downgrade-expired', async (req, res) => {
+  const { createClient } = require('@supabase/supabase-js');
+  const supabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY
+  );
+
+  const { data: users, error } = await supabase.auth.admin.listUsers();
+
+  if (error) {
+    console.error('Failed to list users:', error.message);
+    return res.status(500).send('Failed');
+  }
+
+  const now = new Date();
+
+  for (const user of users) {
+    const metadata = user.user_metadata;
+    const expires = metadata?.subscription_expires;
+
+    if (expires && new Date(expires) < now) {
+      console.log(`Downgrading user: ${user.email}`);
+
+      await supabase.auth.admin.updateUserById(user.id, {
+        user_metadata: {
+          subscription_plan: null,
+          subscription_period: null,
+          subscription_start: null,
+          subscription_expires: null,
+        },
+      });
+
+      await supabase.from('notifications').insert([
+        {
+          user_id: user.id,
+          title: 'Subscription Expired',
+          message: 'Your Hey DJ Pro subscription has expired. Upgrade again to unlock premium features.',
+          read: false,
+        },
+      ]);
+    }
+  }
+
+  res.status(200).send('Downgrade completed');
+});
+
+
+
+
+
+
+
 // Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
