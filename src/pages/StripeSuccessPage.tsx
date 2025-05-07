@@ -10,7 +10,7 @@ import { toast } from 'sonner';
 export default function StripeSuccessPage() {
   const [showConfetti, setShowConfetti] = useState(false);
   const [loading, setLoading] = useState(true);
-  const { setPlan } = useSettings();
+  const { setPlan, resetEventsCreated } = useSettings();
 
   useEffect(() => {
     const refreshUser = async () => {
@@ -24,6 +24,7 @@ export default function StripeSuccessPage() {
 
         const plan = data.user.user_metadata?.subscription_plan || 'free';
         setPlan(plan);
+        resetEventsCreated();
 
         toast.success('Your subscription has been updated!');
       } catch (err) {

@@ -26,7 +26,7 @@ import StripeSuccessPage from "@/pages/StripeSuccessPage"
 export default function App() {
   const { user } = useAuth();
   const { theme } = useSettings();
-  const { setPlan, } = useSettings();
+  const { setPlan, resetEventsCreated } = useSettings();
 
   useEffect(() => {
     // Monitor initial app load performance
@@ -78,6 +78,7 @@ export default function App() {
   
     if (latestPlan !== currentPlan) {
       setPlan(latestPlan); 
+      resetEventsCreated()
     }
   }
 
