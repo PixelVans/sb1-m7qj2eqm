@@ -1,10 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import {
-  BellIcon,
-  Moon,
-  Sun,
-} from 'lucide-react';
+import { BellIcon, Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ProfileDialog } from '@/components/ProfileDialog';
 import { ConnectionStatus } from '@/components/ConnectionStatus';
@@ -12,6 +8,14 @@ import { useAuth } from '@/hooks/useAuth';
 import { useSettings } from '@/lib/store';
 import { Sidebar } from '@/components/SideBar';
 import { getAssetUrl } from '@/lib/utils';
+import { supabase } from '@/lib/supabase';
+
+interface Notification {
+  id: string;
+  title: string;
+  created_at: string;
+  read: boolean;
+}
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -23,20 +27,34 @@ export function MainLayout({ children }: MainLayoutProps) {
   const [profileOpen, setProfileOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
 
   const bellRef = useRef<HTMLDivElement>(null);
-
   const boardtheme = getAssetUrl('boardtheme.jpg');
   const avatarUrl = user?.user_metadata?.avatar_url;
   const djName = user?.user_metadata?.dj_name || 'DJ';
 
-  const notifications = [
-    { id: 1, title: 'New follower', time: '2m ago' },
-    { id: 2, title: 'Event approved', time: '10m ago' },
-    { id: 3, title: 'Payment received', time: '1h ago' },
-    { id: 4, title: 'Reminder: Upcoming gig', time: '3h ago' },
-    { id: 5, title: 'New request on event', time: '1d ago' },
-  ];
+  // Fetch unread notifications
+  useEffect(() => {
+    if (!user) return;
+
+    async function fetchNotifications() {
+      const { data, error } = await supabase
+        .from('notifications')
+        .select('id, title, created_at, read')
+        .eq('user_id', user?.id)
+        .eq('read', false)
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching notifications:', error.message);
+      } else {
+        setNotifications(data || []);
+      }
+    }
+
+    fetchNotifications();
+  }, [user]);
 
   // Close dropdown if clicked outside
   useEffect(() => {
@@ -46,38 +64,50 @@ export function MainLayout({ children }: MainLayoutProps) {
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Mark notification as read in Supabase
+  async function markAsRead(id: string) {
+    const { error } = await supabase
+      .from('notifications')
+      .update({ read: true })
+      .eq('id', id);
+
+    if (error) {
+      console.error('Error marking notification as read:', error.message);
+    } else {
+      setNotifications((prev) => prev.filter((n) => n.id !== id));
+    }
+  }
+
+  function formatTime(timestamp: string) {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diff = Math.floor((now.getTime() - date.getTime()) / 1000); // seconds
+
+    if (diff < 60) return `${diff}s ago`;
+    if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+    if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+    return `${Math.floor(diff / 86400)}d ago`;
+  }
 
   return (
     <div className={`min-h-screen ${theme === 'dark' ? 'bg-[#121212]' : 'bg-gray-50'} text-foreground flex`}>
-      {/* Sidebar */}
       <div className="hidden lg:block">
         <Sidebar subscription={subscription} />
       </div>
 
-      {/* Mobile Sidebar */}
       {mobileOpen && (
         <>
-          <div
-            className="fixed inset-0 bg-black/50 z-40"
-            onClick={() => setMobileOpen(false)}
-          />
-          <div className="fixed top-0 left-0 z-50 h-full w-64 bg-white dark:bg-[#1a1a1a] shadow-lg ">
-            <Sidebar
-              subscription={subscription}
-              isMobile
-              onClose={() => setMobileOpen(false)}
-            />
+          <div className="fixed inset-0 bg-black/50 z-40" onClick={() => setMobileOpen(false)} />
+          <div className="fixed top-0 left-0 z-50 h-full w-64 bg-white dark:bg-[#1a1a1a] shadow-lg">
+            <Sidebar subscription={subscription} isMobile onClose={() => setMobileOpen(false)} />
           </div>
         </>
       )}
 
-      {/* Main Content */}
       <div className="flex-1 flex flex-col">
-        {/* Top Bar */}
         <div className={`h-16 border-b border-border flex items-center p-3 lg:px-8 shadow-sm ${theme === 'dark' ? 'shadow-slate-700 ' : 'shadow-slate-400'}`}>
           <div className="lg:hidden mr-2">
             <button onClick={() => setMobileOpen(true)} className="p-2 hover:bg-accent rounded-md">
@@ -90,57 +120,53 @@ export function MainLayout({ children }: MainLayoutProps) {
           <div className="flex-1" />
 
           <div className="relative overflow-hidden h-6 mr-1 lg:mr-9 w-full">
-            <div className={`marquee text-lg font-extralight font-rajdhani ${theme === 'dark' ? 'text-yellow-200' : 'text-black'} text-foreground flex`}>
+            <div className={`marquee text-lg font-extralight font-rajdhani ${theme === 'dark' ? 'text-yellow-200' : 'text-black'} flex`}>
               {subscription.plan === 'pro'
-                ? `Welcome, ${djName}! You are a Pro DJ. Enjoy unlimited events, pre-event song requests, custom branding, analytics, and premium support to elevate every gig.`
-                : `Hey ${djName}, you're currently on the Free Plan. You can create 1 event with basic features. Upgrade to Pro for unlimited events, pre-event requests, custom branding, analytics, and more—only $9.99/month.`}
+                ? `Welcome, ${djName}! You are a Pro DJ. Enjoy unlimited events, song requests, branding, analytics, and support.`
+                : `Hey ${djName}, you're on the Free Plan. Upgrade to Pro for unlimited events and premium features—only $9.99/month.`}
             </div>
           </div>
 
           <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="w-9 px-0"
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            >
-              {theme === 'dark' ? (
-                <Sun className="h-5 w-5 text-yellow-400" />
-              ) : (
-                <Moon className="h-5 w-5 text-purple-400" />
-              )}
+            <Button variant="ghost" size="sm" className="w-9 px-0" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
+              {theme === 'dark' ? <Sun className="h-5 w-5 text-yellow-400" /> : <Moon className="h-5 w-5 text-purple-400" />}
             </Button>
 
             {/* Notifications */}
             <div className="relative" ref={bellRef}>
-            <button
-                  className="p-2 hover:bg-accent rounded-full relative"
-                  onClick={() => setNotifOpen(!notifOpen)}
-                >
-                  <BellIcon className="h-5 w-5 text-muted-foreground" />
-                  
-                  {/* Green Dot */}
-                  {notifications.length > 0 && (
-                    <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-green-500 ring-2 ring-background" />
-                  )}
-                </button>
-             {/* notification modal toggle */}
+              <button
+                className="p-2 hover:bg-accent rounded-full relative"
+                onClick={() => setNotifOpen(!notifOpen)}
+              >
+                <BellIcon className="h-5 w-5 text-muted-foreground" />
+                {notifications.length > 0 && (
+                  <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-green-500 ring-2 ring-background" />
+                )}
+              </button>
+
               {notifOpen && (
                 <div className="absolute right-0 mt-2 w-80 bg-[#1a1a1a] text-popover-foreground border border-border rounded-xl shadow-xl z-50">
                   <div className="p-4 border-b border-border font-semibold">Notifications</div>
                   <ul className="max-h-72 overflow-y-auto">
-                    {notifications.map((notif) => (
-                      <li key={notif.id}>
-                        <Link
-                          to="/notifications"
-                          onClick={() => setNotifOpen(false)}
-                          className="block px-4 mx-4 rounded-md py-3 hover:bg-accent transition"
-                        >
-                          <div className="text-sm font-medium">{notif.title}</div>
-                          <div className="text-xs text-muted-foreground">{notif.time}</div>
-                        </Link>
-                      </li>
-                    ))}
+                    {notifications.length === 0 ? (
+                      <li className="text-center p-4 text-sm text-muted-foreground">No unread notifications</li>
+                    ) : (
+                      notifications.map((notif) => (
+                        <li key={notif.id}>
+                          <Link
+                            to="/notifications"
+                            onClick={() => {
+                              markAsRead(notif.id);
+                              setNotifOpen(false);
+                            }}
+                            className="block px-4 mx-4 rounded-md py-3 hover:bg-accent transition"
+                          >
+                            <div className="text-sm font-medium">{notif.title}</div>
+                            <div className="text-xs text-muted-foreground">{formatTime(notif.created_at)}</div>
+                          </Link>
+                        </li>
+                      ))
+                    )}
                   </ul>
                   <div className="border-t border-border p-3 text-sm text-center">
                     <Link
@@ -161,15 +187,9 @@ export function MainLayout({ children }: MainLayoutProps) {
               className="h-8 w-8 rounded-full overflow-hidden flex items-center justify-center bg-primary hover:opacity-90 transition-opacity"
             >
               {avatarUrl ? (
-                <img
-                  src={avatarUrl}
-                  alt={djName}
-                  className="h-full w-full object-cover"
-                />
+                <img src={avatarUrl} alt={djName} className="h-full w-full object-cover" />
               ) : (
-                <span className="text-sm font-medium text-primary-foreground">
-                  {djName[0]}
-                </span>
+                <span className="text-sm font-medium text-primary-foreground">{djName[0]}</span>
               )}
             </button>
           </div>
@@ -179,49 +199,16 @@ export function MainLayout({ children }: MainLayoutProps) {
         <div className="flex-1 overflow-auto relative p-4 lg:p-8">
           <div className="absolute top-0 left-0 w-full h-1/4 pointer-events-none z-0">
             {theme === 'dark' && (
-              <img
-                src={boardtheme}
-                alt="Background Event"
-                className="w-full h-full mt-[150px] blur-3xl object-cover opacity-40"
-              />
+              <img src={boardtheme} alt="Background Event" className="w-full h-full mt-[150px] blur-3xl object-cover opacity-40" />
             )}
           </div>
 
-          <div className="relative z-10">
-            {children}
-          </div>
+          <div className="relative z-10">{children}</div>
         </div>
       </div>
 
       <ProfileDialog open={profileOpen} onOpenChange={setProfileOpen} />
       <ConnectionStatus />
     </div>
-  );
-}
-
-function NavLink({
-  to,
-  icon: Icon,
-  children,
-}: {
-  to: string;
-  icon: React.ElementType;
-  children: React.ReactNode;
-}) {
-  const location = useLocation();
-  const isActive = location.pathname === to || location.pathname.startsWith(`${to}/`);
-
-  return (
-    <Link
-      to={to}
-      className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-        isActive
-          ? 'bg-primary text-primary-foreground'
-          : 'text-muted-foreground hover:text-foreground hover:bg-accent'
-      }`}
-    >
-      <Icon className="h-5 w-5" />
-      {children}
-    </Link>
   );
 }

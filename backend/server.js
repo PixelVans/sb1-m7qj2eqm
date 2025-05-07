@@ -29,7 +29,7 @@ app.get('/', (req, res) => {
 
 // Create Checkout Session
 app.post('/create-checkout-session', async (req, res) => {
-  const { plan, period, email, userId } = req.body;
+  const { plan, period, email, userId, name } = req.body;
 
   let amount = 0;
   if (plan === 'pro') {
@@ -63,6 +63,7 @@ app.post('/create-checkout-session', async (req, res) => {
         plan,
         period,
         email,
+        name,
       },
     });
 
@@ -90,10 +91,10 @@ app.post('/webhook', async (req, res) => {
   }
 
   const session = event.data.object;
-  const { userId, plan, period } = session.metadata || {};
+  const { userId, plan, period, name = 'DJ' } = session.metadata || {};
 
   if (event.type === 'checkout.session.completed') {
-    console.log(`✅ Payment success for ${userId}: ${plan} (${period})`);
+    console.log(`Payment success for ${userId}: ${plan} (${period})`);
 
     const startDate = new Date();
     const expiresDate = new Date(startDate);
@@ -102,6 +103,14 @@ app.post('/webhook', async (req, res) => {
     } else if (period === 'yearly') {
       expiresDate.setFullYear(expiresDate.getFullYear() + 1);
     }
+
+    const amountPaid = (session.amount_total / 100).toFixed(2);
+    const formattedAmount = `$${amountPaid}`;
+    const formattedExpiry = expiresDate.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
 
     const { error } = await supabase.auth.admin.updateUserById(userId, {
       user_metadata: {
@@ -113,37 +122,34 @@ app.post('/webhook', async (req, res) => {
     });
 
     if (error) {
-      console.error('❌ Supabase update failed:', error.message);
+      console.error('Supabase update failed:', error.message);
     } else {
-      console.log('✅ Supabase user metadata updated');
+      console.log('Supabase user metadata updated');
 
-      // Add success notification
       const { error: notifError } = await supabase.from('notifications').insert([
         {
           user_id: userId,
-          title: 'Payment Successful',
-          message: `Your Hey DJ Pro (${period}) subscription is now active. Enjoy all the premium features!`,
+          title: `Hey DJ ${name}, your payment of ${formattedAmount} was successful`,
+          message: `Your Hey DJ Pro (${period}) subscription is now active and will expire on ${formattedExpiry}. Enjoy all the premium features!`,
           read: false,
         },
       ]);
 
       if (notifError) {
-        console.error('❌ Notification insert failed:', notifError.message);
+        console.error('Notification insert failed:', notifError.message);
       } else {
-        console.log('✅ Notification inserted');
+        console.log('Notification inserted');
       }
     }
   }
 
   if (event.type === 'checkout.session.expired') {
-    // Optional: Handle expired sessions (user never completed payment)
-    console.warn(`⚠️ Session expired for user ${userId}`);
+    console.warn(`Session expired for user ${userId}`);
   }
 
   if (event.type === 'checkout.session.async_payment_failed') {
-    console.warn(`❌ Payment failed for user ${userId}`);
+    console.warn(`Payment failed for user ${userId}`);
 
-    // Add failure notification
     const { error: notifError } = await supabase.from('notifications').insert([
       {
         user_id: userId,
@@ -154,9 +160,9 @@ app.post('/webhook', async (req, res) => {
     ]);
 
     if (notifError) {
-      console.error('❌ Failed to insert failure notification:', notifError.message);
+      console.error('Failed to insert failure notification:', notifError.message);
     } else {
-      console.log('⚠️ Failure notification inserted');
+      console.log('Failure notification inserted');
     }
   }
 
