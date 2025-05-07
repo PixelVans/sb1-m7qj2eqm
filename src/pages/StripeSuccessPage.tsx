@@ -16,6 +16,7 @@ export default function StripeSuccessPage() {
     const refreshUser = async () => {
       try {
         setShowConfetti(true);
+        await supabase.auth.refreshSession();
         const { data, error } = await supabase.auth.getUser();
 
         if (error || !data?.user) {
