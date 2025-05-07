@@ -130,7 +130,7 @@ app.post('/webhook', async (req, res) => {
         {
           user_id: userId,
           title: `Hey DJ ${name}, your payment of ${formattedAmount} was successful`,
-          message: `Your Hey DJ Pro (${period}) subscription is now active and will expire on ${formattedExpiry}. Enjoy all the premium features!`,
+          message: `Your Pro (${period}) subscription is now active and will expire on ${formattedExpiry}. Enjoy all the premium features!`,
           read: false,
         },
       ]);
