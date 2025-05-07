@@ -80,7 +80,7 @@ const handleSelectPlan = async (plan: 'free' | 'pro') => {
         body: JSON.stringify({
           userId: user.id,
           email: user.email,
-          name: user.user_metadata?.name || 'DJ',
+          name: user.user_metadata?.dj_name?.trim() || '',
           plan,
           period: isYearly ? 'yearly' : 'monthly',
         }),

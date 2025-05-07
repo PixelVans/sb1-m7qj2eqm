@@ -91,7 +91,7 @@ app.post('/webhook', async (req, res) => {
   }
 
   const session = event.data.object;
-  const { userId, plan, period, name = 'DJ' } = session.metadata || {};
+  const { userId, plan, period, name = '' } = session.metadata || {};
 
   if (event.type === 'checkout.session.completed') {
     console.log(`Payment success for ${userId}: ${plan} (${period})`);
