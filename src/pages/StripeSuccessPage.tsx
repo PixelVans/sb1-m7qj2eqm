@@ -27,7 +27,7 @@ export default function StripeSuccessPage() {
         setPlan(plan);
         resetEventsCreated();
 
-        toast.success('Your subscription has been updated!');
+        //toast.success('Your subscription has been updated!');
       } catch (err) {
         toast.error('Could not update subscription. Try logging out and in again.');
       } finally {
