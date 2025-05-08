@@ -13,7 +13,7 @@ import { supabase } from '@/lib/supabase';
 type NotificationType = 'success' | 'info' | 'warning';
 
 interface Notification {
-  id: number;
+  id: string;
   type: NotificationType;
   title: string;
   message: string;
@@ -68,7 +68,7 @@ export default function NotificationsPage() {
     fetchNotifications();
   }, [user?.id]);
 
-  const handleMarkAsRead = async (id: number) => {
+  const handleMarkAsRead = async (id: string) => {
     const { error } = await supabase
       .from('notifications')
       .update({ read: true })
