@@ -129,7 +129,7 @@ app.post('/webhook', async (req, res) => {
       const { error: notifError } = await supabase.from('notifications').insert([
         {
           user_id: userId,
-          title: `Hey DJ ${name}, your payment of ${formattedAmount} was successful`,
+          title: `Hey ${name}, A payment of ${formattedAmount} was made to your account`,
           message: `Your Pro (${period}) subscription is now active and will expire on ${formattedExpiry}. Enjoy all the premium features!`,
           read: false,
         },

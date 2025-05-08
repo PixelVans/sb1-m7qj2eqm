@@ -15,7 +15,6 @@ export default function StripeSuccessPage() {
   useEffect(() => {
     const refreshUser = async () => {
       try {
-        setShowConfetti(true);
         await supabase.auth.refreshSession();
         const { data, error } = await supabase.auth.getUser();
 
@@ -27,19 +26,23 @@ export default function StripeSuccessPage() {
         setPlan(plan);
         resetEventsCreated();
 
-        //toast.success('Your subscription has been updated!');
+        // Show confetti after successful update
+        
+        
+        
       } catch (err) {
         toast.error('Could not update subscription. Try logging out and in again.');
       } finally {
         setLoading(false);
+        setShowConfetti(true);
       }
     };
 
     refreshUser();
-  }, [setPlan]);
+  }, [setPlan, resetEventsCreated]);
 
   return (
-    <div className="bg-[#121212] flex items-center justify-center px-4 ">
+    <div className="flex items-center justify-center px-4">
       {showConfetti && <Confetti />}
       <div className="bg-white/5 backdrop-blur-lg rounded-2xl shadow-2xl p-10 max-w-xl text-center space-y-6 border border-white/10">
         <CheckCircle2Icon className="h-20 w-20 text-green-400 mx-auto" />
@@ -53,7 +56,7 @@ export default function StripeSuccessPage() {
         {loading ? (
           <div className="flex justify-center items-center space-x-2 text-white">
             <Loader2 className="animate-spin h-5 w-5" />
-            <span>Updating your account...</span>
+            <span className='text-yellow-300'>Updating your account...</span>
           </div>
         ) : (
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -64,7 +67,10 @@ export default function StripeSuccessPage() {
               </Button>
             </Link>
             <Link to="/contact">
-              <Button variant="outline" className="w-full border-white/20 text-white hover:bg-white/10">
+              <Button
+                variant="outline"
+                className="w-full border-white/20 text-white hover:bg-white/10"
+              >
                 Need Help?
               </Button>
             </Link>
