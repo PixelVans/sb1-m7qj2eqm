@@ -1,3 +1,4 @@
+// Imports remain the same
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { ThumbsUp, ExternalLink, Music2, Instagram, AlertCircle } from 'lucide-react';
@@ -6,12 +7,10 @@ import { supabase } from '@/lib/supabase';
 import type { Database } from '@/lib/supabase';
 import { toast } from 'sonner';
 import { useDebouncedCallback } from '@/hooks/useDebounce'; 
-
-
-
 import { useSettings } from '@/lib/store';
 
 type Event = Database['public']['Tables']['events']['Row'] & {
+  created_by: string;
   dj_profile?: {
     dj_name: string;
     avatar_url: string | null;
@@ -41,19 +40,15 @@ export default function AttendeeView() {
   const [error, setError] = useState<string | null>(null);
   const [userRequests, setUserRequests] = useState<number>(0);
   const { requestLimit } = useSettings();
-  
-
   const [votedSongIds, setVotedSongIds] = useState<string[]>([]);
 
-  // Load voted songs on mount
   useEffect(() => {
     const storedVotes = localStorage.getItem(`voted_${eventId}`);
     if (storedVotes) {
       setVotedSongIds(JSON.parse(storedVotes));
     }
   }, [eventId]);
-  
-  // Update local storage when votes change
+
   function updateVoted(songId: string, voted: boolean) {
     const updated = voted
       ? [...votedSongIds, songId]
@@ -62,15 +57,8 @@ export default function AttendeeView() {
     setVotedSongIds(updated);
     localStorage.setItem(`voted_${eventId}`, JSON.stringify(updated));
   }
-  
 
-
-
-
-  // Debounce vote updates to prevent spam
   const debouncedVoteUpdate = useDebouncedCallback(handleVoteToggle, VOTE_DEBOUNCE_MS);
-
-  
 
   useEffect(() => {
     if (eventId) {
@@ -104,7 +92,6 @@ export default function AttendeeView() {
     if (!eventId) return;
     
     try {
-      // First get the event details
       const { data: eventData, error: eventError } = await supabase
         .from('events')
         .select('*')
@@ -114,19 +101,16 @@ export default function AttendeeView() {
       if (eventError) throw eventError;
       if (!eventData) throw new Error('Event not found');
 
-      // Check if event is active
       if (!eventData.active) {
         throw new Error('This event has ended');
       }
 
-      // Then get the DJ profile using the RPC function
       const { data: profileData, error: profileError } = await supabase
         .rpc('get_dj_profile', { event_id: eventId })
         .maybeSingle();
 
       if (profileError) throw profileError;
 
-      // Combine event and profile data
       setEvent({
         ...eventData,
         dj_profile: profileData
@@ -167,8 +151,6 @@ export default function AttendeeView() {
 
   async function loadUserRequests() {
     if (!eventId) return;
-    
-    // Get request count from localStorage
     const count = localStorage.getItem(`requests_${eventId}`) || '0';
     setUserRequests(parseInt(count, 10));
   }
@@ -195,7 +177,6 @@ export default function AttendeeView() {
       return;
     }
 
-    // Validate inputs
     if (songTitle.length > MAX_TITLE_LENGTH) {
       toast.error('Song title is too long');
       return;
@@ -214,7 +195,6 @@ export default function AttendeeView() {
     setSubmitting(true);
 
     try {
-      // Check if song already exists
       const { data: existingSongs } = await supabase
         .from('song_requests')
         .select('*')
@@ -223,7 +203,6 @@ export default function AttendeeView() {
         .eq('artist', artist.trim());
 
       if (existingSongs && existingSongs.length > 0) {
-        // Update votes for existing song
         await supabase
           .from('song_requests')
           .update({ votes: existingSongs[0].votes + 1 })
@@ -231,20 +210,31 @@ export default function AttendeeView() {
 
         toast.success('Vote added to existing song request!');
       } else {
-        // Create new song request
         await supabase
           .from('song_requests')
-          .insert([
+          .insert([{
+            event_id: eventId,
+            title: songTitle.trim(),
+            artist: artist.trim(),
+            song_link: songLink.trim() || null,
+            votes: 1,
+          }]);
+        // Send notification to DJ
+        if (event?.dj_id) {
+          const { error: notifError } = await supabase.from('notifications').insert([
             {
-              event_id: eventId,
-              title: songTitle.trim(),
-              artist: artist.trim(),
-              song_link: songLink.trim() || null,
-              votes: 1,
+              user_id: event.dj_id,
+              title: `"${songTitle.trim()}" by ${artist.trim()} has been requested`,
+              message: `A new song "${songTitle.trim()}" by ${artist.trim()} has been requested by one of your attendees for your "${event.name}" event.`,
+              read: false,
             },
           ]);
 
-        // Update local request count
+          if (notifError) {
+            console.error('Notification error:', notifError);
+          }
+        }
+
         const newCount = userRequests + 1;
         localStorage.setItem(`requests_${eventId}`, newCount.toString());
         setUserRequests(newCount);
@@ -252,11 +242,8 @@ export default function AttendeeView() {
         toast.success('Song request submitted successfully!');
       }
 
-      // Show success message
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
-
-      // Clear form
       setSongTitle('');
       setArtist('');
       setSongLink('');
@@ -270,22 +257,22 @@ export default function AttendeeView() {
 
   async function handleVoteToggle(songId: string) {
     if (!songId || !eventId) return;
-  
+
     const votedSongsKey = `voted_${eventId}`;
     const votedSongs = JSON.parse(localStorage.getItem(votedSongsKey) || '[]') as string[];
     const hasVoted = votedSongs.includes(songId);
     const alreadyVoted = votedSongIds.includes(songId);
-  
+
     try {
       const { data: song, error: fetchError } = await supabase
         .from('song_requests')
         .select('votes')
         .eq('id', songId)
         .single();
-  
+
       if (fetchError) throw fetchError;
       if (!song) throw new Error('Song not found');
-  
+
       const updatedVotes = hasVoted ? song.votes - 1 : song.votes + 1;
       updateVoted(songId, !alreadyVoted);
 
@@ -293,15 +280,14 @@ export default function AttendeeView() {
         .from('song_requests')
         .update({ votes: updatedVotes })
         .eq('id', songId);
-  
+
       if (updateError) throw updateError;
-  
-      // Update localStorage
+
       const newVotedSongs = hasVoted
         ? votedSongs.filter(id => id !== songId)
         : [...votedSongs, songId];
       localStorage.setItem(votedSongsKey, JSON.stringify(newVotedSongs));
-  
+
       toast.success(hasVoted ? 'Vote removed' : 'Vote added');
     } catch (error) {
       console.error('Error toggling vote:', error);

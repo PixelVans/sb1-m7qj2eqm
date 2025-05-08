@@ -120,11 +120,7 @@ export function MainLayout({ children }: MainLayoutProps) {
           <div className="flex-1" />
 
           <div className="relative overflow-hidden h-6 mr-1 lg:mr-9 w-full">
-            <div className={`marquee text-lg font-extralight font-rajdhani ${theme === 'dark' ? 'text-yellow-200' : 'text-black'} flex`}>
-              {subscription.plan === 'pro'
-                ? `Welcome, ${djName}! You are a Pro DJ. Enjoy unlimited events, song requests, branding, analytics, and support.`
-                : `Hey ${djName}, you're on the Free Plan. Upgrade to Pro for unlimited events and premium features—only $9.99/month.`}
-            </div>
+           
           </div>
 
           <div className="flex items-center gap-4">
@@ -134,16 +130,17 @@ export function MainLayout({ children }: MainLayoutProps) {
 
             {/* Notifications */}
             <div className="relative" ref={bellRef}>
-              <button
-                className="p-2 hover:bg-accent rounded-full relative"
-                onClick={() => setNotifOpen(!notifOpen)}
-              >
-                <BellIcon className="h-5 w-5 text-muted-foreground" />
-                {notifications.length > 0 && (
-                  <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-green-500 ring-2 ring-background" />
-                )}
+            <button
+                    className="p-2 hover:bg-accent rounded-full relative"
+                    onClick={() => setNotifOpen(!notifOpen)}
+                  >
+                    <BellIcon className="h-5 w-5 text-muted-foreground" />
+                    {notifications.length > 0 && (
+                      <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] text-[10px] leading-tight px-[4px] bg-red-500 text-white rounded-full flex items-center justify-center ring-2 ring-background">
+                        {notifications.length}
+                      </span>
+                    )}
               </button>
-
               {notifOpen && (
                 <div className="absolute right-0 mt-2 w-80 bg-[#1a1a1a] text-popover-foreground border border-border rounded-xl shadow-xl z-50">
                   <div className="p-4 border-b border-border font-semibold">Notifications</div>

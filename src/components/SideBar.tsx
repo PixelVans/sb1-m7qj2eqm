@@ -86,16 +86,7 @@ const { theme,  } = useSettings();
               </Link>
             )}
           </div>
-
-          <div className="mt-[80px] lg:mt-[150px] ">
-          <img src={dj} alt="" className={`${theme === 'dark' ? ' animate-bump opacity-40 h-52 w-auto ml-2' : ' hidden   '} `} />
-         
-          </div>
-        <h1 className={`font-zenspot text-center font-extralight 
-          ${theme === 'dark' ? ' text-purple-300' : 'hidden '} `}>
-          Que it up Dj
-          </h1>
-        </nav>
+       </nav>
       </div>
   );
 }

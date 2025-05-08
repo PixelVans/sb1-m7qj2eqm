@@ -81,6 +81,7 @@ export default function NotificationsPage() {
     }
   };
 
+
   const handleMarkAllAsRead = async () => {
     const { error } = await supabase
       .from('notifications')
@@ -96,6 +97,8 @@ export default function NotificationsPage() {
       console.error('Failed to mark all as read:', error.message);
     }
   };
+
+ 
 
   const handlePrev = () => setPage((p) => Math.max(1, p - 1));
   const handleNext = () => setPage((p) => Math.min(totalPages, p + 1));
