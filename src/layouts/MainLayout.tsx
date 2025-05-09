@@ -34,7 +34,7 @@ export function MainLayout({ children }: MainLayoutProps) {
   const avatarUrl = user?.user_metadata?.avatar_url;
   const djName = user?.user_metadata?.dj_name || 'DJ';
 
-  // Fetch unread notifications
+  // Fetch and subscribe to unread notifications
   useEffect(() => {
     if (!user) return;
 
@@ -46,14 +46,31 @@ export function MainLayout({ children }: MainLayoutProps) {
         .eq('read', false)
         .order('created_at', { ascending: false });
 
-      if (error) {
-        console.error('Error fetching notifications:', error.message);
-      } else {
-        setNotifications(data || []);
-      }
+      if (!error) setNotifications(data || []);
+      else console.error('Error fetching notifications:', error.message);
     }
 
     fetchNotifications();
+
+    const notificationChannel = supabase
+      .channel('notifications_channel')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'notifications',
+          filter: `user_id=eq.${user.id}`,
+        },
+        () => {
+          fetchNotifications();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(notificationChannel);
+    };
   }, [user]);
 
   // Close dropdown if clicked outside
@@ -67,7 +84,6 @@ export function MainLayout({ children }: MainLayoutProps) {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Mark notification as read in Supabase
   async function markAsRead(id: string) {
     const { error } = await supabase
       .from('notifications')
@@ -84,7 +100,7 @@ export function MainLayout({ children }: MainLayoutProps) {
   function formatTime(timestamp: string) {
     const date = new Date(timestamp);
     const now = new Date();
-    const diff = Math.floor((now.getTime() - date.getTime()) / 1000); // seconds
+    const diff = Math.floor((now.getTime() - date.getTime()) / 1000);
 
     if (diff < 60) return `${diff}s ago`;
     if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
@@ -119,9 +135,7 @@ export function MainLayout({ children }: MainLayoutProps) {
 
           <div className="flex-1" />
 
-          <div className="relative overflow-hidden h-6 mr-1 lg:mr-9 w-full">
-           
-          </div>
+          <div className="relative overflow-hidden h-6 mr-1 lg:mr-9 w-full" />
 
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="sm" className="w-9 px-0" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
@@ -130,16 +144,16 @@ export function MainLayout({ children }: MainLayoutProps) {
 
             {/* Notifications */}
             <div className="relative" ref={bellRef}>
-            <button
-                    className="p-2 hover:bg-accent rounded-full relative"
-                    onClick={() => setNotifOpen(!notifOpen)}
-                  >
-                    <BellIcon className="h-5 w-5 text-muted-foreground" />
-                    {notifications.length > 0 && (
-                      <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] text-[10px] leading-tight px-[4px] bg-red-500 text-white rounded-full flex items-center justify-center ring-2 ring-background">
-                        {notifications.length}
-                      </span>
-                    )}
+              <button
+                className="p-2 hover:bg-accent rounded-full relative"
+                onClick={() => setNotifOpen(!notifOpen)}
+              >
+                <BellIcon className="h-5 w-5 text-muted-foreground" />
+                {notifications.length > 0 && (
+                  <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] text-[10px] leading-tight px-[4px] bg-red-500 text-white rounded-full flex items-center justify-center ring-2 ring-background">
+                    {notifications.length}
+                  </span>
+                )}
               </button>
               {notifOpen && (
                 <div className="absolute right-0 mt-2 w-80 bg-[#1a1a1a] text-popover-foreground border border-border rounded-xl shadow-xl z-50">
@@ -199,7 +213,6 @@ export function MainLayout({ children }: MainLayoutProps) {
               <img src={boardtheme} alt="Background Event" className="w-full h-full mt-[150px] blur-3xl object-cover opacity-40" />
             )}
           </div>
-
           <div className="relative z-10">{children}</div>
         </div>
       </div>
