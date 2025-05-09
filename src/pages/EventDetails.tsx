@@ -53,13 +53,13 @@ function SongRequestCard({ song, onStatusChange }: {
     <div
       ref={setNodeRef}
       style={style}
-      className={`flex items-center justify-between p-4  rounded-lg group${theme === 'dark' ? ' bg-white/5  ' : ' bg-slate-200   '} `}
+      className={`flex items-center justify-between p-2 sm:p-4  rounded-lg group${theme === 'dark' ? ' bg-white/5  ' : ' bg-slate-200   '} `}
     >
       {song.status === 'pending' && (
         <div 
           {...attributes} 
           {...listeners}
-          className="cursor-grab active:cursor-grabbing p-2 -ml-2 opacity-0 group-hover:opacity-100 transition-opacity"
+          className="cursor-grab active:cursor-grabbing sm:p-2 -ml-2 opacity-0 group-hover:opacity-100 transition-opacity"
         >
           <GripVertical className="h-4 w-4 text-gray-400" />
         </div>
@@ -483,7 +483,7 @@ export default function EventDetails() {
   return (
     <div className="space-y-6">
       {/* Event Header */}
-      <div className="bg-white/5 rounded-lg p-6">
+      <div className="bg-white/5 rounded-lg p-2 sm:p-6">
         <div className="flex justify-between items-center mb-4">
           <div>
             <h1
@@ -571,7 +571,7 @@ export default function EventDetails() {
       {/* Song Requests */}
       <div className="space-y-8">
         {/* Pending Requests */}
-        <div className="bg-white/5 rounded-lg p-6">
+        <div className="bg-white/5 rounded-lg p-1 sm:p-6">
           <h2 className="text-xl font-bold mb-6">Queue ({pendingRequests.length})</h2>
           <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
             <SortableContext items={pendingRequests} strategy={verticalListSortingStrategy}>

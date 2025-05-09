@@ -221,7 +221,7 @@ export default function DJDashboard() {
 
       {/* Recent Events */}
       {recentEvents.length > 0 && (
-        <div data-aos="zoom-in" className={` rounded-lg p-6 ${theme === 'dark' ? 'bg-white/5  ' : ' bg-white shadow-lg '} `} >
+        <div data-aos="zoom-in" className={` rounded-lg p-2 sm:p-6 ${theme === 'dark' ? 'bg-white/5  ' : ' bg-white shadow-lg '} `} >
           
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-bold">Recent Events</h2>
@@ -264,7 +264,7 @@ export default function DJDashboard() {
       )}
 
       {/* Top Requests */}
-      <div className={`rounded-lg p-6 ${theme === 'dark' ? ' bg-white/5  ' : ' bg-white shadow-lg'} `}>
+      <div className={`rounded-lg p-2 sm:p-6 ${theme === 'dark' ? ' bg-white/5  ' : ' bg-white shadow-lg'} `}>
       
         <div className="flex items-center gap-2 mb-6">
           <Music2 className="h-5 w-5 text-blue-300" />
@@ -288,7 +288,7 @@ export default function DJDashboard() {
                     className="flex items-center justify-between p-4 bg-white/5 rounded-lg"
                   >
                     <div className="flex items-center gap-4">
-                      <span className="text-2xl font-bold text-primary/50">
+                      <span className=" text-lg sm:text-2xl font-bold text-primary/50">
                         #{index}
                       </span>
                       <div>
@@ -332,8 +332,8 @@ export default function DJDashboard() {
                   key={request.id}
                   className={`flex items-center justify-between p-4  rounded-lg ${theme === 'dark' ? '  bg-white/5 ' : ' bg-white shadow-lg   '} `}
                 >
-                  <div className="flex items-center gap-4">
-                    <span className="text-2xl font-bold text-primary/50">
+                  <div className="flex items-center gap-2 sm:gap-4">
+                    <span className="text-lg sm:text-2xl ml-[-5px] sm:ml-0 font-bold text-primary/50">
                       #{index + 1}
                     </span>
                     <div>

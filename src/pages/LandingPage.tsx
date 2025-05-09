@@ -65,8 +65,8 @@ export default function LandingPage() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-8">
             <div className="flex items-center gap-2">
-              <img src={logoUrl} alt="Hey DJ" className="h-8 w-8" />
-              <span className=" text-lg lg:text-2xl font-bold">Hey DJ</span>
+              <img src={logoUrl} alt="Hey DJ" className="sm:h-8 sm:w-8 h-7 w-7" />
+              <span className=" text-md lg:text-2xl font-bold">Hey DJ</span>
             </div>
             <div className="hidden md:flex items-center gap-6">
               <a href="#features" className="text-sm font-medium hover:text-primary transition-colors">
@@ -82,7 +82,7 @@ export default function LandingPage() {
               Log in
             </Link>
             <Link to="/login" >
-              <Button className=''>Get Started</Button>
+            <button className='bg-purple-700 p-2 sm:p-2 rounded-lg text-xs sm:text-sm'>Get Started</button>
             </Link>
           </div>
         </div>
