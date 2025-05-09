@@ -238,7 +238,8 @@ export default function DJDashboard() {
             {recentEvents.map((event) => (
               <div
                 key={event.id}
-                className="flex items-center justify-between p-4 bg-white/5 rounded-lg cursor-pointer hover:bg-white/10 transition-colors"
+                className={`flex items-center justify-between p-4  rounded-lg cursor-pointer hover:bg-white/10 transition-colors 
+                  ${theme === 'dark' ? ' bg-white/5  ' : ' bg-slate-100   '} `}
                 onClick={() => navigate(`/events/${event.id}`)}
               >
                 <div>

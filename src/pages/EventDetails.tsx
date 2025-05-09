@@ -10,6 +10,7 @@ import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } 
 import { CSS } from '@dnd-kit/utilities';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
+import { useSettings } from '@/lib/store';
 
 type Event = Database['public']['Tables']['events']['Row'];
 type SongRequest = Database['public']['Tables']['song_requests']['Row'] & {
@@ -46,13 +47,13 @@ function SongRequestCard({ song, onStatusChange }: {
     transform: CSS.Transform.toString(transform),
     transition,
   };
+  const { theme } = useSettings();
 
   return (
     <div
-      data-aos="zoom-in"
       ref={setNodeRef}
       style={style}
-      className="flex items-center justify-between p-4 bg-white/5 rounded-lg group"
+      className={`flex items-center justify-between p-4  rounded-lg group${theme === 'dark' ? ' bg-white/5  ' : ' bg-slate-200   '} `}
     >
       {song.status === 'pending' && (
         <div 
@@ -63,14 +64,16 @@ function SongRequestCard({ song, onStatusChange }: {
           <GripVertical className="h-4 w-4 text-gray-400" />
         </div>
       )}
-      <div className="flex-1">
+      <div className="flex-1 ">
         <div className="flex items-center gap-2">
           {song.status === 'pending' && (
             <span className="text-lg font-semibold text-purple-400">#{song.queue_position}</span>
           )}
-          <h3 className="font-medium text-white">{song.title}</h3>
+          <h3 className={`font-medium ${theme === 'dark' ? ' text-white  ' : ' text-black  '} `}>{song.title}</h3>
+          
         </div>
-        <p className="text-sm text-gray-400">{song.artist}</p>
+        <p className={`font-sm ${theme === 'dark' ? ' text-gray-400 ' : ' text-slate-900  '} `}>{song.artist}</p>
+        
         {song.song_link && (
           <a
             href={song.song_link}
@@ -85,8 +88,9 @@ function SongRequestCard({ song, onStatusChange }: {
       </div>
       <div className="flex items-center space-x-4">
         <div className="flex items-center gap-2">
-          <ThumbsUp className="h-4 w-4 text-purple-300" />
-          <span className="text-purple-300">{song.votes}</span>
+          <ThumbsUp className={`h-4 w-4 ${theme === 'dark' ? ' text-purple-300 ' : ' text-purple-800  '} `} />
+          <span >{song.votes}</span>
+          
           {song.request_count > 1 && (
             <span className="px-2 py-1 rounded-full bg-purple-500/20 text-purple-300 text-sm">
               {song.request_count}x
@@ -140,7 +144,7 @@ export default function EventDetails() {
   const [copied, setCopied] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const qrRef = useRef<HTMLDivElement>(null);
-
+  const { theme } = useSettings();
   const sensors = useSensors(
     useSensor(MouseSensor, {
       activationConstraint: {
@@ -482,7 +486,9 @@ export default function EventDetails() {
       <div className="bg-white/5 rounded-lg p-6">
         <div className="flex justify-between items-center mb-4">
           <div>
-            <h1 className="text-2xl font-bold text-white">{event.name}</h1>
+            <h1
+              className={`text-2xl font-bold ${theme === 'dark' ? ' text-white  ' : ' text-black  '} `}>{event.name}</h1>
+              
             <p className="text-gray-400">
               {format(new Date(event.created_at), 'MMMM d, yyyy')}
             </p>

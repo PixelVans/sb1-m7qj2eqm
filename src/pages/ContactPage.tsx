@@ -3,6 +3,7 @@ import { MessageCircleIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import emailjs from '@emailjs/browser';
+import { useSettings } from '@/lib/store';
 
 export default function ContactPage() {
   const [firstName, setFirstName] = useState('');
@@ -11,7 +12,8 @@ export default function ContactPage() {
   const [category, setCategory] = useState('technical');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
-
+  const { theme } = useSettings();
+  const isDark = theme === 'dark';
   const form = useRef<HTMLFormElement>(null);
 
   const handleSend = async (e: React.FormEvent) => {
@@ -45,14 +47,22 @@ export default function ContactPage() {
     }
   };
 
+  const textColor = isDark ? 'text-white' : 'text-black';
+  const subTextColor = isDark ? 'text-gray-400' : 'text-gray-600';
+  const inputBg = isDark ? 'bg-white/10 text-white ring-white/10' : 'bg-white text-black ring-gray-300';
+  const labelColor = isDark ? 'text-gray-300' : 'text-gray-700';
+  const formBg = isDark ? 'bg-white/5' : 'bg-white border border-gray-200';
+
   return (
-    <div className="bg-[#121212] flex flex-col justify-center">
+    <div className="flex flex-col justify-center px-2 sm:px-6  ">
       <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
-        {/* Left Column: Heading */}
-        <div className="flex flex-col items-center md:items-start text-center md:text-left mx-auto py-24">
+        {/* Left Column */}
+       
+
+        <div className="flex flex-col items-center md:items-start text-center md:text-left mx-auto py-5 md:py-24">
           <MessageCircleIcon className="h-24 w-24 text-purple-500 mb-4 mx-auto " />
-          <h1 className="text-3xl font-bold font-rajdhani text-white mx-auto">Contact Us</h1>
-          <p className="text-gray-400 mt-2">
+          <h1 className={`text-3xl font-semibold ${textColor} mx-auto`}>Contact Us</h1>
+          <p className={`${subTextColor} mt-2`}>
             We’d love to hear your thoughts or feedback!
           </p>
         </div>
@@ -61,11 +71,11 @@ export default function ContactPage() {
         <form
           ref={form}
           onSubmit={handleSend}
-          className="bg-white/5 backdrop-blur-lg rounded-lg px-8 py-5 shadow-xl space-y-6"
+          className={`${formBg} backdrop-blur-lg rounded-lg px-6 py-6 shadow-xl space-y-6`}
         >
           {/* First Name */}
           <div>
-            <label htmlFor="firstName" className="block text-sm font-medium text-gray-300 mb-1">
+            <label htmlFor="firstName" className={`block text-sm font-medium ${labelColor} mb-1`}>
               First Name (optional)
             </label>
             <input
@@ -74,14 +84,14 @@ export default function ContactPage() {
               name="first_name"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
-              className="w-full rounded-lg border-0 py-2 px-3 bg-white/10 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-purple-500 sm:text-sm"
+              className={`w-full rounded-lg border-0 py-2 px-3 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-purple-500 sm:text-sm ${inputBg}`}
               placeholder="Enter your name"
             />
           </div>
 
           {/* Email */}
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1">
+            <label htmlFor="email" className={`block text-sm font-medium ${labelColor} mb-1`}>
               Email (optional)
             </label>
             <input
@@ -90,14 +100,14 @@ export default function ContactPage() {
               name="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-lg border-0 py-2 px-3 bg-white/10 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-purple-500 sm:text-sm"
+              className={`w-full rounded-lg border-0 py-2 px-3 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-purple-500 sm:text-sm ${inputBg}`}
               placeholder="you@example.com"
             />
           </div>
 
           {/* Phone */}
           <div>
-            <label htmlFor="phone" className="block text-sm font-medium text-gray-300 mb-1">
+            <label htmlFor="phone" className={`block text-sm font-medium ${labelColor} mb-1`}>
               Phone (optional)
             </label>
             <input
@@ -106,14 +116,14 @@ export default function ContactPage() {
               name="phone"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              className="w-full rounded-lg border-0 py-2 px-3 bg-white/10 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-purple-500 sm:text-sm"
+              className={`w-full rounded-lg border-0 py-2 px-3 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-purple-500 sm:text-sm ${inputBg}`}
               placeholder="+XXXXXXXXXX"
             />
           </div>
 
-          {/* Dropdown */}
+          {/* Category */}
           <div>
-            <label htmlFor="category" className="block text-sm font-medium text-gray-300 mb-1">
+            <label htmlFor="category" className={`block text-sm font-medium ${labelColor} mb-1`}>
               What is your message about?
             </label>
             <select
@@ -121,7 +131,7 @@ export default function ContactPage() {
               name="category"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full rounded-lg border-0 py-2 px-3 bg-white/10 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-purple-500 sm:text-sm appearance-none"
+              className={`w-full rounded-lg border-0 py-2 px-3 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-purple-500 sm:text-sm appearance-none ${inputBg}`}
             >
               <option value="technical">Technical Issue</option>
               <option value="payment">Payment Issue</option>
@@ -132,7 +142,7 @@ export default function ContactPage() {
 
           {/* Message */}
           <div>
-            <label htmlFor="message" className="block text-sm font-medium text-gray-300 mb-1 pt-4">
+            <label htmlFor="message" className={`block text-sm font-medium ${labelColor} mb-1 pt-4`}>
               Describe your message and we will get back to you ASAP
             </label>
             <textarea
@@ -142,7 +152,7 @@ export default function ContactPage() {
               rows={5}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              className="w-full rounded-lg border-0 py-2 px-3 bg-white/10 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-purple-500 sm:text-sm"
+              className={`w-full rounded-lg border-0 py-2 px-3 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-purple-500 sm:text-sm ${inputBg}`}
               placeholder="Type your message here..."
             />
           </div>
@@ -150,7 +160,7 @@ export default function ContactPage() {
           {/* Submit */}
           <Button
             type="submit"
-            className="w-full bg-purple-600 hover:bg-purple-700"
+             className={`w-full ${theme === 'dark' ? ' bg-purple-600 hover:bg-purple-700 ' : ' bg-purple-500 '} `}
             disabled={loading}
           >
             {loading ? 'Sending...' : 'Send Message'}

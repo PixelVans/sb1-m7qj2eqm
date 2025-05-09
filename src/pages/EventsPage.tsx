@@ -13,6 +13,7 @@ import { PricingModal } from '@/components/PricingModal';
 import { toast } from 'sonner';
 import { Confetti } from '@/components/Confetti';
 
+
 type Event = Database['public']['Tables']['events']['Row'] & {
   start_time?: string;
   end_time?: string;
@@ -44,7 +45,7 @@ export default function EventsPage() {
   });
   const [updatingEventId, setUpdatingEventId] = useState<string | null>(null);
 
-  const { subscription, incrementEventsCreated, canCreateEvent } = useSettings();
+  const { subscription, theme, incrementEventsCreated, canCreateEvent } = useSettings();
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [open, setOpen] = useState(false);
   useEffect(() => {
@@ -230,7 +231,7 @@ export default function EventsPage() {
       {showConfetti && <Confetti />}
 
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
+        <div className={`${theme === 'dark' ? '   ' : ' bg-slate-100 px-9 py-4 rounded-xl  '} `}>
           <h1 className="text-2xl font-bold">Events</h1>
           <p className="text-gray-400 mt-1">Manage your events and track song requests</p>
         </div>
@@ -266,9 +267,9 @@ export default function EventsPage() {
           }`}
           onClick={() => setFilter('all')}
         >
-          <div className="flex items-center gap-3">
+          <div className={`flex items-center gap-3 ${theme === 'dark' ? '   ' : ' bg-slate-200 px-9 py-4 rounded-xl  '} `}>
             <CalendarDays className="h-5 w-5" />
-            <div>
+            <div >
               <p className="text-sm">All Events</p>
               <p className="text-2xl font-bold">{totalEvents}</p>
             </div>
@@ -295,12 +296,12 @@ export default function EventsPage() {
             filter === 'ended' 
               ? 'bg-gray-600 text-white' 
               : 'bg-white/5 hover:bg-white/10'
-          }`}
+          } ${theme === 'dark' ? '   ' : ' bg-slate-100 px-9 py-4 rounded-xl  '}` }
           onClick={() => setFilter('ended')}
         >
-          <div className="flex items-center gap-3">
+          <div className={`flex items-center gap-3`}>
             <CalendarDays className="h-5 w-5" />
-            <div>
+            <div >
               <p className="text-sm">Ended Events</p>
               <p className="text-2xl font-bold">{endedEvents}</p>
             </div>
@@ -350,7 +351,8 @@ export default function EventsPage() {
           filteredEvents.map((event) => (
             <div 
               key={event.id} 
-              className="bg-white/5 rounded-lg p-6 space-y-4 cursor-pointer transition-all transform hover:scale-[1.02] hover:bg-white/10"
+              className={`rounded-lg p-6 space-y-4 cursor-pointer transition-all transform hover:scale-[1.02]
+                 hover:bg-white/10${theme === 'dark' ? ' bg-white/5  ' : ' bg-slate-100'} `}
               onClick={() => navigate(`/events/${event.id}`)}
             >
               <div>

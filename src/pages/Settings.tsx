@@ -1,11 +1,17 @@
-import  { useState } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { useSettings } from '@/lib/store';
 import { Moon, Sun, Eye, Hash, AlertTriangle } from 'lucide-react';
 import { ProfileDialog } from '@/components/ProfileDialog';
 import { MembershipStatus } from '@/components/MembershipStatus';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
 import { toast } from 'sonner';
 
 export default function Settings() {
@@ -21,6 +27,7 @@ export default function Settings() {
     resetEventsCreated,
   } = useSettings();
 
+  const isDark = theme === 'dark';
   const [profileOpen, setProfileOpen] = useState(false);
   const [showDowngradeConfirm, setShowDowngradeConfirm] = useState(false);
 
@@ -31,28 +38,31 @@ export default function Settings() {
     toast.success('Successfully downgraded to free plan');
   };
 
+  const bgClass = isDark ? 'bg-white/5' : 'bg-gray-100';
+  const textPrimary = isDark ? 'text-white' : 'text-gray-900';
+  const textSecondary = isDark ? 'text-gray-400' : 'text-gray-600';
+  const selectBg = isDark ? 'bg-white/10 text-white' : 'bg-white text-gray-900 border border-gray-300';
+
   return (
     <div className="max-w-2xl mx-auto space-y-8">
-      {/* Membership Status */}
       <MembershipStatus />
 
-      {/* General Settings */}
-      <div className="bg-white/5 rounded-lg p-6">
-        <h2 className="text-2xl font-bold mb-6">Settings</h2>
+      <div className={`${bgClass} rounded-lg p-6`}>
+        <h2 className={`text-2xl font-bold mb-6 ${textPrimary}`}>Settings</h2>
 
-        {/* Theme Setting */}
         <div className="space-y-6">
+          {/* Theme */}
           <div className="flex items-center justify-between py-4">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                {theme === 'dark' ? (
+                {isDark ? (
                   <Moon className="h-5 w-5 text-purple-400" />
                 ) : (
-                  <Sun className="h-5 w-5 text-yellow-400" />
+                  <Sun className="h-5 w-5 text-yellow-500" />
                 )}
-                <h3 className="font-medium">Theme</h3>
+                <h3 className={`font-medium ${textPrimary}`}>Theme</h3>
               </div>
-              <p className="text-sm text-gray-400">
+              <p className={`text-sm ${textSecondary}`}>
                 Switch between dark and light mode
               </p>
             </div>
@@ -67,9 +77,9 @@ export default function Settings() {
             <div className="space-y-1">
               <div className="flex items-center gap-2">
                 <Eye className="h-5 w-5 text-purple-400" />
-                <h3 className="font-medium">Show Vote Count</h3>
+                <h3 className={`font-medium ${textPrimary}`}>Show Vote Count</h3>
               </div>
-              <p className="text-sm text-gray-400">
+              <p className={`text-sm ${textSecondary}`}>
                 Display the number of votes for each song
               </p>
             </div>
@@ -84,16 +94,16 @@ export default function Settings() {
             <div className="space-y-1">
               <div className="flex items-center gap-2">
                 <Hash className="h-5 w-5 text-purple-400" />
-                <h3 className="font-medium">Request Limit</h3>
+                <h3 className={`font-medium ${textPrimary}`}>Request Limit</h3>
               </div>
-              <p className="text-sm text-gray-400">
+              <p className={`text-sm ${textSecondary}`}>
                 Maximum number of requests per attendee
               </p>
             </div>
             <select
               value={requestLimit}
               onChange={(e) => setRequestLimit(Number(e.target.value))}
-              className="bg-white/10 rounded-lg px-3 py-2 text-white"
+              className={`rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-purple-500 ${selectBg}`}
             >
               {[1, 2, 3, 4, 5].map((num) => (
                 <option key={num} value={num}>
@@ -107,10 +117,10 @@ export default function Settings() {
 
       {/* Plan Management */}
       {subscription.plan === 'pro' && (
-        <div className="bg-white/5 rounded-lg p-6">
-          <h2 className="text-xl font-bold mb-6">Plan Management</h2>
+        <div className={`${bgClass} rounded-lg p-6`}>
+          <h2 className={`text-xl font-bold mb-6 ${textPrimary}`}>Plan Management</h2>
           <div className="space-y-4">
-            <p className="text-sm text-gray-400">
+            <p className={`text-sm ${textSecondary}`}>
               You are currently on the Pro plan. You can downgrade to the free plan,
               but please note that this will limit you to one event.
             </p>
@@ -126,8 +136,8 @@ export default function Settings() {
       )}
 
       {/* Profile Section */}
-      <div className="bg-white/5 rounded-lg p-6">
-        <h2 className="text-xl font-bold mb-6">Profile</h2>
+      <div className={`${bgClass} rounded-lg p-6`}>
+        <h2 className={`text-xl font-bold mb-6 ${textPrimary}`}>Profile</h2>
         <Button
           variant="secondary"
           className="w-full"
@@ -165,16 +175,10 @@ export default function Settings() {
             </ul>
           </div>
           <DialogFooter>
-            <Button
-              variant="ghost"
-              onClick={() => setShowDowngradeConfirm(false)}
-            >
+            <Button variant="ghost" onClick={() => setShowDowngradeConfirm(false)}>
               Cancel
             </Button>
-            <Button
-              variant="destructive"
-              onClick={handleDowngrade}
-            >
+            <Button variant="destructive" onClick={handleDowngrade}>
               Confirm Downgrade
             </Button>
           </DialogFooter>
