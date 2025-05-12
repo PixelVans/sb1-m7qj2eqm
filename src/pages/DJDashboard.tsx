@@ -183,11 +183,22 @@ export default function DJDashboard() {
         <img
           src={soundwaveImg}
           alt="Soundwave"
-          className='absolute right-0 top-0 h-full object-contain pointer-events-none opacity-35 md:opacity-50 mt-10 md:mt-0'
+          className='absolute right-0 top-0 h-full object-contain pointer-events-none opacity-20 md:opacity-50 mt-10 md:mt-0'
             
         />
-       <h1 className="text-4xl font-bold font- mb-2  relative z-10">
-          Welcome onboard, <span className={`${theme === 'dark' ? 'text-yellow-300 ' : 'text-purple-700 '} `}>{djName}!</span>
+       <h1 className="text-2xl md:text-4xl font-bold font- mb-2  relative z-10">
+          Welcome onboard, {" "}
+          {djName.split("").map((char, index) => (
+          <span
+            key={index}
+            data-aos="zoom-in"
+            data-aos-delay={index * 100}
+            data-aos-once="true"
+            className={`${theme === 'dark' ? 'text-yellow-300' : 'text-purple-700'}`}
+          >
+            {char}
+          </span>
+          ))}
         </h1>
         <p className={`relative z-10 ${theme === 'dark' ? ' text-gray-300  ' : ' text-gray-700   '} `}>
           Manage your events and song requests from one place.
