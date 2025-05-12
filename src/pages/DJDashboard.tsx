@@ -176,17 +176,17 @@ export default function DJDashboard() {
   return (
     <div className="space-y-8">
       {/* Welcome Section */}
-      <div className={`relative  rounded-lg p-8 overflow-hidden  
+      <div className={`relative  rounded-lg p-8  overflow-hidden  
       ${theme === 'dark' ? ' bg-gradient-to-r from-purple-500/20 to-blue-500/20  ' : 'bg-white shadow-lg  '} `}>
         
         {/* Absolute image on the right */}
         <img
           src={soundwaveImg}
           alt="Soundwave"
-          className='absolute right-0 top-0 h-full object-contain pointer-events-none opacity-20 md:opacity-50 mt-10 md:mt-0'
+          className='absolute right-0 top-0 h-full object-contain pointer-events-none opacity-20 md:opacity-70 mt-10 md:mt-0'
             
         />
-       <h1 className="text-2xl md:text-4xl font-bold font- mb-2  relative z-10">
+       <h1 className="text-3xl md:text-3xl font-bold font- mb-2  relative z-10">
           Welcome onboard, {" "}
           {djName.split("").map((char, index) => (
           <span
