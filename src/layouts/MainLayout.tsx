@@ -156,7 +156,8 @@ export function MainLayout({ children }: MainLayoutProps) {
                 )}
               </button>
               {notifOpen && (
-                <div className="absolute right-0 mt-2 w-80 bg-[#1a1a1a] text-popover-foreground border border-border rounded-xl shadow-xl z-50">
+                <div className="absolute right-0 mt-2 w-80 bg-[#1a1a1a] text-popover-foreground border border-border 
+                rounded-xl shadow-purple-300 shadow-sm  z-50 ">
                   <div className="p-4 border-b border-border font-semibold">Notifications</div>
                   <ul className="max-h-72 overflow-y-auto">
                     {notifications.length === 0 ? (

@@ -140,7 +140,7 @@ export default function NotificationsPage() {
         {loading ? (
           <div className={`flex justify-center items-center space-x-2 ${isDark ? 'text-purple-400' : 'text-purple-600'}`}>
             <Loader2 className="animate-spin h-9 w-9" />
-            <span className={`${isDark ? 'text-yellow-300' : 'text-yellow-600'}`}>Fetching...</span>
+            <span className={`${isDark ? 'text-yellow-300' : 'text-yellow-600'}`}>Fetching notifications...</span>
           </div>
         ) : notifications.length === 0 ? (
           <p className={`${isDark ? 'text-white' : 'text-gray-700'} text-center`}>No notifications found.</p>
@@ -156,7 +156,7 @@ export default function NotificationsPage() {
                       } ${n.read ? 'opacity-50' : 'opacity-100'}`}
                   >
                     <div className="flex gap-2 sm:gap-3 items-start">
-                      <div className={`p-1 sm:p-2 rounded-full ${isDark ? 'bg-white/10' : 'bg-gray-300'} shrink-0`}>
+                     <div className={`p-[4px] sm:p-[5px] rounded-full ${n.read? 'bg-white/10' : 'bg-green-500'} shrink-0`}>
                         {iconMap[n.type]}
                       </div>
                       <div className="flex-1">
