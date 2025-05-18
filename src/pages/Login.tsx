@@ -119,7 +119,7 @@ export default function Login() {
       });
   
       const { userExists } = await res.json();
-  
+     
       if (!userExists) {
         setResetMessage('No account was found with the email you provided.');
         setResetLoading(false);
@@ -150,6 +150,7 @@ export default function Login() {
     <div className="min-h-screen bg-[#121212] flex flex-col justify-center">
       <div className="mx-auto w-full max-w-md">
         <div className="flex flex-col items-center mb-8">
+        
           <Music2Icon className="h-12 w-12 text-purple-500 mb-4" />
           <h1 className="text-3xl font-bold text-white">Hey DJ</h1>
           <p className="text-gray-400 mt-2">Your party, your playlist</p>
