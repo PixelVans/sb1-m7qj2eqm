@@ -42,7 +42,7 @@ export default function ResetPasswordPage() {
   };
 
   return (
-    <div className="flex items-center justify-center  px-4">
+    <div className="flex items-center justify-center  px-4 mt-20">
       <div className={`w-full max-w-md p-6 rounded-2xl shadow-lg border ${isDark ? 'border-white/20 bg-white/5' : 'border-gray-300 bg-white'}`}>
         <div className="flex flex-col gap-5 items-center text-center">
           <LockIcon className={`w-10 h-10 ${isDark ? 'text-purple-400' : 'text-purple-600'}`} />
@@ -77,7 +77,7 @@ export default function ResetPasswordPage() {
           />
 
           {errorMsg && (
-            <div className="text-red-500 text-sm mt-1">{errorMsg}</div>
+            <div className="text-red-500 text-sm mt-1 text-center">{errorMsg}</div>
           )}
 
           {success && (
@@ -94,6 +94,12 @@ export default function ResetPasswordPage() {
             {loading && <Loader2 className="animate-spin w-4 h-4 mr-2" />}
             Reset Password
           </Button>
+          <a
+          href="/login"
+          className="block text-center mt-2 text-sm text-purple-400 hover:text-purple-300 transition underline"
+        >
+          Back to sign-in
+        </a>
         </div>
       </div>
     </div>

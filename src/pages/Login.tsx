@@ -148,7 +148,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-[#121212] flex flex-col justify-center lg:py-5">
+    <div className="h-screen bg-[#121212] flex flex-col justify-center lg:py-5">
       <div className="mx-auto w-full max-w-md">
         <div className="flex flex-col items-center mb-4">
         
@@ -157,7 +157,7 @@ export default function Login() {
           <p className="text-gray-400 mt-2">Your party, your playlist</p>
         </div>
 
-        <div className="bg-white/5 backdrop-blur-lg rounded-lg px-8 py-9 shadow-xl">
+        <div className="bg-white/5 backdrop-blur-lg rounded-lg px-8 py-5 lg:py-7 shadow-xl">
           <h2 className="text-center text-2xl font-bold tracking-tight text-white mb-8">
             {isLogin ? 'Sign in to your account' : 'Create your account'}
           </h2>

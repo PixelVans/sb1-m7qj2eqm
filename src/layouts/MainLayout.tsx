@@ -33,7 +33,7 @@ export function MainLayout({ children }: MainLayoutProps) {
   const boardtheme = getAssetUrl('boardtheme.jpg');
   const avatarUrl = user?.user_metadata?.avatar_url;
   const djName = user?.user_metadata?.dj_name || 'DJ';
-  console.log(subscription)
+  
   // Fetch and subscribe to unread notifications
   useEffect(() => {
     if (!user) return;
@@ -173,7 +173,7 @@ export function MainLayout({ children }: MainLayoutProps) {
                             }}
                             className="block px-4 mx-4 rounded-md py-3 hover:bg-accent transition"
                           >
-                            <div className="text-sm text-yellow-300 font-medium">New Song Request</div>
+                            
                             <div className="text-sm">{notif.title}</div>
                             <div className="text-xs text-muted-foreground">{formatTime(notif.created_at)}</div>
                           </Link>

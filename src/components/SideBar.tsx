@@ -68,6 +68,7 @@ const { theme,  } = useSettings();
               Contact
             </NavLink>
             
+            
            {subscription.plan === 'free' && (
               <Link
                 to="/pricing"

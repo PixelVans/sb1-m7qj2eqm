@@ -109,10 +109,9 @@ useEffect(() => {
         <Route path="/pricing" element={<PricingPage />} />
         <Route path="/success" element={<StripeSuccessPage />} />
         <Route path="/failure" element={<StripeFailurePage />} />
-        <Route path="/failure" element={<StripeFailurePage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/notifications" element={<NotificationPage />} />
-       
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
       </Routes>
     </MainLayout>
   );
