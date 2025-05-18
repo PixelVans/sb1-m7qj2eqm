@@ -109,21 +109,41 @@ export default function Login() {
   const handlePasswordReset = async () => {
     setResetLoading(true);
     setResetMessage('');
-
-    const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
-      redirectTo: `${window.location.origin}/reset-password`,
-    });
-
-    if (error) {
-      setResetMessage(error.message || 'Failed to send reset email.');
-    } else {
-      toast.success('Password reset link sent', {
-        description: 'Check your inbox to reset your password.',
+  
+    try {
+      // Call your backend to check if user exists
+      const res = await fetch('https://heydj-pro.onrender.com/check-user-exists', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: resetEmail }),
       });
-      setResetMessage('A password reset link has been sent to your email.');
+  
+      const { userExists } = await res.json();
+  
+      if (!userExists) {
+        setResetMessage('No account was found with the email you provided.');
+        setResetLoading(false);
+        return;
+      }
+  
+      // If user exists, proceed to send reset email
+      const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+  
+      if (error) {
+        setResetMessage(error.message || 'Failed to send reset email.');
+      } else {
+        toast.success('Password reset link sent', {
+          description: 'Check your email inbox to reset your password.',
+        });
+        setResetMessage('A password reset link has been sent to your email.');
+      }
+    } catch (err: any) {
+      setResetMessage('An error occurred. Please try again later.');
+    } finally {
+      setResetLoading(false);
     }
-
-    setResetLoading(false);
   };
 
   return (

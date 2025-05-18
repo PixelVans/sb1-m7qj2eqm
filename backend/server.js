@@ -222,6 +222,33 @@ app.post('/downgrade-expired', async (req, res) => {
 
 
 
+// New route: Check if user exists by email
+app.post('/check-user-exists', async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).json({ error: 'Email is required' });
+  }
+
+  try {
+    // Use Supabase Admin API to list users filtered by email
+    const { data, error } = await supabase.auth.admin.listUsers({ email });
+
+    if (error) {
+      console.error('Error fetching user:', error);
+      return res.status(500).json({ error: 'Failed to fetch user info' });
+    }
+
+    // If no users found, data.users will be empty array
+    const userExists = data.users.length > 0;
+
+    res.json({ userExists });
+  } catch (err) {
+    console.error('Server error:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 
 
 
