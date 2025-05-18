@@ -90,6 +90,7 @@ useEffect(() => {
           <Route path="*" element={<Navigate to="/" />} />
           <Route path="/success" element={<StripeSuccessPage />} />
           <Route path="/failure" element={<StripeFailurePage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
         </Routes>
       </div>
     );
@@ -111,7 +112,7 @@ useEffect(() => {
         <Route path="/failure" element={<StripeFailurePage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/notifications" element={<NotificationPage />} />
-        <Route path="/reset-password" element={<ResetPasswordPage />} />
+       
       </Routes>
     </MainLayout>
   );
