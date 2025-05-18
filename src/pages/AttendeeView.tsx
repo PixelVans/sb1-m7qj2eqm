@@ -224,7 +224,7 @@ export default function AttendeeView() {
           const { error: notifError } = await supabase.from('notifications').insert([
             {
               user_id: event.dj_id,
-              title: `"${songTitle.trim()}" by ${artist.trim()} has been requested`,
+              title: `"${songTitle.trim()}"  by  ${artist.trim()}`,
               message: `A new song "${songTitle.trim()}" by ${artist.trim()} has been requested by one of your attendees for your "${event.name}" event.`,
               read: false,
             },
