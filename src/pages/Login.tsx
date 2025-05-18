@@ -55,7 +55,7 @@ export default function Login() {
         toast.success('Account created successfully!', {
           description: 'Please select your plan to continue.',
         });
-
+        setPlan(null);
         navigate('/pricing');
       }
     } catch (error: any) {
