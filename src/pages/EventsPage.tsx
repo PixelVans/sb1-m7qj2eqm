@@ -236,17 +236,7 @@ export default function EventsPage() {
           <p className="text-gray-400 mt-1">Manage your events and track song requests</p>
         </div>
         <div className="flex gap-2">
-          <Button
-            variant="outline"
-            onClick={() => setViewMode(viewMode === 'grid' ? 'calendar' : 'grid')}
-            className="relative group"
-          >
-            {viewMode === 'grid' ? (
-              <CalendarIcon className="h-4 w-4" />
-            ) : (
-              <LayoutGrid className="h-4 w-4" />
-            )}
-          </Button>
+          
           <Button 
             onClick={handleNewEvent}
             className="bg-purple-600 hover:bg-purple-700"

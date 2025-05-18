@@ -25,7 +25,7 @@ type SongRequest = Database['public']['Tables']['song_requests']['Row'];
 
 const MAX_TITLE_LENGTH = 100;
 const MAX_ARTIST_LENGTH = 100;
-const VOTE_DEBOUNCE_MS = 500;
+const VOTE_DEBOUNCE_MS = 200;
 
 export default function AttendeeView() {
   const { eventId } = useParams();
@@ -217,7 +217,7 @@ export default function AttendeeView() {
             title: songTitle.trim(),
             artist: artist.trim(),
             song_link: songLink.trim() || null,
-            votes: 1,
+            votes: 0,
           }]);
         // Send notification to DJ
         if (event?.dj_id) {

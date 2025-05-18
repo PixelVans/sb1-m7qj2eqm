@@ -157,7 +157,7 @@ export function MainLayout({ children }: MainLayoutProps) {
               </button>
               {notifOpen && (
                 <div className="absolute right-0 mt-2 w-80 bg-[#1a1a1a] text-popover-foreground border border-border 
-                rounded-xl shadow-purple-300 shadow-sm  z-50 ">
+                rounded-xl shadow-purple-400 shadow-sm  z-50 ">
                   <div className="p-4 border-b border-border font-semibold">Notifications</div>
                   <ul className="max-h-72 overflow-y-auto">
                     {notifications.length === 0 ? (
@@ -173,7 +173,8 @@ export function MainLayout({ children }: MainLayoutProps) {
                             }}
                             className="block px-4 mx-4 rounded-md py-3 hover:bg-accent transition"
                           >
-                            <div className="text-sm font-medium">{notif.title}</div>
+                            <div className="text-sm text-yellow-300 font-medium">New Song Request</div>
+                            <div className="text-sm">{notif.title}</div>
                             <div className="text-xs text-muted-foreground">{formatTime(notif.created_at)}</div>
                           </Link>
                         </li>
