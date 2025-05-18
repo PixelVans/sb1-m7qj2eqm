@@ -5,9 +5,9 @@ import {
   LayoutDashboardIcon, CalendarDaysIcon, SettingsIcon,
   RocketIcon, SparklesIcon, HeadsetIcon
 } from 'lucide-react';
-import { getAssetUrl, getLogoUrl } from '@/lib/utils';
+import {  getLogoUrl } from '@/lib/utils';
 import { useSettings } from '@/lib/store';
-import dj from '../assets/q-min.png'
+
 interface SidebarProps {
   subscription: any;
   onClose?: () => void;
@@ -18,7 +18,6 @@ export function Sidebar({ subscription, onClose, isMobile = false }: SidebarProp
   const location = useLocation();
   const logoUrl = getLogoUrl();
  // const dj = getAssetUrl('djr.png');
- 
 const { theme,  } = useSettings(); 
     
   const NavLink = ({ to, icon: Icon, children }: any) => {
@@ -38,7 +37,9 @@ const { theme,  } = useSettings();
       </Link>
     );
   };
-
+  if (!subscription || typeof subscription.plan !== 'string' || subscription.plan === null) {
+    return null;
+  }
   return (
     <div
         className={`w-64 ${

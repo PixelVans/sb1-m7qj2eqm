@@ -33,7 +33,7 @@ export function MainLayout({ children }: MainLayoutProps) {
   const boardtheme = getAssetUrl('boardtheme.jpg');
   const avatarUrl = user?.user_metadata?.avatar_url;
   const djName = user?.user_metadata?.dj_name || 'DJ';
-
+  console.log(subscription)
   // Fetch and subscribe to unread notifications
   useEffect(() => {
     if (!user) return;

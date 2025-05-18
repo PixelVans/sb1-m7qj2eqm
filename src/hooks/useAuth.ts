@@ -88,9 +88,7 @@ export function useAuth() {
         // Update subscription plan from user metadata
         if (newUser.user_metadata?.subscription_plan) {
           setPlan(newUser.user_metadata.subscription_plan);
-        } else {
-          setPlan('free');
-        }
+        } 
 
         resetEventsCreated();
       }

@@ -2,7 +2,7 @@ import React from 'react';
 import { useEffect } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate,useNavigate } from 'react-router-dom';
 import DJDashboard from '@/pages/DJDashboard';
 import EventsPage from '@/pages/EventsPage';
 import EventDetails from '@/pages/EventDetails';
@@ -22,11 +22,10 @@ import { supabase } from '@/lib/supabase';
 import  StripeFailurePage  from '@/pages/StripeFailurePage';
 import StripeSuccessPage from "@/pages/StripeSuccessPage"
 
-
 export default function App() {
   const { user } = useAuth();
-  const { theme } = useSettings();
-  const { setPlan, resetEventsCreated } = useSettings();
+  const { theme, subscription } = useSettings();
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Monitor initial app load performance
@@ -46,41 +45,16 @@ export default function App() {
     document.documentElement.classList.toggle('dark', theme === 'dark');
   }, [theme]);
 
-// fetch user info from Supabase and update Zustand
-  useEffect(() => {
-    if (user?.id) {
-      syncSubscription(); 
-      
-    }
-  }, [user?.id]);
 
+  // Redirect to /pricing if user is logged in but plan is not selected
+useEffect(() => {
 
-  //ensure that any changes to the subscription status  are respected even after idle or tab switch.
-  useEffect(() => {
-    const handleFocus = () => {
-      if (user?.id) {
-        syncSubscription();
-      }
-    };
-  
-    window.addEventListener('focus', handleFocus);
-    return () => window.removeEventListener('focus', handleFocus);
-  }, [user?.id]);
-
-
-  
-  async function syncSubscription() {
-    const { data, error } = await supabase.auth.getUser();
-    if (error || !data?.user) return;
-    //console.log(data?.user)
-    const latestPlan = data.user.user_metadata?.subscription_plan || 'free';
-    const currentPlan = useSettings.getState().subscription.plan;
-  
-    if (latestPlan !== currentPlan) {
-      setPlan(latestPlan); 
-      resetEventsCreated()
-    }
+  if (user && (!subscription || !subscription.plan || subscription.plan === null)) {
+    navigate('/pricing');
   }
+}, [user, subscription, navigate]);
+  
+ 
 
   //Initialize aos
   React.useEffect(() => {

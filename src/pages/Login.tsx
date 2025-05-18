@@ -31,7 +31,8 @@ export default function Login() {
 
         if (error) throw error;
 
-        const plan = data.user?.user_metadata?.subscription_plan || 'free';
+        const plan = data.user?.user_metadata?.subscription_plan || null;
+        console.log(plan)
         setPlan(plan);
         resetEventsCreated();
 

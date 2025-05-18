@@ -8,8 +8,7 @@ import type { Database } from '@/lib/supabase';
 import { useSettings } from '@/lib/store';
 import { TotalRequestsDialog } from '@/components/TotalRequestsDialog';
 import { getAssetUrl } from '@/lib/utils';
-import music from '../assets/music.png'
-import party from '../assets/party.png'
+
 
 type Event = Database['public']['Tables']['events']['Row'];
 type SongRequest = Database['public']['Tables']['song_requests']['Row'] & {
@@ -47,7 +46,6 @@ export default function DJDashboard() {
   const [requestsByEvent, setRequestsByEvent] = useState<RequestsByEvent[]>([]);
   const djName = user?.user_metadata?.dj_name || 'DJ';
   const { theme } = useSettings();
-  const soundwaveImg = getAssetUrl('soundwave.png');
   const music = getAssetUrl('music.png');
   const party = getAssetUrl('party.png');
 
@@ -65,7 +63,7 @@ export default function DJDashboard() {
       const { data: activeEvents } = await supabase
         .from('events')
         .select('id')
-        .eq('dj_id', user.id)
+        .eq('dj_id', user.id)                                                             
         .eq('active', true);
 
       // Get total requests count and breakdown by event
@@ -103,7 +101,7 @@ export default function DJDashboard() {
 
       // Get top requests only for pro users
       let topRequests: SongRequest[] = [];
-      if (subscription.plan === 'pro') {
+      if (subscription?.plan === 'pro') {
         const { data: topRequestsData } = await supabase
           .from('song_requests')
           .select(
@@ -180,15 +178,10 @@ export default function DJDashboard() {
       ${theme === 'dark' ? ' bg-gradient-to-r from-purple-500/20 to-blue-500/20  ' : 'bg-white shadow-lg  '} `}>
         
         {/* Absolute image on the right */}
-        <img
-          src={soundwaveImg}
-          alt="Soundwave"
-          className='absolute right-0 top-0 h-full object-contain pointer-events-none opacity-20 md:opacity-70 mt-10 md:mt-0'
-            
-        />
+        
        <h1 className="text-3xl md:text-3xl font-bold font- mb-2  relative z-10">
           Welcome onboard, {" "}
-          {djName.split("").map((char, index) => (
+          {djName.split("").map((char:any, index:any) => (
           <span
             key={index}
             data-aos="zoom-in"
@@ -280,7 +273,7 @@ export default function DJDashboard() {
         <div className="flex items-center gap-2 mb-6">
           <Music2 className="h-5 w-5 text-blue-300" />
           <h2 className="text-xl font-bold">Top Requests</h2>
-          {subscription.plan === 'free' && (
+          {subscription?.plan === 'free' && (
             <div className="ml-auto flex items-center gap-2">
               <Lock className="h-4 w-4 text-amber-400" />
               <span className="text-sm text-amber-400">Pro feature</span>
@@ -288,7 +281,7 @@ export default function DJDashboard() {
           )}
         </div>
 
-        {subscription.plan === 'free' ? (
+        {subscription?.plan === 'free' ? (
           <div className="relative">
             {/* Blurred preview */}
             <div className="filter blur-sm opacity-50">

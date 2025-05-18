@@ -1,20 +1,22 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
+interface SubscriptionPlan {
+  plan: 'free' | 'pro' | null;
+  eventsCreated: number;
+  expiresAt: string | null;
+}
+
 interface SettingsState {
   theme: 'dark' | 'light';
   showVoteCount: boolean;
   requestLimit: number;
-  subscription: {
-    plan: 'free' | 'pro';
-    eventsCreated: number;
-    expiresAt: string | null; // ISO timestamp
-  };
+  subscription: SubscriptionPlan | null;
   setTheme: (theme: 'dark' | 'light') => void;
   setShowVoteCount: (show: boolean) => void;
   setRequestLimit: (limit: number) => void;
   incrementEventsCreated: () => void;
-  setPlan: (plan: 'free' | 'pro', expiresAt?: string | null) => void;
+  setPlan: (plan: 'free' | 'pro' | null, expiresAt?: string | null) => void;
   resetEventsCreated: () => void;
   canCreateEvent: () => boolean;
   checkAndExpirePlan: () => void;
@@ -26,64 +28,68 @@ export const useSettings = create<SettingsState>()(
       theme: 'dark',
       showVoteCount: true,
       requestLimit: 3,
-      subscription: {
-        plan: 'free',
-        eventsCreated: 0,
-        expiresAt: null,
-      },
+      subscription: null, 
+
       setTheme: (theme) => set({ theme }),
       setShowVoteCount: (showVoteCount) => set({ showVoteCount }),
       setRequestLimit: (requestLimit) => set({ requestLimit }),
-      incrementEventsCreated: () =>
-        set((state) => ({
-          subscription: {
-            ...state.subscription,
-            eventsCreated: state.subscription.eventsCreated + 1,
-          },
-        })),
+
+      incrementEventsCreated: () => {
+        const { subscription } = get();
+        if (subscription) {
+          set({
+            subscription: {
+              ...subscription,
+              eventsCreated: subscription.eventsCreated + 1,
+            },
+          });
+        }
+      },
+
       setPlan: (plan, expiresAt = null) =>
-        set((state) => ({
+        set(() => ({
           subscription: {
-            ...state.subscription,
             plan,
+            eventsCreated: 0,
             expiresAt,
-            eventsCreated: 0,
           },
         })),
-      resetEventsCreated: () =>
-        set((state) => ({
-          subscription: {
-            ...state.subscription,
-            eventsCreated: 0,
-          },
-        })),
+
+      resetEventsCreated: () => {
+        const { subscription } = get();
+        if (subscription) {
+          set({
+            subscription: {
+              ...subscription,
+              eventsCreated: 0,
+            },
+          });
+        }
+      },
+
       canCreateEvent: () => {
-        const state = get();
-        if (state.subscription.plan === 'free') {
-          return state.subscription.eventsCreated < 1;
+        const { subscription } = get();
+        if (!subscription) return false;
+        if (subscription.plan === 'free') {
+          return subscription.eventsCreated < 1;
         }
         return true;
       },
+
       checkAndExpirePlan: () => {
-        const state = get();
-        const now = new Date();
-        const expires = state.subscription.expiresAt
-          ? new Date(state.subscription.expiresAt)
-          : null;
-
+        const { subscription } = get();
         if (
-          state.subscription.plan === 'pro' &&
-          expires &&
-          now > expires
+          subscription &&
+          subscription.plan === 'pro' &&
+          subscription.expiresAt
         ) {
-          set({
-            subscription: {
-              plan: 'free',
-              eventsCreated: 0,
-              expiresAt: null,
-            },
-          });
-
+          const now = new Date();
+          const expires = new Date(subscription.expiresAt);
+          if (now > expires) {
+            set({
+              subscription: null,
+            });
+          }
         }
       },
     }),

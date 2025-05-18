@@ -136,10 +136,6 @@ const handleSelectPlan = async (plan: 'free' | 'pro') => {
 
 
 
-
-
-
-
   return (
     <div className="max-w-5xl mx-auto space-y-8">
       {showConfetti && <Confetti />}
@@ -258,10 +254,10 @@ const handleSelectPlan = async (plan: 'free' | 'pro') => {
                     ? 'bg-primary hover:bg-primary/90 gap-2'
                     : 'gap-2'
                 }`}
-                disabled={loading || (!isNewUser && plan.plan === subscription.plan)}
+                disabled={loading || (!isNewUser && plan.plan === subscription?.plan)}
               >
                 {plan.plan === 'pro' && <CreditCard className="h-4 w-4" />}
-                {!isNewUser && plan.plan === subscription.plan 
+                {!isNewUser && plan.plan === subscription?.plan 
                   ? 'Current Plan' 
                   : loading 
                     ? 'Processing...' 
