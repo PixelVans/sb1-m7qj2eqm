@@ -49,7 +49,7 @@ export default function App() {
   // Redirect to /pricing if user is logged in but plan is not selected
 useEffect(() => {
 
-  if (user && (!subscription || !subscription.plan || subscription.plan === null)) {
+  if (user && (!subscription || !subscription.plan || subscription.plan === null )) {
     navigate('/pricing');
   }
 }, [user, subscription, navigate]);

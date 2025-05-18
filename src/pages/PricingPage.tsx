@@ -58,7 +58,7 @@ export default function PricingPage() {
   const [loading, setLoading] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
 
-  const isNewUser = user?.user_metadata?.subscription_plan === undefined;
+  const isNewUser = user?.user_metadata?.subscription_plan === null;
 
   
 //define stripe publishable key
