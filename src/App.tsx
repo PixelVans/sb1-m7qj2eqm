@@ -13,6 +13,7 @@ import Login from '@/pages/Login';
 import LandingPage from '@/pages/LandingPage';
 import ContactPage from './pages/ContactPage';
 import NotificationPage from './pages/NotificationsPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 import { useAuth } from '@/hooks/useAuth';
 import { useSettings } from '@/lib/store';
 import { performanceMonitor } from '@/lib/performance-monitor';
@@ -110,6 +111,7 @@ useEffect(() => {
         <Route path="/failure" element={<StripeFailurePage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/notifications" element={<NotificationPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
       </Routes>
     </MainLayout>
   );

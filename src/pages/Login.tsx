@@ -17,6 +17,11 @@ export default function Login() {
   const { setPlan, resetEventsCreated } = useSettings();
   const navigate = useNavigate();
 
+  const [showResetModal, setShowResetModal] = useState(false);
+  const [resetEmail, setResetEmail] = useState('');
+  const [resetLoading, setResetLoading] = useState(false);
+  const [resetMessage, setResetMessage] = useState('');
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
@@ -32,13 +37,9 @@ export default function Login() {
         if (error) throw error;
 
         const plan = data.user?.user_metadata?.subscription_plan || null;
-        console.log(plan)
         setPlan(plan);
         resetEventsCreated();
-
-        
         navigate('/dashboard');
-        
       } else {
         const { error: signUpError } = await supabase.auth.signUp({
           email,
@@ -61,7 +62,6 @@ export default function Login() {
     } catch (error: any) {
       logger.error('Authentication error:', { error });
 
-      // Handle network errors specifically
       if (error.message === 'Failed to fetch') {
         setError('Unable to connect to authentication service. Please check your internet connection and try again.');
       } else if (error.message?.includes('network')) {
@@ -73,8 +73,7 @@ export default function Login() {
       setLoading(false);
     }
   }
-  
-    // Handle sign up with Apple
+
   const handleAppleSignIn = async () => {
     try {
       setLoading(true);
@@ -95,7 +94,6 @@ export default function Login() {
     } catch (error: any) {
       logger.error('Apple Sign In error:', { error });
 
-        // Handle network errors specifically
       if (error.message === 'Failed to fetch') {
         setError('Unable to connect to Apple authentication service. Please check your internet connection and try again.');
       } else if (error.message?.includes('network')) {
@@ -106,6 +104,26 @@ export default function Login() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handlePasswordReset = async () => {
+    setResetLoading(true);
+    setResetMessage('');
+
+    const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+
+    if (error) {
+      setResetMessage(error.message || 'Failed to send reset email.');
+    } else {
+      toast.success('Password reset link sent', {
+        description: 'Check your inbox to reset your password.',
+      });
+      setResetMessage('A password reset link has been sent to your email.');
+    }
+
+    setResetLoading(false);
   };
 
   return (
@@ -174,6 +192,18 @@ export default function Login() {
               />
             </div>
 
+            {isLogin && (
+              <div className="text-righ text-center">
+                <button
+                  type="button"
+                  onClick={() => setShowResetModal(true)}
+                  className="text-sm text-purple-400 hover:text-purple-300"
+                >
+                  Forgot password?
+                </button>
+              </div>
+            )}
+
             <Button
               type="submit"
               className="w-full bg-purple-600 hover:bg-purple-700"
@@ -218,6 +248,44 @@ export default function Login() {
           </form>
         </div>
       </div>
+
+      {/* Reset Password Modal */}
+      {showResetModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-[12px]">
+           <div className="bg-[#1f1f1f] border border-white/10 rounded-xl p-6 w-full max-w-sm shadow-lg">
+            <h2 className="text-lg font-semibold text-white mb-4">Reset Password</h2>
+            <p className="text-sm text-gray-400 mb-4">
+              Enter your email to receive a password reset link.
+            </p>
+            <input
+              type="email"
+              placeholder="Your email"
+              value={resetEmail}
+              onChange={(e) => setResetEmail(e.target.value)}
+              className="w-full px-3 py-2 rounded-md bg-white/10 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-purple-500 placeholder-gray-400 text-sm mb-4"
+            />
+            {resetMessage && (
+              <p className="text-sm mb-2  text-center text-yellow-300">{resetMessage}</p>
+            )}
+            <div className="flex justify-end space-x-2 mt-4">
+              <Button
+                onClick={() => setShowResetModal(false)}
+                variant="ghost"
+                className="text-gray-300 hover:text-white"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handlePasswordReset}
+                disabled={resetLoading}
+                className="bg-purple-600 hover:bg-purple-700 text-white"
+              >
+                {resetLoading ? 'Sending...' : 'Send Link'}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
