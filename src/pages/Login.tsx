@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Music2Icon, AlertCircle } from 'lucide-react';
+import { Music2Icon, AlertCircle, LinkIcon, KeyIcon } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { Button } from '@/components/ui/button';
 import { useSettings } from '@/lib/store';
 import { toast } from 'sonner';
 import { logger } from '@/lib/logger';
+
 
 export default function Login() {
   const [isLogin, setIsLogin] = useState(true);
@@ -16,7 +17,7 @@ export default function Login() {
   const [error, setError] = useState<string | null>(null);
   const { setPlan, resetEventsCreated } = useSettings();
   const navigate = useNavigate();
-
+ 
   const [showResetModal, setShowResetModal] = useState(false);
   const [resetEmail, setResetEmail] = useState('');
   const [resetLoading, setResetLoading] = useState(false);
@@ -147,16 +148,16 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-[#121212] flex flex-col justify-center">
+    <div className="min-h-screen bg-[#121212] flex flex-col justify-center lg:py-5">
       <div className="mx-auto w-full max-w-md">
-        <div className="flex flex-col items-center mb-8">
+        <div className="flex flex-col items-center mb-4">
         
           <Music2Icon className="h-12 w-12 text-purple-500 mb-4" />
           <h1 className="text-3xl font-bold text-white">Hey DJ</h1>
           <p className="text-gray-400 mt-2">Your party, your playlist</p>
         </div>
 
-        <div className="bg-white/5 backdrop-blur-lg rounded-lg px-8 py-12 shadow-xl">
+        <div className="bg-white/5 backdrop-blur-lg rounded-lg px-8 py-9 shadow-xl">
           <h2 className="text-center text-2xl font-bold tracking-tight text-white mb-8">
             {isLogin ? 'Sign in to your account' : 'Create your account'}
           </h2>
@@ -272,23 +273,29 @@ export default function Login() {
 
       {/* Reset Password Modal */}
       {showResetModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-[12px]">
-           <div className="bg-[#1f1f1f] border border-white/10 rounded-xl p-6 w-full max-w-sm shadow-lg">
-            <h2 className="text-lg font-semibold text-white mb-4">Reset Password</h2>
-            <p className="text-sm text-gray-400 mb-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm ">
+          <div className="bg-[#1f1f1f] border border-white/10 rounded-xl p-6 mx-4 sm:mx-0 w-full max-w-sm md:max-w-md shadow-sm shadow-purple-400">
+            
+            <h2 className="text-2xl md:text-[29px] font-semibold text-white mb-4 text-center mt-2">Reset Your Password</h2>
+            <div className="text-center mb-3">
+              <KeyIcon className="h-7 w-7 text-purple-500 mx-auto" /></div>
+
+  
+            <p className="text-sm md:text-md text-gray-400 mb-4 text-center">
               Enter your email to receive a password reset link.
             </p>
             <input
               type="email"
-              placeholder="Your email"
+              placeholder="Enter Your Account email"
               value={resetEmail}
               onChange={(e) => setResetEmail(e.target.value)}
-              className="w-full px-3 py-2 rounded-md bg-white/10 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-purple-500 placeholder-gray-400 text-sm mb-4"
+              className="w-full px-3 py-2 rounded-md bg-white/10 text-white border border-white/20 focus:outline-none focus:ring-2
+               focus:ring-purple-500 placeholder-gray-400 text-sm mb-4 mt-2"
             />
             {resetMessage && (
               <p className="text-sm mb-2  text-center text-yellow-300">{resetMessage}</p>
             )}
-            <div className="flex justify-end space-x-2 mt-4">
+            <div className="flex justify-end space-x-2 mt-9">
               <Button
                 onClick={() => setShowResetModal(false)}
                 variant="ghost"
@@ -297,12 +304,13 @@ export default function Login() {
                 Cancel
               </Button>
               <Button
-                onClick={handlePasswordReset}
-                disabled={resetLoading}
-                className="bg-purple-600 hover:bg-purple-700 text-white"
-              >
-                {resetLoading ? 'Sending...' : 'Send Link'}
-              </Button>
+              onClick={handlePasswordReset}
+              disabled={resetLoading}
+              className="bg-purple-800 hover:bg-purple-900 text-white flex items-center gap-2"
+            >
+              <LinkIcon className="h-4 w-4 text-white" />
+              {resetLoading ? 'Sending...' : 'Request Link'}
+            </Button>
             </div>
           </div>
         </div>
