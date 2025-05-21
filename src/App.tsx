@@ -91,7 +91,7 @@ useEffect(() => {
           <Route path="*" element={<Navigate to="/" />} />
           <Route path="/success" element={<StripeSuccessPage />} />
           <Route path="/failure" element={<StripeFailurePage />} />
-         
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
         </Routes>
       </div>
     );
@@ -104,7 +104,8 @@ useEffect(() => {
     <Routes>
     {/*Routes outside of MainLayout */}
     <Route path="/reset-password" element={<ResetPasswordPage />} />
-  
+      <Route path="/success" element={<StripeSuccessPage />} />
+      <Route path="/failure" element={<StripeFailurePage />} />
     {/*Routes inside MainLayout */}
     <Route
       path="*"
@@ -117,8 +118,6 @@ useEffect(() => {
             <Route path="/events/:eventId" element={<EventDetails />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/pricing" element={<PricingPage />} />
-            <Route path="/success" element={<StripeSuccessPage />} />
-            <Route path="/failure" element={<StripeFailurePage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/notifications" element={<NotificationPage />} />
           </Routes>

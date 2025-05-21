@@ -42,7 +42,7 @@ export default function StripeSuccessPage() {
   }, [setPlan, resetEventsCreated]);
 
   return (
-    <div className="flex items-center justify-center px-4">
+    <div className="flex items-center justify-center px-4 mt-20">
       {showConfetti && <Confetti />}
       <div className="bg-white/5 backdrop-blur-lg rounded-2xl shadow-2xl p-10 max-w-xl text-center space-y-6 border border-white/10">
         <CheckCircle2Icon className="h-20 w-20 text-green-400 mx-auto" />
