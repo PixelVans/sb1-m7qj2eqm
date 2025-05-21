@@ -5,7 +5,7 @@ import { QrCode, BarChart2, Zap, Check, ArrowRight, Star, Users, Sparkles } from
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/lib/supabase';
 import { getAssetUrl, getLogoUrl } from '@/lib/utils';
-import dj from '../assets/djr.png'
+import logoUrl from '../assets/djr.png'
 const features = [
   {
     icon: QrCode,
@@ -99,7 +99,7 @@ export default function LandingPage() {
           <div className="relative w-full max-w-sm mx-auto mb-2 md:mb-8">
             <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-purple-600/20 rounded-full filter blur-3xl"></div>
             <img
-              src={logoUrl}
+              src="/logo.png"
               alt="DJ Platform"
               className="relative w-4/5 h-auto rounded-lg shadow-xl mx-auto"
             />
