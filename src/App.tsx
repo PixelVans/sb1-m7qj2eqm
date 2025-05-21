@@ -27,7 +27,7 @@ export default function App() {
   const { user } = useAuth();
   const { theme, subscription } = useSettings();
   const navigate = useNavigate();
-
+  const isResetPassword = window.location.pathname === '/reset-password';
   useEffect(() => {
     // Monitor initial app load performance
     performanceMonitor.mark('app-init');
@@ -90,12 +90,20 @@ useEffect(() => {
           <Route path="*" element={<Navigate to="/" />} />
           <Route path="/success" element={<StripeSuccessPage />} />
           <Route path="/failure" element={<StripeFailurePage />} />
-          <Route path="/reset-password" element={<ResetPasswordPage />} />
         </Routes>
       </div>
     );
   }
 
+  if (isResetPassword) {
+    return (
+      <div className={theme === 'dark' ? 'dark' : ''}>
+        <Routes>
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+        </Routes>
+      </div>
+    );
+  }
 
   // Protected routes
   return (
