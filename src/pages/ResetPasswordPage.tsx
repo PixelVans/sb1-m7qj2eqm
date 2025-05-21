@@ -12,6 +12,7 @@ export default function ResetPasswordPage() {
   const [errorMsg, setErrorMsg] = useState('');
   const { theme } = useSettings();
   const isDark = theme === 'dark';
+  const [countdown, setCountdown] = useState(3);
 
   useEffect(() => {
     supabase.auth.getSession();
@@ -61,11 +62,18 @@ export default function ResetPasswordPage() {
     ]);
   
     setSuccess(true);
+
+    let timeLeft = 3;
+    const interval = setInterval(() => {
+      timeLeft -= 1;
+      setCountdown(timeLeft);
+    }, 1000);
   
-    // Wait 2 seconds then redirect to dashboard
+    // Redirect after 3 seconds
     setTimeout(() => {
+      clearInterval(interval);
       window.location.href = '/dashboard';
-    }, 2000);
+    }, 3000);
   
     setLoading(false);
   };
@@ -113,6 +121,9 @@ export default function ResetPasswordPage() {
           {success && (
             <div className="flex items-center gap-2 text-green-600 text-sm mt-1">
               <CheckCircle2Icon className="w-4 h-4" /> Password has been updated!
+              <div className="mt-1 text-xs text-yellow-500">
+              Redirecting to your dashboard in {countdown}...
+            </div>
             </div>
           )}
 

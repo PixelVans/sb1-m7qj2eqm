@@ -10,6 +10,8 @@ import { toast } from 'sonner';
 export default function StripeSuccessPage() {
   const [showConfetti, setShowConfetti] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [countdown, setCountdown] = useState(3);
+
   const { setPlan, resetEventsCreated } = useSettings();
 
   useEffect(() => {
@@ -25,16 +27,24 @@ export default function StripeSuccessPage() {
         const plan = data.user.user_metadata?.subscription_plan || 'free';
         setPlan(plan);
         resetEventsCreated();
-
-        // Show confetti after successful update
-        
-        
-        
       } catch (err) {
         toast.error('Could not update subscription. Try logging out and in again.');
       } finally {
         setLoading(false);
         setShowConfetti(true);
+
+        // Countdown + redirect
+        let timeLeft = 3;
+        setCountdown(timeLeft);
+        const interval = setInterval(() => {
+          timeLeft -= 1;
+          setCountdown(timeLeft);
+        }, 1000);
+
+        setTimeout(() => {
+          clearInterval(interval);
+          window.location.href = '/dashboard';
+        }, 3000);
       }
     };
 
@@ -56,25 +66,32 @@ export default function StripeSuccessPage() {
         {loading ? (
           <div className="flex justify-center items-center space-x-2 text-white">
             <Loader2 className="animate-spin h-5 w-5" />
-            <span className='text-yellow-300'>Updating your account...</span>
+            <span className="text-yellow-300">Updating your account...</span>
           </div>
         ) : (
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/dashboard">
-              <Button className="w-full bg-purple-600 hover:bg-purple-700">
-                Go to Dashboard
-                <ArrowRightIcon className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
-            <Link to="/contact">
-              <Button
-                variant="outline"
-                className="w-full border-white/20 text-white hover:bg-white/10"
-              >
-                Need Help?
-              </Button>
-            </Link>
-          </div>
+          <>
+            {/* 👇 Countdown Message */}
+            <p className="text-sm text-yellow-300">
+              Redirecting to dashboard in {countdown}...
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mt-4">
+              <Link to="/dashboard">
+                <Button className="w-full bg-purple-600 hover:bg-purple-700">
+                  Go to Dashboard
+                  <ArrowRightIcon className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+              <Link to="/contact">
+                <Button
+                  variant="outline"
+                  className="w-full border-white/20 text-white hover:bg-white/10"
+                >
+                  Need Help?
+                </Button>
+              </Link>
+            </div>
+          </>
         )}
       </div>
     </div>
