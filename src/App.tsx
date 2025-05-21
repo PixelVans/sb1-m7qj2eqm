@@ -19,7 +19,7 @@ import { useSettings } from '@/lib/store';
 import { performanceMonitor } from '@/lib/performance-monitor';
 import { logger } from '@/lib/logger';
 import { MainLayout } from '@/layouts/MainLayout';
-import { useLocation } from 'react-router-dom';
+
 import  StripeFailurePage  from '@/pages/StripeFailurePage';
 import StripeSuccessPage from "@/pages/StripeSuccessPage"
 
@@ -27,8 +27,7 @@ export default function App() {
   const { user } = useAuth();
   const { theme, subscription } = useSettings();
   const navigate = useNavigate();
-  const location = useLocation();
-  const isResetPassword = location.pathname.startsWith('/reset-password');
+
   
   useEffect(() => {
     // Monitor initial app load performance
@@ -92,36 +91,40 @@ useEffect(() => {
           <Route path="*" element={<Navigate to="/" />} />
           <Route path="/success" element={<StripeSuccessPage />} />
           <Route path="/failure" element={<StripeFailurePage />} />
+         
         </Routes>
       </div>
     );
   }
 
-  if (isResetPassword) {
-    return (
-      <div className={theme === 'dark' ? 'dark' : ''}>
-        <Routes>
-          <Route path="/reset-password" element={<ResetPasswordPage />} />
-        </Routes>
-      </div>
-    );
-  }
+
 
   // Protected routes
   return (
-    <MainLayout>
-      <Routes>
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
-        <Route path="/dashboard" element={<DJDashboard />} />
-        <Route path="/events" element={<EventsPage />} />
-        <Route path="/events/:eventId" element={<EventDetails />} />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/pricing" element={<PricingPage />} />
-        <Route path="/success" element={<StripeSuccessPage />} />
-        <Route path="/failure" element={<StripeFailurePage />} />
-        <Route path="/contact" element={<ContactPage />} />
-        <Route path="/notifications" element={<NotificationPage />} />
-      </Routes>
-    </MainLayout>
+    <Routes>
+    {/*Routes outside of MainLayout */}
+    <Route path="/reset-password" element={<ResetPasswordPage />} />
+  
+    {/*Routes inside MainLayout */}
+    <Route
+      path="*"
+      element={
+        <MainLayout>
+          <Routes>
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/dashboard" element={<DJDashboard />} />
+            <Route path="/events" element={<EventsPage />} />
+            <Route path="/events/:eventId" element={<EventDetails />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/pricing" element={<PricingPage />} />
+            <Route path="/success" element={<StripeSuccessPage />} />
+            <Route path="/failure" element={<StripeFailurePage />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/notifications" element={<NotificationPage />} />
+          </Routes>
+        </MainLayout>
+      }
+    />
+  </Routes>
   );
 }
