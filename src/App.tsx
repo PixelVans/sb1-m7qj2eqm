@@ -19,7 +19,7 @@ import { useSettings } from '@/lib/store';
 import { performanceMonitor } from '@/lib/performance-monitor';
 import { logger } from '@/lib/logger';
 import { MainLayout } from '@/layouts/MainLayout';
-
+import { useLocation } from 'react-router-dom';
 import  StripeFailurePage  from '@/pages/StripeFailurePage';
 import StripeSuccessPage from "@/pages/StripeSuccessPage"
 
@@ -27,7 +27,9 @@ export default function App() {
   const { user } = useAuth();
   const { theme, subscription } = useSettings();
   const navigate = useNavigate();
-  const isResetPassword = window.location.pathname === '/reset-password';
+  const location = useLocation();
+  const isResetPassword = location.pathname.startsWith('/reset-password');
+  
   useEffect(() => {
     // Monitor initial app load performance
     performanceMonitor.mark('app-init');
