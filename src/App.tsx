@@ -19,7 +19,7 @@ import { useSettings } from '@/lib/store';
 import { performanceMonitor } from '@/lib/performance-monitor';
 import { logger } from '@/lib/logger';
 import { MainLayout } from '@/layouts/MainLayout';
-import { supabase } from '@/lib/supabase';
+
 import  StripeFailurePage  from '@/pages/StripeFailurePage';
 import StripeSuccessPage from "@/pages/StripeSuccessPage"
 
