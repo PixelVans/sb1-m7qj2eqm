@@ -111,7 +111,6 @@ useEffect(() => {
         <Route path="/failure" element={<StripeFailurePage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/notifications" element={<NotificationPage />} />
-        <Route path="/reset-password" element={<ResetPasswordPage />} />
       </Routes>
     </MainLayout>
   );

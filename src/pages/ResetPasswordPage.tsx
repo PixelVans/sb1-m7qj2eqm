@@ -23,23 +23,53 @@ export default function ResetPasswordPage() {
       setErrorMsg("Passwords don't match.");
       return;
     }
-
+  
     if (password.length < 6) {
       setErrorMsg('Password must be at least 6 characters long.');
       return;
     }
-
+  
     setLoading(true);
+  
+    const {
+      data: { user },
+      error: sessionError,
+    } = await supabase.auth.getUser();
+  
+    if (!user || sessionError) {
+      setErrorMsg('User session not found. Please try again.');
+      setLoading(false);
+      return;
+    }
+  
     const { error } = await supabase.auth.updateUser({ password });
-
+  
     if (error) {
       setErrorMsg(error.message);
-    } else {
-      setSuccess(true);
+      setLoading(false);
+      return;
     }
-
+  
+    // Insert notification
+    await supabase.from('notifications').insert([
+      {
+        user_id: user.id,
+        title: 'Password Reset Successful',
+        message: "Your account password was changed. If this wasn't you, please contact support immediately.",
+        read: false,
+      },
+    ]);
+  
+    setSuccess(true);
+  
+    // Wait 2 seconds then redirect to dashboard
+    setTimeout(() => {
+      window.location.href = '/dashboard';
+    }, 2000);
+  
     setLoading(false);
   };
+  
 
   return (
     <div className="flex items-center justify-center  px-4 mt-20">
