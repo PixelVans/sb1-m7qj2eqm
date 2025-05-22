@@ -36,7 +36,11 @@ export function useAuth() {
         setUser(session?.user ?? null);
 
         if (session?.user?.user_metadata?.subscription_plan) {
-          setPlan(session.user.user_metadata.subscription_plan);
+          const plan = session.user.user_metadata.subscription_plan;
+          const expiresAt = session.user.user_metadata.subscription_expires;
+          const isExpired = expiresAt ? new Date() > new Date(expiresAt) : false;
+        
+          setPlan(plan, expiresAt, isExpired);
         }
 
         logger.info('Session check completed successfully');
@@ -68,8 +72,8 @@ export function useAuth() {
               }
             });
 
-            // Redirect to pricing page for new users
-            navigate('/pricing');
+            // Redirect to start-free-trial page for new users
+            navigate('/start-free-trial');
           } catch (error) {
             logger.error('Error updating user after Apple sign-in:', { error });
             toast.error('Failed to complete sign-in process');
@@ -87,8 +91,12 @@ export function useAuth() {
 
         // Update subscription plan from user metadata
         if (newUser.user_metadata?.subscription_plan) {
-          setPlan(newUser.user_metadata.subscription_plan);
-        } 
+          const plan = newUser.user_metadata.subscription_plan;
+          const expiresAt = newUser.user_metadata.subscription_expires;
+          const isExpired = expiresAt ? new Date() > new Date(expiresAt) : false;
+        
+          setPlan(plan, expiresAt, isExpired);
+        }
 
         resetEventsCreated();
       }
@@ -102,7 +110,6 @@ export function useAuth() {
       // Handle sign out
       if (event === 'SIGNED_OUT') {
         setUser(null);
-        setPlan('free');
         resetEventsCreated();
         sessionStorage.removeItem('hasWelcomed'); // Clear welcome flag on logout
         navigate('/');

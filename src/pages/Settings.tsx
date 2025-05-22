@@ -12,7 +12,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from '@/components/ui/dialog';
-import { toast } from 'sonner';
+
 
 export default function Settings() {
   const {
@@ -32,10 +32,10 @@ export default function Settings() {
   const [showDowngradeConfirm, setShowDowngradeConfirm] = useState(false);
 
   const handleDowngrade = () => {
-    setPlan('free');
-    resetEventsCreated();
-    setShowDowngradeConfirm(false);
-    toast.success('Successfully downgraded to free plan');
+    // setPlan(null);
+    // resetEventsCreated();
+    // setShowDowngradeConfirm(false);
+    // toast.success('Successfully unsubscribed from pro plan');
   };
 
   const bgClass = isDark ? 'bg-white/5' : 'bg-gray-100';
@@ -116,7 +116,7 @@ export default function Settings() {
       </div>
 
       {/* Plan Management */}
-      {subscription.plan === 'pro' && (
+      {subscription?.plan === 'pro' && (
         <div className={`${bgClass} rounded-lg p-6`}>
           <h2 className={`text-xl font-bold mb-6 ${textPrimary}`}>Plan Management</h2>
           <div className="space-y-4">

@@ -8,7 +8,6 @@ import EventsPage from '@/pages/EventsPage';
 import EventDetails from '@/pages/EventDetails';
 import AttendeeView from '@/pages/AttendeeView';
 import Settings from '@/pages/Settings';
-import PricingPage from '@/pages/PricingPage';
 import Login from '@/pages/Login';
 import LandingPage from '@/pages/LandingPage';
 import ContactPage from './pages/ContactPage';
@@ -19,16 +18,41 @@ import { useSettings } from '@/lib/store';
 import { performanceMonitor } from '@/lib/performance-monitor';
 import { logger } from '@/lib/logger';
 import { MainLayout } from '@/layouts/MainLayout';
-
 import  StripeFailurePage  from '@/pages/StripeFailurePage';
 import StripeSuccessPage from "@/pages/StripeSuccessPage"
+import UpgradePlanPage from './pages/UpgradePlanPage.tsx';
+import FreeTrialPage from './pages/FreeTrialPage.tsx';
+import { supabase } from './lib/supabase.ts';
 
 export default function App() {
   const { user } = useAuth();
   const { theme, subscription } = useSettings();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const checkSubscription = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      const metadata = user?.user_metadata;
+      
+      if (!metadata) return;
   
+      const plan = metadata.subscription_plan as 'trial' | 'pro' | null;
+      const expiresAt = metadata.subscription_expires;
+  
+      if (plan && expiresAt) {
+        const now = new Date();
+        const expires = new Date(expiresAt);
+        const isExpired = now > expires;
+  
+        // Update Zustand store accordingly — keep plan, set expired flag inside subscription
+        useSettings.getState().setPlan(plan, expiresAt, isExpired);
+      }
+    };
+  
+    checkSubscription();
+  }, []);
+  
+
   useEffect(() => {
     // Monitor initial app load performance
     performanceMonitor.mark('app-init');
@@ -52,11 +76,17 @@ export default function App() {
 useEffect(() => {
 
   if (user && (!subscription || !subscription.plan || subscription.plan === null )) {
-    navigate('/pricing');
+    navigate('/start-free-trial');
   }
 }, [user, subscription, navigate]);
   
- 
+  // Redirect to /upgrade if user is logged in but plan is expired  
+  useEffect(() => {
+    if (user && subscription?.expired) {
+      navigate('/upgrade-plan');
+    }
+  }, [subscription, navigate]);
+  
 
   //Initialize aos
   React.useEffect(() => {
@@ -92,7 +122,7 @@ useEffect(() => {
           <Route path="/success" element={<StripeSuccessPage />} />
           <Route path="/failure" element={<StripeFailurePage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
-        </Routes>
+          </Routes>
       </div>
     );
   }
@@ -106,6 +136,8 @@ useEffect(() => {
     <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route path="/success" element={<StripeSuccessPage />} />
       <Route path="/failure" element={<StripeFailurePage />} />
+      <Route path="/start-free-trial" element={<FreeTrialPage />} />
+      <Route path="/upgrade-plan" element={<UpgradePlanPage />} />
     {/*Routes inside MainLayout */}
     <Route
       path="*"
@@ -117,7 +149,6 @@ useEffect(() => {
             <Route path="/events" element={<EventsPage />} />
             <Route path="/events/:eventId" element={<EventDetails />} />
             <Route path="/settings" element={<Settings />} />
-            <Route path="/pricing" element={<PricingPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/notifications" element={<NotificationPage />} />
           </Routes>

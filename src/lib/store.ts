@@ -2,10 +2,12 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
 interface SubscriptionPlan {
-  plan: 'free' | 'pro' | null;
+  plan: 'trial' | 'pro' | null;
   eventsCreated: number;
   expiresAt: string | null;
+  expired: boolean;
 }
+
 
 interface SettingsState {
   theme: 'dark' | 'light';
@@ -16,7 +18,12 @@ interface SettingsState {
   setShowVoteCount: (show: boolean) => void;
   setRequestLimit: (limit: number) => void;
   incrementEventsCreated: () => void;
-  setPlan: (plan: 'free' | 'pro' | null, expiresAt?: string | null) => void;
+  setPlan: (
+    plan: 'trial' | 'pro' | null,
+    expiresAt?: string | null,
+    expired?: boolean
+  ) => void;
+
   resetEventsCreated: () => void;
   canCreateEvent: () => boolean;
   checkAndExpirePlan: () => void;
@@ -46,16 +53,17 @@ export const useSettings = create<SettingsState>()(
         }
       },
 
-      setPlan: (plan, expiresAt = null) =>
+      setPlan: (plan, expiresAt = null, expired = false) =>
         set(() => ({
           subscription: {
             plan,
             eventsCreated: 0,
             expiresAt,
+            expired,
           },
         })),
-
-      resetEventsCreated: () => {
+      
+   resetEventsCreated: () => {
         const { subscription } = get();
         if (subscription) {
           set({
@@ -70,9 +78,7 @@ export const useSettings = create<SettingsState>()(
       canCreateEvent: () => {
         const { subscription } = get();
         if (!subscription) return false;
-        if (subscription.plan === 'free') {
-          return subscription.eventsCreated < 1;
-        }
+        
         return true;
       },
 
@@ -80,18 +86,25 @@ export const useSettings = create<SettingsState>()(
         const { subscription } = get();
         if (
           subscription &&
-          subscription.plan === 'pro' &&
+          (subscription.plan === 'pro' || subscription.plan === 'trial') &&
           subscription.expiresAt
         ) {
           const now = new Date();
           const expires = new Date(subscription.expiresAt);
-          if (now > expires) {
+          const expired = now > expires;
+      
+          if (subscription.expired !== expired) {
             set({
-              subscription: null,
+              subscription: {
+                ...subscription,
+                expired,
+              },
             });
           }
         }
-      },
+      }
+      
+      ,
     }),
     {
       name: 'dj-settings',

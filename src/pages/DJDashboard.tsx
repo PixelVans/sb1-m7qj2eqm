@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CalendarDays, Music2, Lock, SparklesIcon } from 'lucide-react';
+import { CalendarDays, Music2, } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/lib/supabase';
@@ -34,7 +34,7 @@ type RequestsByEvent = {
 export default function DJDashboard() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { subscription } = useSettings();
+  
   const [stats, setStats] = useState<Stats>({
     activeEvents: 0,
     totalRequests: 0,
@@ -48,7 +48,7 @@ export default function DJDashboard() {
   const { theme } = useSettings();
   const music = getAssetUrl('music.png');
   const party = getAssetUrl('party.png');
-
+  
   useEffect(() => {
     if (user?.id) {
       loadDashboardData();
@@ -101,8 +101,7 @@ export default function DJDashboard() {
 
       // Get top requests only for pro users
       let topRequests: SongRequest[] = [];
-      if (subscription?.plan === 'pro') {
-        const { data: topRequestsData } = await supabase
+      const { data: topRequestsData } = await supabase
           .from('song_requests')
           .select(
             `
@@ -120,7 +119,7 @@ export default function DJDashboard() {
             ...request,
             event_name: request.events.name,
           })) || [];
-      }
+      
 
       setStats({
         activeEvents: activeEvents?.length || 0,
@@ -273,58 +272,7 @@ export default function DJDashboard() {
         <div className="flex items-center gap-2 mb-6">
           <Music2 className="h-5 w-5 text-blue-300" />
           <h2 className="text-xl font-bold">Top Requests</h2>
-          {subscription?.plan === 'free' && (
-            <div className="ml-auto flex items-center gap-2">
-              <Lock className="h-4 w-4 text-amber-400" />
-              <span className="text-sm text-amber-400">Pro feature</span>
-            </div>
-          )}
         </div>
-
-        {subscription?.plan === 'free' ? (
-          <div className="relative">
-            {/* Blurred preview */}
-            <div className="filter blur-sm opacity-50">
-              <div className="space-y-4">
-                {[1, 2, 3].map((index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between p-4 bg-white/5 rounded-lg"
-                  >
-                    <div className="flex items-center gap-4">
-                      <span className=" text-lg sm:text-2xl font-bold text-primary/50">
-                        #{index}
-                      </span>
-                      <div>
-                        <h3 className="font-medium text-white">
-                          Popular Song Title
-                        </h3>
-                        <div className="flex items-center gap-2 text-sm">
-                          <span className="text-gray-400">Artist Name</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Music2 className="h-4 w-4 text-blue-300" />
-                      <span className="font-medium">XX votes</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Upgrade overlay */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <Button
-                onClick={() => navigate('/pricing')}
-                className="bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-black gap-2"
-              >
-                <SparklesIcon className="h-4 w-4" />
-                Upgrade to See Top Songs
-              </Button>
-            </div>
-          </div>
-        ) : (
           <div className="space-y-4">
             {stats.topRequests.length === 0 ? (
               <p className="text-center text-gray-400 py-4">
@@ -361,7 +309,7 @@ export default function DJDashboard() {
               ))
             )}
           </div>
-        )}
+        
       </div>
 
       {/* Getting Started */}

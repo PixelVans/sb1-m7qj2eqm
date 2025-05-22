@@ -55,10 +55,10 @@ export default function Login() {
         if (signUpError) throw signUpError;
 
         toast.success('Account created successfully!', {
-          description: 'Please select your plan to continue.',
+          description: 'You can start your free trial to continue.',
         });
         setPlan(null);
-        navigate('/pricing');
+        navigate('/start-free-trial');
       }
     } catch (error: any) {
       logger.error('Authentication error:', { error });

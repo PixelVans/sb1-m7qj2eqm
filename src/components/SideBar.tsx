@@ -68,26 +68,7 @@ const { theme,  } = useSettings();
               Contact
             </NavLink>
             
-            
-           {subscription.plan === 'free' && (
-              <Link
-                to="/pricing"
-                className="mt-4 flex items-center gap-3 px-4 py-3 rounded-lg bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-black transition-all relative overflow-hidden group"
-              >
-                <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IHgxPSI4MS4yNyUiIHkxPSI4MS4yNyUiIHgyPSIwJSIgeTI9IjAlIiBpZD0iYSI+PHN0b3Agc3RvcC1jb2xvcj0iI0ZGRiIgc3RvcC1vcGFjaXR5PSIwIiBvZmZzZXQ9IjAlIi8+PHN0b3Agc3RvcC1jb2xvcj0iI0ZGRiIgc3RvcC1vcGFjaXR5PSIuMDUiIG9mZnNldD0iMTAwJSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxwYXRoIGZpbGw9InVybCgjYSkiIGQ9Ik0wIDBoMjB2MjBIMHoiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPjwvc3ZnPg==')] opacity-50"></div>
-                <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                <RocketIcon className="h-5 w-5 text-amber-900 relative z-10" />
-                <div className="flex-1 relative z-10">
-                  <span className="font-semibold block text-amber-900 mt-2">
-                    Upgrade to Pro
-                  </span>
-                  <span className="text-xs text-amber-900/80 block">
-                    Unlock unlimited events
-                  </span>
-                </div>
-                <SparklesIcon className="h-4 w-4 text-amber-900 absolute top-1 right-1 animate-[pulse_3s_ease-in-out_infinite] z-10" />
-              </Link>
-            )}
+          
           </div>
        </nav>
       </div>
