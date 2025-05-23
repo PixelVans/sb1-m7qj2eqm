@@ -25,7 +25,7 @@ export default function FreeTrialPage() {
       const now = new Date();
       const expires = new Date(now);
       //expires.setDate(expires.getDate() + 7);
-      expires.setMinutes(expires.getMinutes() + 2);
+      expires.setMinutes(expires.getMinutes() + 400);
 
       // Format ISO strings
       const subscriptionStart = now.toISOString();
@@ -48,7 +48,7 @@ export default function FreeTrialPage() {
       //redirect to dashboard after short delay
       setTimeout(() => {
         navigate('/dashboard');
-      }, 2000);
+      }, 500);
 
     } catch (error) {
       console.error('Error starting free trial:', error);

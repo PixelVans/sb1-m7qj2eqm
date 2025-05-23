@@ -100,7 +100,7 @@ export default function UpgradePlanPage() {
             <h3 className="text-lg font-medium">
                 {subscription?.plan === 'pro'
                 ? 'Your Pro Plan Has Ended'
-                : 'Your 7-Day Free Trial Has Ended'}
+                : 'You completed your free trial'}
             </h3>
 
             <p className="text-sm text-muted-foreground">
