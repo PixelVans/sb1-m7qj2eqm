@@ -1,27 +1,24 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CalendarDays, Music2, } from 'lucide-react';
+import { CalendarDays, Music2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/lib/supabase';
 import type { Database } from '@/lib/supabase';
 import { useSettings } from '@/lib/store';
 import { TotalRequestsDialog } from '@/components/TotalRequestsDialog';
-import { getAssetUrl } from '@/lib/utils';
 
 
 type Event = Database['public']['Tables']['events']['Row'];
 type SongRequest = Database['public']['Tables']['song_requests']['Row'] & {
-  event_name?: string;
-  request_count: number;
-  status: 'pending' | 'played' | 'rejected';
-  queue_position: number;
+  events?: { name: string; dj_id: string };
 };
 
 type Stats = {
   activeEvents: number;
   totalRequests: number;
-  topRequests: SongRequest[];
+  topRequestsAllDJs: SongRequest[];
+  topRequestsMyDJ: SongRequest[];
 };
 
 type RequestsByEvent = {
@@ -34,231 +31,266 @@ type RequestsByEvent = {
 export default function DJDashboard() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  
+  const { theme, hasSeenTutorial, setHasSeenTutorial } = useSettings();
+
   const [stats, setStats] = useState<Stats>({
     activeEvents: 0,
     totalRequests: 0,
-    topRequests: [],
+    topRequestsAllDJs: [],
+    topRequestsMyDJ: [],
   });
   const [recentEvents, setRecentEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [showRequestsDialog, setShowRequestsDialog] = useState(false);
   const [requestsByEvent, setRequestsByEvent] = useState<RequestsByEvent[]>([]);
   const djName = user?.user_metadata?.dj_name || 'DJ';
-  const { theme } = useSettings();
-  const music = getAssetUrl('music.png');
-  const party = getAssetUrl('party.png');
+  const [activeStep, setActiveStep] = useState(0);
+  const shouldShowTutorial = !hasSeenTutorial && !loading && recentEvents.length === 0;
+
+ 
   
+  
+  
+
   useEffect(() => {
-    if (user?.id) {
-      loadDashboardData();
-    }
+    if (user?.id) loadDashboardData();
   }, [user?.id]);
 
   async function loadDashboardData() {
-    if (!user?.id) return;
-
+    setLoading(true);
     try {
-      // Get active events count
       const { data: activeEvents } = await supabase
         .from('events')
         .select('id')
-        .eq('dj_id', user.id)                                                             
+        .eq('dj_id', user!.id)
         .eq('active', true);
 
-      // Get total requests count and breakdown by event
       const { data: events } = await supabase
         .from('events')
-        .select(
-          `
-          id,
-          name,
-          created_at,
-          active,
-          dj_id,
-          start_time,
-          end_time,
-          location,
-          song_requests (count)
-        `
-        )
-        .eq('dj_id', user.id)
+        .select('id,name,created_at,active,dj_id,start_time,end_time,location,song_requests(count)')
+        .eq('dj_id', user!.id)
         .order('created_at', { ascending: false });
 
       const totalRequests =
         events?.reduce(
-          (sum, event) => sum + (event.song_requests?.[0]?.count || 0),
+          (sum, ev) => sum + (ev.song_requests?.[0]?.count || 0),
           0
         ) || 0;
 
-      const requestsBreakdown =
-        events?.map((event) => ({
-          event_name: event.name,
-          event_date: event.created_at,
-          total_requests: event.song_requests?.[0]?.count || 0,
-          active: event.active,
+      const breakdown =
+        events?.map(ev => ({
+          event_name: ev.name,
+          event_date: ev.created_at,
+          total_requests: ev.song_requests?.[0]?.count || 0,
+          active: ev.active,
         })) || [];
 
-      // Get top requests only for pro users
-      let topRequests: SongRequest[] = [];
-      const { data: topRequestsData } = await supabase
-          .from('song_requests')
-          .select(
-            `
-            *,
-            events!inner (
-              name
-            )
-          `
-          )
-          .order('votes', { ascending: false })
-          .limit(5);
+      const { data: topAll } = await supabase
+        .from('song_requests')
+        .select('*, events!inner(name)')
+        .order('votes', { ascending: false })
+        .limit(5);
 
-        topRequests =
-          topRequestsData?.map((request) => ({
-            ...request,
-            event_name: request.events.name,
-          })) || [];
-      
+      const { data: topMy } = await supabase
+        .from('song_requests')
+        .select('*, events!inner(name,dj_id)')
+        .eq('events.dj_id', user!.id)
+        .order('votes', { ascending: false })
+        .limit(5);
 
       setStats({
         activeEvents: activeEvents?.length || 0,
         totalRequests,
-        topRequests,
+        topRequestsAllDJs: topAll || [],
+        topRequestsMyDJ: topMy || [],
       });
 
-      setRequestsByEvent(requestsBreakdown);
-      setRecentEvents(events || []);
-      setLoading(false);
-    } catch (error) {
-      console.error('Error loading dashboard data:', error);
+      setRequestsByEvent(breakdown);
+      setRecentEvents((events as any as Event[]));
+
+      
+    } catch (err) {
+      console.error('Error loading dashboard data:', err);
+    } finally {
       setLoading(false);
     }
   }
-  type Stat = {
-    label: string;
-    value: string;
-    icon: any;
-    img: string,
-    color: string;
-    onClick?: () => void;
-  };
-  const stats_data: Stat[] = [
-    {
-      label: 'Active Events',
-      value: stats.activeEvents.toString(),
-      icon: CalendarDays,
-      img: party,
-      color: 'bg-purple-500/20 text-purple-300',
-      onClick: () => navigate('/events?filter=active'),
-    },
-    {
-      label: 'Total Requests',
-      value: stats.totalRequests.toString(),
-      icon: Music2,
-      img: music,
-      color: 'bg-blue-500/20 text-blue-300',
-      onClick: () => setShowRequestsDialog(true),
-    },
-  ];
+
+
 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
       </div>
     );
   }
 
+
+  const steps = [
+    {
+      title: 'Create an Event',
+      desc: 'Start by creating a new event for your upcoming gig.',
+    },
+    {
+      title: 'Share the QR Code ',
+      desc: 'Display the event QR code for attendees to scan and request songs or share the  link',
+    },
+    {
+      title: 'Manage Requests',
+      desc: 'View and manage song requests during your event.',
+    },
+    {
+      title: 'Top requests',
+      desc: 'View your top song requests from your events and discover popular tracks from other DJs — all in your dashboard.',
+    },
+  ];
+  
   return (
     <div className="space-y-8">
-      {/* Welcome Section */}
-      <div className={`relative  rounded-lg p-8  overflow-hidden  
-      ${theme === 'dark' ? ' bg-gradient-to-r from-purple-500/20 to-blue-500/20  ' : 'bg-white shadow-lg  '} `}>
-        
-        {/* Absolute image on the right */}
-        
-       <h1 className="text-3xl md:text-3xl font-bold font- mb-2  relative z-10">
-          Welcome onboard, {" "}
-          {djName.split("").map((char:any, index:any) => (
-          <span
-            key={index}
-            data-aos="zoom-in"
-            data-aos-delay={index * 100}
-            data-aos-once="true"
-            className={`${theme === 'dark' ? 'text-yellow-300' : 'text-purple-700'}`}
-          >
-            {char}
-          </span>
+      
+
+      {/* Welcome */}
+      <div
+        className={`relative rounded-lg p-8 overflow-hidden onboarding-welcome ${
+          theme === 'dark'
+            ? 'bg-gradient-to-r from-purple-500/20 to-blue-500/20'
+            : 'bg-white shadow-lg'
+        }`}
+      >
+        <h1 className="text-3xl font-bold mb-2">
+          Welcome onboard,{' '}
+          {djName.split('').map((ch: any, i: any) => (
+            <span
+              key={i}
+              data-aos="zoom-in"
+              data-aos-delay={i * 100}
+              data-aos-once
+              className={theme === 'dark' ? 'text-yellow-300' : 'text-purple-700'}
+            >
+              {ch}
+            </span>
           ))}
         </h1>
-        <p className={`relative z-10 ${theme === 'dark' ? ' text-gray-300  ' : ' text-gray-700   '} `}>
+        <p className={theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}>
           Manage your events and song requests from one place.
         </p>
       </div>
 
+      {/* Getting Started Manual (fallback visual) */}
+      {shouldShowTutorial &&  (
+  <div className="bg-white/5 rounded-lg p-6 onboarding-create-event">
+    <div className="flex justify-between items-center mb-4">
+      <h2 className="text-xl font-bold">Getting Started</h2>
+      <button
+        onClick={() => {
+          setHasSeenTutorial(true);
+        }}
+        className="text-sm text-yellow-100  hover:rounded-xl p-2 hover:underline hover:shadow-lg hover:shadow-purple-600"
+      >
+        Dismiss tutorial
+      </button>
+    </div>
+
+    {/* Step Selector */}
+    <div className="flex gap-2 mb-6">
+      {steps.map((_, idx) => (
+        <button
+          key={idx}
+          onClick={() => setActiveStep(idx)}
+          className={`px-3 py-1 rounded-full border text-sm ${
+            activeStep === idx
+              ? 'bg-purple-500 text-white'
+              : 'bg-transparent text-gray-300 border-gray-500'
+          }`}
+        >
+          Step {idx + 1}
+        </button>
+      ))}
+    </div>
+
+    {/* Active Step Content */}
+    <div className="p-4 rounded-lg bg-white/10">
+      <h3 className="text-lg font-medium text-white mb-1">
+        {steps[activeStep].title}
+      </h3>
+      <p className="text-gray-300">{steps[activeStep].desc}</p>
+    </div>
+      </div>
+    )}
+
 
       {/* Quick Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
-        {stats_data.map((stat) => (
-          <div
-            key={stat.label}
-            className={` rounded-lg p-6 ${
-              stat.onClick ? 'cursor-pointer hover:bg-white/10 transition-colors' : ''
-              } flex justify-between items-center ${theme === 'dark' ? ' bg-white/5 ' : 'bg-white shadow-lg '} `}
-            onClick={stat.onClick}
-          >
-            {/* Left side: icon + text */}
-            <div>
-              <div className={`inline-flex p-3 rounded-lg  mb-4 ${theme === 'dark' ? `${stat.color} ` : ' text-primary'} `}>
-                
-                <stat.icon className="h-6 w-6" />
-              </div>
-              <h3 className="text-2xl font-bold">{stat.value}</h3>
-              <p className={`${theme === 'dark' && ' text-gray-200'} `}>{stat.label}</p>
-            </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div
+          onClick={() => navigate('/events?filter=active')}
+          className={`rounded-lg p-6 flex justify-between items-center cursor-pointer onboarding-create-event ${
+            theme === 'dark' ? 'bg-white/5' : 'bg-white shadow-lg'
+          } hover:bg-white/10 transition`}
+        >
+          <div>
+            <CalendarDays className="h-6 w-6 text-primary mb-2" />
+            <h3 className="text-2xl font-bold">{stats.activeEvents}</h3>
+            <p className={theme === 'dark' ? 'text-gray-200' : 'text-gray-600'}>
+              Active Events
+            </p>
           </div>
-        ))}
-      </div>
+        </div>
 
+        <div
+          onClick={() => setShowRequestsDialog(true)}
+          className={`rounded-lg p-6 flex justify-between items-center cursor-pointer onboarding-requests ${
+            theme === 'dark' ? 'bg-white/5' : 'bg-white shadow-lg'
+          } hover:bg-white/10 transition`}
+        >
+          <div>
+            <Music2 className="h-6 w-6 text-primary mb-2" />
+            <h3 className="text-2xl font-bold">{stats.totalRequests}</h3>
+            <p className={theme === 'dark' ? 'text-gray-200' : 'text-gray-600'}>
+              Total Requests
+            </p>
+          </div>
+        </div>
+      </div>
 
       {/* Recent Events */}
       {recentEvents.length > 0 && (
-        <div data-aos="zoom-in" className={` rounded-lg p-2 sm:p-6 ${theme === 'dark' ? 'bg-white/5  ' : ' bg-white shadow-lg '} `} >
-          
-          <div className="flex justify-between items-center mb-6">
+        <div
+          className={`rounded-lg p-6 onboarding-recent-events ${
+            theme === 'dark' ? 'bg-white/5' : 'bg-white shadow-lg'
+          }`}
+        >
+          <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold">Recent Events</h2>
-            <Button
-              variant="ghost"
-              className="text-primary hover:text-primary/80"
-              onClick={() => navigate('/events')}
-            >
+            <Button variant="ghost" onClick={() => navigate('/events')}>
               View All
-              <CalendarDays className="ml-2 h-4 w-4" />
             </Button>
           </div>
-          <div className="space-y-4">
-            {recentEvents.map((event) => (
+          <div className="space-y-3">
+            {recentEvents.map(ev => (
               <div
-                key={event.id}
-                className={`flex items-center justify-between p-4  rounded-lg cursor-pointer hover:bg-white/10 transition-colors 
-                  ${theme === 'dark' ? ' bg-white/5  ' : ' bg-slate-100   '} `}
-                onClick={() => navigate(`/events/${event.id}`)}
+                key={ev.id}
+                onClick={() => navigate(`/events/${ev.id}`)}
+                className={`flex justify-between items-center p-4 rounded-lg cursor-pointer hover:bg-white/10 transition ${
+                  theme === 'dark' ? 'bg-white/5' : 'bg-gray-50'
+                }`}
               >
                 <div>
-                  <h3 className={`font-medium ${theme === 'dark' &&' white ' } `}>{event.name}</h3>
-                  <p  >
-                 {new Date(event.created_at).toLocaleDateString()}
+                  <h3 className={theme === 'dark' ? 'text-white' : undefined}>
+                    {ev.name}
+                  </h3>
+                  <p className="text-sm text-gray-400">
+                    {new Date(ev.created_at).toLocaleDateString()}
                   </p>
                 </div>
                 <span
-                  className={`px-3 py-1 rounded-full text-sm ${
-                    event.active
+                  className={`px-3 py-1 text-sm rounded-full ${
+                    ev.active
                       ? 'bg-green-500/20 text-green-300'
                       : 'bg-gray-500/20 text-gray-300'
-                  }`} 
+                  }`}
                 >
-                  {event.active ? 'Active' : 'Ended'}
+                  {ev.active ? 'Active' : 'Ended'}
                 </span>
               </div>
             ))}
@@ -266,94 +298,76 @@ export default function DJDashboard() {
         </div>
       )}
 
-      {/* Top Requests */}
-      <div className={`rounded-lg p-2 sm:p-6 ${theme === 'dark' ? ' bg-white/5  ' : ' bg-white shadow-lg'} `}>
-      
-        <div className="flex items-center gap-2 mb-6">
-          <Music2 className="h-5 w-5 text-blue-300" />
-          <h2 className="text-xl font-bold">Top Requests</h2>
-        </div>
-          <div className="space-y-4">
-            {stats.topRequests.length === 0 ? (
-              <p className="text-center text-gray-400 py-4">
-                No song requests yet
-              </p>
-            ) : (
-              stats.topRequests.map((request, index) => (
-                <div
-                  key={request.id}
-                  className={`flex items-center justify-between p-4  rounded-lg ${theme === 'dark' ? '  bg-white/5 ' : ' bg-white shadow-lg   '} `}
-                >
-                  <div className="flex items-center gap-2 sm:gap-4">
-                    <span className="text-lg sm:text-2xl ml-[-5px] sm:ml-0 font-bold text-primary/50">
-                      #{index + 1}
-                    </span>
-                    <div>
-                      <h3 className={`font-medium ${theme === 'dark' && ' text-white'} `} >
-                        {request.title}
-                      </h3>
-                      <div className="flex items-center gap-2 text-sm">
-                        <span className={`${theme === 'dark' && ' text-gray-400'} `} >{request.artist}</span>
-                        <span className="text-gray-600">•</span>
-                        <span className="text-gray-400">
-                          {request.event_name}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Music2 className="h-4 w-4 text-blue-300" />
-                    <span className="font-medium">{request.votes} votes</span>
+
+          {/* Your Top Requests */}
+          <div
+        className={`rounded-lg p-6 ${
+          theme === 'dark' ? 'bg-white/5' : 'bg-white shadow-lg'
+        }`}
+      >
+        <h2 className="text-xl font-bold mb-4">Top Requests From Your Events</h2>
+        <div className="space-y-3">
+          {stats.topRequestsMyDJ.length === 0 ? (
+            <p className="text-center text-gray-400">No requests yet.</p>
+          ) : (
+            stats.topRequestsMyDJ.map((req, i) => (
+              <div
+                key={req.id}
+                className={`flex justify-between items-center p-4 rounded-lg hover:bg-white/10 transition ${
+                  theme === 'dark' ? 'bg-white/5' : 'bg-gray-50'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <span className="font-bold text-primary">#{i + 1}</span>
+                  <div>
+                    <p className={theme === 'dark' ? 'text-white' : undefined}>
+                      {req.title}
+                    </p>
+                    <p className="text-sm text-gray-400">{req.events!.name}</p>
                   </div>
                 </div>
-              ))
-            )}
-          </div>
-        
+                <span className="font-medium">{req.votes} votes</span>
+              </div>
+            ))
+          )}
+        </div>
       </div>
 
-      {/* Getting Started */}
-      {recentEvents.length === 0 && (
-        <div className="bg-white/5 rounded-lg p-6">
-          <h2 className="text-xl font-bold mb-4">Getting Started</h2>
-          <div className="space-y-4">
-            <div className="flex items-start gap-4 p-4 bg-white/5 rounded-lg">
-              <div className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-purple-500/20 text-purple-300">
-                1
+      {/* Top Requests */}
+      <div
+        className={`rounded-lg p-6 onboarding-top-requests ${
+          theme === 'dark' ? 'bg-white/5' : 'bg-white shadow-lg'
+        }`}
+      >
+        <h2 className="text-xl font-bold mb-4">Top Requests From Other DJs</h2>
+        <div className="space-y-3">
+          {stats.topRequestsAllDJs.length === 0 ? (
+            <p className="text-center text-gray-400">No requests yet.</p>
+          ) : (
+            stats.topRequestsAllDJs.map((req, i) => (
+              <div
+                key={req.id}
+                className={`flex justify-between items-center p-4 rounded-lg hover:bg-white/10 transition ${
+                  theme === 'dark' ? 'bg-white/5' : 'bg-gray-50'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <span className="font-bold text-primary">#{i + 1}</span>
+                  <div>
+                    <p className={theme === 'dark' ? 'text-white' : undefined}>
+                      {req.title}
+                    </p>
+                    <p className="text-sm text-gray-400">{req.events!.name}</p>
+                  </div>
+                </div>
+                <span className="font-medium">{req.votes} votes</span>
               </div>
-              <div>
-                <h3 className="font-medium text-white">Create an Event</h3>
-                <p className="text-gray-400">
-                  Start by creating a new event for your upcoming gig.
-                </p>
-              </div>
-            </div>
-            <div className="flex items-start gap-4 p-4 bg-white/5 rounded-lg">
-              <div className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-purple-500/20 text-purple-300">
-                2
-              </div>
-              <div>
-                <h3 className="font-medium text-white">Share the QR Code</h3>
-                <p className="text-gray-400">
-                  Display the event QR code for attendees to scan and request
-                  songs.
-                </p>
-              </div>
-            </div>
-            <div className="flex items-start gap-4 p-4 bg-white/5 rounded-lg">
-              <div className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-purple-500/20 text-purple-300">
-                3
-              </div>
-              <div>
-                <h3 className="font-medium text-white">Manage Requests</h3>
-                <p className="text-gray-400">
-                  View and manage song requests during your event.
-                </p>
-              </div>
-            </div>
-          </div>
+            ))
+          )}
         </div>
-      )}
+      </div>
+
+  
 
       <TotalRequestsDialog
         open={showRequestsDialog}
@@ -363,3 +377,6 @@ export default function DJDashboard() {
     </div>
   );
 }
+
+
+

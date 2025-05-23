@@ -8,12 +8,13 @@ interface SubscriptionPlan {
   expired: boolean;
 }
 
-
 interface SettingsState {
   theme: 'dark' | 'light';
   showVoteCount: boolean;
   requestLimit: number;
   subscription: SubscriptionPlan | null;
+  hasSeenTutorial: boolean;
+
   setTheme: (theme: 'dark' | 'light') => void;
   setShowVoteCount: (show: boolean) => void;
   setRequestLimit: (limit: number) => void;
@@ -23,10 +24,10 @@ interface SettingsState {
     expiresAt?: string | null,
     expired?: boolean
   ) => void;
-
   resetEventsCreated: () => void;
   canCreateEvent: () => boolean;
   checkAndExpirePlan: () => void;
+  setHasSeenTutorial: (seen: boolean) => void;
 }
 
 export const useSettings = create<SettingsState>()(
@@ -35,7 +36,8 @@ export const useSettings = create<SettingsState>()(
       theme: 'dark',
       showVoteCount: true,
       requestLimit: 3,
-      subscription: null, 
+      subscription: null,
+      hasSeenTutorial: false,
 
       setTheme: (theme) => set({ theme }),
       setShowVoteCount: (showVoteCount) => set({ showVoteCount }),
@@ -62,8 +64,8 @@ export const useSettings = create<SettingsState>()(
             expired,
           },
         })),
-      
-   resetEventsCreated: () => {
+
+      resetEventsCreated: () => {
         const { subscription } = get();
         if (subscription) {
           set({
@@ -78,7 +80,6 @@ export const useSettings = create<SettingsState>()(
       canCreateEvent: () => {
         const { subscription } = get();
         if (!subscription) return false;
-        
         return true;
       },
 
@@ -92,7 +93,7 @@ export const useSettings = create<SettingsState>()(
           const now = new Date();
           const expires = new Date(subscription.expiresAt);
           const expired = now > expires;
-      
+
           if (subscription.expired !== expired) {
             set({
               subscription: {
@@ -102,9 +103,9 @@ export const useSettings = create<SettingsState>()(
             });
           }
         }
-      }
-      
-      ,
+      },
+
+      setHasSeenTutorial: (seen) => set({ hasSeenTutorial: seen }),
     }),
     {
       name: 'dj-settings',
@@ -115,6 +116,7 @@ export const useSettings = create<SettingsState>()(
         subscription: state.subscription,
         showVoteCount: state.showVoteCount,
         requestLimit: state.requestLimit,
+        hasSeenTutorial: state.hasSeenTutorial,
       }),
     }
   )

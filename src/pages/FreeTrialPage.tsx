@@ -59,7 +59,7 @@ export default function FreeTrialPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-black to-gray-900 text-white px-4">
+    <div className="lg:min-h-screen flex items-center justify-center bg-gradient-to-r from-black to-gray-900 text-white px-4">
       <div className="bg-white/5 rounded-2xl p-8 max-w-md w-full shadow-lg space-y-7 px-12">
         <div className="space-y-2 text-center">
           <Timer className="h-12 w-12 mx-auto text-purple-400 mb-5" />

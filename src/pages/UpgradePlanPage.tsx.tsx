@@ -86,7 +86,7 @@ export default function UpgradePlanPage() {
   };
 
   return (
-      <div className="max-w-5xl mx-auto space-y-8 mt-7 mb-14">
+      <div className="max-w-5xl mx-auto space-y-8 mt-4 sm:mt-7 mb-14">
           
         {showExpiredModal && user && (
         <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/60">
