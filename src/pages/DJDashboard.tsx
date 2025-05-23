@@ -56,6 +56,26 @@ export default function DJDashboard() {
     if (user?.id) loadDashboardData();
   }, [user?.id]);
 
+  //Real time updates for the song requests changes
+  useEffect(() => {
+    const channel = supabase
+      .channel('song-requests-dashboard')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'song_requests' },
+        payload => {
+          console.log('Song request change detected:', payload);
+          loadDashboardData(); // re-fetch data when anything changes
+        }
+      )
+      .subscribe();
+  
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+  
+
   async function loadDashboardData() {
     setLoading(true);
     try {
