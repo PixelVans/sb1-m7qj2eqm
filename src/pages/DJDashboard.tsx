@@ -82,7 +82,7 @@ export default function DJDashboard() {
   
 
   async function loadDashboardData() {
-    setLoading(true);
+   // setLoading(true);
     try {
       const { data: activeEvents } = await supabase
         .from('events')
