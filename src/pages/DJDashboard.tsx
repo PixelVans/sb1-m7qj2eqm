@@ -53,27 +53,32 @@ export default function DJDashboard() {
   
 
   useEffect(() => {
-    if (user?.id) loadDashboardData();
-  }, [user?.id]);
-
-  //Real time updates for the song requests changes
-  useEffect(() => {
-    const channel = supabase
-      .channel('song-requests-dashboard')
+    if (!user?.id) return;
+  
+    loadDashboardData(); 
+  
+    // Subscribe to all song_requests changes
+    const subscription = supabase
+      .channel('public:song_requests')
       .on(
         'postgres_changes',
-        { event: '*', schema: 'public', table: 'song_requests' },
-        payload => {
-          console.log('Song request change detected:', payload);
-          loadDashboardData(); // re-fetch data when anything changes
+        {
+          event: '*', 
+          schema: 'public',
+          table: 'song_requests',
+        },
+        () => {
+         loadDashboardData();
         }
       )
       .subscribe();
   
+    // Cleanup
     return () => {
-      supabase.removeChannel(channel);
+      supabase.removeChannel(subscription);
     };
-  }, []);
+  }, [user?.id]);
+  
   
 
   async function loadDashboardData() {
@@ -141,7 +146,7 @@ export default function DJDashboard() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+        <div className="animate-spin rounded-full h-9 w-9 border-b-2 border-primary" />
       </div>
     );
   }

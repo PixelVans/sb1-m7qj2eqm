@@ -475,6 +475,7 @@ export default function AttendeeView() {
                     )}
                   </div>
                   <button
+                    type='button'
                         onClick={() => debouncedVoteUpdate(song.id)}
                         className={`flex items-center gap-2 px-3 py-1 rounded-lg transition-colors ${
                           votedSongIds.includes(song.id)
