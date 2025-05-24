@@ -330,7 +330,7 @@ export default function DJDashboard() {
           theme === 'dark' ? 'bg-white/5' : 'bg-white shadow-lg'
         }`}
       >
-        <h2 className="text-xl font-bold mb-4">Top Requests From Your Events</h2>
+        <h2 className="text-xl font-bold mb-4">Top Requests From All Your Events</h2>
         <div className="space-y-3">
           {stats.topRequestsMyDJ.length === 0 ? (
             <p className="text-center text-gray-400">No requests yet.</p>
@@ -364,7 +364,7 @@ export default function DJDashboard() {
           theme === 'dark' ? 'bg-white/5' : 'bg-white shadow-lg'
         }`}
       >
-        <h2 className="text-xl font-bold mb-4">Top Requests From Other DJs</h2>
+        <h2 className="text-xl font-bold mb-4">Trending Requests on the Platform</h2>
         <div className="space-y-3">
           {stats.topRequestsAllDJs.length === 0 ? (
             <p className="text-center text-gray-400">No requests yet.</p>

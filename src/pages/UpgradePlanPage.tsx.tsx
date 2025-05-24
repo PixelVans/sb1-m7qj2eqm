@@ -106,7 +106,7 @@ export default function UpgradePlanPage() {
             <p className="text-sm text-muted-foreground">
                 {subscription?.plan === 'pro'
                 ? `To continue enjoying Pro features, please choose a plan. Your previous subscription was on a ${user.user_metadata?.subscription_period || 'monthly'} basis.`
-                : 'To keep using Hey DJ and unlock all features, please choose a plan that suits you.'}
+                : 'To keep using the app and unlock all features, please choose a plan that suits you.'}
             </p>
 
             <Button
