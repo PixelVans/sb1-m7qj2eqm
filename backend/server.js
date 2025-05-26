@@ -74,6 +74,11 @@ app.post('/create-checkout-session', async (req, res) => {
   }
 });
 
+
+
+
+
+
 // Stripe Webhook Handler
 app.post('/webhook', async (req, res) => {
   const sig = req.headers['stripe-signature'];
@@ -172,57 +177,7 @@ app.post('/webhook', async (req, res) => {
 
 
 
-//cron job to downgrade users if the plan expires
-app.post('/downgrade-expired', async (req, res) => {
-  const { createClient } = require('@supabase/supabase-js');
-  const supabase = createClient(
-    process.env.SUPABASE_URL,
-    process.env.SUPABASE_SERVICE_ROLE_KEY
-  );
-
-  const { data: users, error } = await supabase.auth.admin.listUsers();
-
-  if (error) {
-    console.error('Failed to list users:', error.message);
-    return res.status(500).send('Failed');
-  }
-
-  const now = new Date();
-
-  for (const user of users) {
-    const metadata = user.user_metadata;
-    const expires = metadata?.subscription_expires;
-
-    if (expires && new Date(expires) < now) {
-      console.log(`Downgrading user: ${user.email}`);
-
-      await supabase.auth.admin.updateUserById(user.id, {
-        user_metadata: {
-          subscription_plan: null,
-          subscription_period: null,
-          subscription_start: null,
-          subscription_expires: null,
-        },
-      });
-
-      await supabase.from('notifications').insert([
-        {
-          user_id: user.id,
-          title: 'Subscription Expired',
-          message: 'Your Hey DJ Pro subscription has expired. Upgrade again to unlock premium features.',
-          read: false,
-        },
-      ]);
-    }
-  }
-
-  res.status(200).send('Downgrade completed');
-});
-
-
-
-
-// New route: Check if user exists by email
+// Check if user exists by email
 app.post('/check-user-exists', async (req, res) => {
   const { email } = req.body;
 
@@ -231,7 +186,7 @@ app.post('/check-user-exists', async (req, res) => {
   }
 
   try {
-    // Fetch all users (may need to paginate if >1000 users)
+    // Fetch all users
     const { data, error } = await supabase.auth.admin.listUsers();
 
     if (error) {
@@ -239,7 +194,7 @@ app.post('/check-user-exists', async (req, res) => {
       return res.status(500).json({ error: 'Failed to fetch user list' });
     }
 
-    // Manually check for user with matching email
+    // check for user with matching email
     const userExists = data.users.some((user) => user.email === email);
 
     return res.json({ userExists });
