@@ -184,7 +184,7 @@ export default function DJDashboard() {
         }`}
       >
         
-        <h1 className="text-4xl font-semibold tracking-tight mb-4 leading-tight">
+        <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight mb-4 leading-tight">
           Welcome onboard,&nbsp;
           {djName.split('').map((ch: any, i: any) => (
             <span
