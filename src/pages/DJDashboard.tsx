@@ -198,7 +198,7 @@ export default function DJDashboard() {
             </span>
           ))}
         </h1>
-        <p className={ theme === 'dark' ? 'text-gray-300  font-thin italic ' : 'text-gray-800 '}>
+        <p className={ theme === 'dark' ? 'text-gray-300   italic ' : 'text-gray-800 '}>
           Manage your events and song requests from one place.
         </p>
       </div>
