@@ -179,12 +179,13 @@ export default function DJDashboard() {
       <div
         className={`relative rounded-lg p-8 overflow-hidden onboarding-welcome ${
           theme === 'dark'
-            ? 'bg-gradient-to-r from-purple-500/20 to-blue-500/20'
+            ? 'bg-gradient-to-r from-purple-600/20 to-blue-500/20 shadow-black shadow-sm '
             : 'bg-white shadow-lg'
         }`}
       >
-        <h1 className="text-3xl font-bold mb-2">
-          Welcome onboard,{' '}
+        
+        <h1 className="text-4xl font-semibold tracking-tight mb-4 leading-tight">
+          Welcome onboard,&nbsp;
           {djName.split('').map((ch: any, i: any) => (
             <span
               key={i}
@@ -249,12 +250,12 @@ export default function DJDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div
           onClick={() => navigate('/events?filter=active')}
-          className={`rounded-lg p-6 flex justify-between items-center cursor-pointer onboarding-create-event ${
-            theme === 'dark' ? 'bg-white/5' : 'bg-white shadow-lg'
+          className={`rounded-lg p-6 flex justify-between items-center  cursor-pointer onboarding-create-event ${
+            theme === 'dark' ? 'bg-white/5 shadow-black shadow-md' : 'bg-white shadow-lg'
           } hover:bg-white/10 transition`}
         >
-          <div>
-            <CalendarDays className="h-6 w-6 text-primary mb-2" />
+          <div >
+            <CalendarDays className="h-6 w-6 text-purple-500 mb-2" />
             <h3 className="text-2xl font-bold">{stats.activeEvents}</h3>
             <p className={theme === 'dark' ? 'text-gray-200' : 'text-gray-600'}>
               Active Events
@@ -264,12 +265,12 @@ export default function DJDashboard() {
 
         <div
           onClick={() => setShowRequestsDialog(true)}
-          className={`rounded-lg p-6 flex justify-between items-center cursor-pointer onboarding-requests ${
-            theme === 'dark' ? 'bg-white/5' : 'bg-white shadow-lg'
+          className={`rounded-lg p-6 flex justify-between  items-center cursor-pointer onboarding-requests ${
+            theme === 'dark' ? 'bg-white/5 shadow-black shadow-md' : 'bg-white shadow-lg'
           } hover:bg-white/10 transition`}
         >
           <div>
-            <Music2 className="h-6 w-6 text-primary mb-2" />
+            <Music2 className="h-6 w-6 text-purple-500 mb-2 font-bold " />
             <h3 className="text-2xl font-bold">{stats.totalRequests}</h3>
             <p className={theme === 'dark' ? 'text-gray-200' : 'text-gray-600'}>
               Total Requests
@@ -326,8 +327,8 @@ export default function DJDashboard() {
 
           {/* Your Top Requests */}
           <div
-        className={`rounded-lg p-6 ${
-          theme === 'dark' ? 'bg-white/5' : 'bg-white shadow-lg'
+        className={`rounded-lg p-6  ${
+          theme === 'dark' ? 'bg-white/5 shadow-black shadow-sm' : 'bg-white shadow-lg'
         }`}
       >
         <h2 className="text-xl font-bold mb-4">Top Requests From All Your Events</h2>

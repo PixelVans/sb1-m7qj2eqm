@@ -30,20 +30,22 @@ const plans = [
   }
 ];
 
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
+
 export default function UpgradePlanPage() {
-  const { user } = useAuth();
   const { subscription } = useSettings();
   const [isYearly, setIsYearly] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<'pro' | null>(null);
   const [loading, setLoading] = useState(false);
-  const { signOut } = useAuth();
+  const { user, signOut } = useAuth();
+
  
   const isNewUser = user?.user_metadata?.subscription_plan === undefined;
  
     const [showExpiredModal, setShowExpiredModal] = useState(subscription?.expired === true);
 
   
-  const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
+  
   useEffect(() => {
     if (subscription?.expired) {
       setShowExpiredModal(true);
