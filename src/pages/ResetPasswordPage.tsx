@@ -118,16 +118,17 @@ export default function ResetPasswordPage() {
             <div className="text-red-500 text-sm mt-1 text-center">{errorMsg}</div>
           )}
 
-          {success && (
-            <div className="flex items-center gap-2 text-green-600 text-sm mt-1">
-              <CheckCircle2Icon className="w-4 h-4" /> Password has been updated!
-              <div className="mt-1 text-xs text-yellow-500">
-              Redirecting to your dashboard in {countdown}...
+        {success && (
+          <div className="text-green-600 text-sm mt-1">
+            <div className="flex items-center gap-2 mb-1">
+              <CheckCircle2Icon className="w-4 h-4" />
+              <span>Password has been updated!</span>
             </div>
-            </div>
-          )}
+            <p className="text-xs text-yellow-500">Redirecting to your dashboard in {countdown}...</p>
+          </div>
+        )}
 
-          <Button
+        <Button
             onClick={handleReset}
             disabled={loading || success}
             className={`${isDark ? 'bg-purple-600 hover:bg-purple-700 text-white' : 'bg-purple-500 hover:bg-purple-600 text-white'} w-full`}
