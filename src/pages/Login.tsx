@@ -22,6 +22,9 @@ export default function Login() {
   const [resetEmail, setResetEmail] = useState('');
   const [resetLoading, setResetLoading] = useState(false);
   const [resetMessage, setResetMessage] = useState('');
+  const [cooldown, setCooldown] = useState(0);
+
+
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -108,26 +111,12 @@ export default function Login() {
   };
 
   const handlePasswordReset = async () => {
+    if (cooldown > 0) return;
+  
     setResetLoading(true);
     setResetMessage('');
   
     try {
-      // Call your backend to check if user exists
-      const res = await fetch('https://heydj-pro.onrender.com/check-user-exists', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: resetEmail }),
-      });
-  
-      const { userExists } = await res.json();
-     
-      if (!userExists) {
-        setResetMessage('No account was found with the email you provided.');
-        setResetLoading(false);
-        return;
-      }
-  
-      // If user exists, proceed to send reset email
       const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
         redirectTo: `${window.location.origin}/reset-password`,
       });
@@ -139,6 +128,18 @@ export default function Login() {
           description: 'Check your email inbox to reset your password.',
         });
         setResetMessage('A password reset link has been sent to your email.');
+  
+        // Start 30 second cooldown
+        setCooldown(30);
+        const interval = setInterval(() => {
+          setCooldown((prev) => {
+            if (prev <= 1) {
+              clearInterval(interval);
+              return 0;
+            }
+            return prev - 1;
+          });
+        }, 1000);
       }
     } catch (err: any) {
       setResetMessage('An error occurred. Please try again later.');
@@ -146,6 +147,8 @@ export default function Login() {
       setResetLoading(false);
     }
   };
+  
+  
 
   return (
     <div className="h-screen bg-[#121212] flex flex-col justify-center lg:py-5">
@@ -276,9 +279,9 @@ export default function Login() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm ">
           <div className="bg-[#1f1f1f] border border-white/10 rounded-xl p-6 mx-4 sm:mx-0 w-full max-w-sm md:max-w-md shadow-sm shadow-purple-400">
             
-            <h2 className="text-2xl md:text-[29px] font-semibold text-white mb-4 text-center mt-2">Reset Your Password</h2>
+            <h2 className="text-2xl md:text-[30px] font-semibold text-white mb-4 text-center mt-2">Reset Your Password</h2>
             <div className="text-center mb-3">
-              <KeyIcon className="h-7 w-7 text-purple-500 mx-auto" /></div>
+              <KeyIcon className="h-9 w-9 text-purple-500 mx-auto" /></div>
 
   
             <p className="text-sm md:text-md text-gray-400 mb-4 text-center">
@@ -295,6 +298,12 @@ export default function Login() {
             {resetMessage && (
               <p className="text-sm mb-2  text-center text-yellow-300">{resetMessage}</p>
             )}
+            {cooldown > 0 && (
+                <p className="text-xs text-purple-400 text-center mt-3">
+                  Please wait {cooldown} second{cooldown !== 1 && 's'} before requesting another reset link.
+                </p>
+              )}
+
             <div className="flex justify-end space-x-2 mt-9">
               <Button
                 onClick={() => setShowResetModal(false)}
@@ -305,7 +314,7 @@ export default function Login() {
               </Button>
               <Button
               onClick={handlePasswordReset}
-              disabled={resetLoading}
+              disabled={resetLoading || cooldown > 0}
               className="bg-purple-800 hover:bg-purple-900 text-white flex items-center gap-2"
             >
               <LinkIcon className="h-4 w-4 text-white" />
