@@ -7,7 +7,7 @@ interface LoadingEventsSkeletonProps {
     const textBg = theme === 'dark' ? 'bg-gray-600' : 'bg-gray-300/30';
   
     return (
-      <div className="space-y-6 animate-pulse">
+      <div className="space-y-6 animate-pulse mx-auto">
         {/* Page Header Skeleton */}
         <div className={`rounded-lg p-6 ${baseBg} w-full`}>
           <div className="h-10 w-72 rounded mb-2 bg-gray-300/30"></div>

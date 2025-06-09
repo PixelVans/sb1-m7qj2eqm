@@ -146,7 +146,8 @@ useEffect(() => {
         <MainLayout>
           <Routes>
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
-            <Route path="/dashboard" element={<DJDashboard />} />
+            <Route path="/dashboard" element={<DashboardSkeleton theme={theme} />} />
+            {/* <Route path="/dashboard" element={<DJDashboard  />} /> */}
             <Route path="/events" element={<EventsPage />} />
             <Route path="/events/:eventId" element={<EventDetails />} />
             <Route path="/settings" element={<Settings />} />
