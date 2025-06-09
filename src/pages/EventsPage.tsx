@@ -12,7 +12,7 @@ import { useSettings } from '@/lib/store';
 import { PricingModal } from '@/components/PricingModal';
 import { toast } from 'sonner';
 import { Confetti } from '@/components/Confetti';
-
+import EventsSkeleton from '@/components/skeleton/EventsSkeleton';
 
 type Event = Database['public']['Tables']['events']['Row'] & {
   start_time?: string;
@@ -220,9 +220,7 @@ export default function EventsPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-      </div>
+      <EventsSkeleton theme={theme} />
     );
   }
 

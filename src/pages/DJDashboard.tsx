@@ -7,7 +7,7 @@ import { supabase } from '@/lib/supabase';
 import type { Database } from '@/lib/supabase';
 import { useSettings } from '@/lib/store';
 import { TotalRequestsDialog } from '@/components/TotalRequestsDialog';
-
+import DashboardSkeleton from '@/components/skeleton/DashboardSkeleton';
 
 type Event = Database['public']['Tables']['events']['Row'];
 type SongRequest = Database['public']['Tables']['song_requests']['Row'] & {
@@ -145,9 +145,9 @@ export default function DJDashboard() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-9 w-9 border-b-2 border-primary" />
-      </div>
+      
+         <DashboardSkeleton theme={theme} />
+      
     );
   }
 

@@ -53,13 +53,13 @@ export default function ContactPage() {
 
   return (
     <div className="flex flex-col justify-center px-2 sm:px-6  ">
-      <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+      <div className="  grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
         {/* Left Column */}
        
 
-        <div className="flex flex-col items-center md:items-start text-center md:text-left mx-auto py-5 md:py-24">
+        <div className="flex flex-col mx-auto items-center md:items-start text-center md:text-left  py-5 md:py-24">
           <MessageCircleIcon className="h-24 w-24 text-purple-500 mb-4 mx-auto " />
-          <h1 className={`text-3xl font-semibold ${textColor} mx-auto`}>Contact Us</h1>
+          <h1 className={`text-3xl  ${textColor} mx-auto`}>Contact Us</h1>
           <p className={`${subTextColor} mt-2`}>
             We'd love to hear your thoughts or feedback!
           </p>
@@ -69,7 +69,7 @@ export default function ContactPage() {
         <form
           ref={form}
           onSubmit={handleSend}
-          className={`${formBg} backdrop-blur-lg rounded-lg px-6 py-6 shadow-xl space-y-6`}
+          className={`${formBg} backdrop-blur-lg rounded-lg px-3 sm:px-6 py-6 shadow-xl space-y-6 lg:mr-20 `}
         >
           {/* First Name */}
           <div>

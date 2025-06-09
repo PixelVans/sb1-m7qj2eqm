@@ -4,6 +4,7 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { Routes, Route, Navigate,useNavigate } from 'react-router-dom';
 import DJDashboard from '@/pages/DJDashboard';
+
 import EventsPage from '@/pages/EventsPage';
 import EventDetails from '@/pages/EventDetails';
 import AttendeeView from '@/pages/AttendeeView';
