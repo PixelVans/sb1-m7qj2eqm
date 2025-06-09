@@ -48,7 +48,7 @@ export default function DashboardSkeleton({ theme }: DashboardSkeletonProps) {
       {/* Recent Events Skeleton */}
       <div className={`rounded-lg p-6 onboarding-recent-events ${baseBg} `}>
         <div className="flex justify-between items-center mb-4 w-full">
-          <div className="h-6 w-40 rounded bg-gray-300/30 animate-pulse"></div>
+          <div className="h-6 w-32 sm:w-40 rounded bg-gray-300/30 animate-pulse"></div>
           <div className="h-6 w-20 rounded bg-gray-300/30 animate-pulse"></div>
         </div>
         <div className="space-y-3">
@@ -60,7 +60,7 @@ export default function DashboardSkeleton({ theme }: DashboardSkeletonProps) {
               } w-full`}
             >
               <div>
-                <div className={`h-5 w-40 mb-1 rounded ${textBg} animate-pulse`}></div>
+                <div className={`h-5 w-32 sm:w-40 mb-1 rounded ${textBg} animate-pulse`}></div>
                 <div className="h-4 w-24 rounded bg-gray-300/20 animate-pulse"></div>
               </div>
               <div className="h-6 w-20 rounded-full bg-gray-300/30 animate-pulse"></div>
@@ -75,7 +75,7 @@ export default function DashboardSkeleton({ theme }: DashboardSkeletonProps) {
           key={idx}
           className={`rounded-lg p-6 ${baseBg} `}
         >
-          <div className="h-6 w-64 mb-4 rounded bg-gray-300/30 animate-pulse"></div>
+          <div className="h-6 w-52 sm:w-64 mb-4 rounded bg-gray-300/30 animate-pulse"></div>
           <div className="space-y-3">
             {[1, 2, 3].map((__, i) => (
               <div
