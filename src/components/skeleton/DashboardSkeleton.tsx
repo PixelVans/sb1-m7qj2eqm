@@ -13,7 +13,7 @@ export default function DashboardSkeleton({ theme }: DashboardSkeletonProps) {
      
       {/* Welcome Skeleton */}
       <div
-        className={`relative rounded-lg p-2 sm:p-8 overflow-hidden onboarding-welcome ${
+        className={`relative rounded-lg p-8 overflow-hidden onboarding-welcome ${
           theme === 'dark'
             ? 'bg-gradient-to-r from-purple-600/20 to-blue-500/20 shadow-black shadow-sm '
             : 'bg-white shadow-lg'
