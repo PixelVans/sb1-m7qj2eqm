@@ -18,9 +18,9 @@ export default function DashboardSkeleton({ theme }: DashboardSkeletonProps) {
             ? 'bg-gradient-to-r from-purple-600/20 to-blue-500/20 shadow-black shadow-sm '
             : 'bg-white shadow-lg'
         } `}
-          ><div className="flex">
-          <div className="h-12 w-48 sm:w-60 mb-4 rounded animate-pulse bg-gray-300/30"></div>        
-          <div className="h-8 w-28 ml-3 mt-3 mb-4 rounded animate-pulse bg-yellow-700 blur-sm"></div>        
+          ><div className="flex flex-col sm:flex-row">
+          <div className="h-12 w-60 mb-1 sm:mb-4 rounded animate-pulse bg-gray-300/30"></div>        
+          <div className="h-8 w-28 sm:ml-3 mt-3 mb-4 rounded animate-pulse bg-yellow-700 blur-sm"></div>        
       </div>
         
         
