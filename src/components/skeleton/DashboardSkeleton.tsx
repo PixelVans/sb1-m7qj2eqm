@@ -19,12 +19,12 @@ export default function DashboardSkeleton({ theme }: DashboardSkeletonProps) {
             : 'bg-white shadow-lg'
         } w-full`}
           ><div className="flex">
-          <div className="h-12 w-60 mb-4 rounded animate-pulse bg-gray-300/30"></div>        
-          <div className="h-8 w-28 ml-3 mt-3 mb-4 rounded animate-pulse bg-yellow-600 blur-md"></div>        
+          <div className="h-12 w-48 sm:w-60 mb-4 rounded animate-pulse bg-gray-300/30"></div>        
+          <div className="h-8 w-28 ml-3 mt-3 mb-4 rounded animate-pulse bg-yellow-700 blur-sm"></div>        
       </div>
         
         
-        <div className={`h-5 w-96 rounded italic animate-pulse ${textBg}`}></div>
+        <div className={`h-5 w-56 sm:w-96 rounded italic animate-pulse ${textBg}`}></div>
       </div>
 
       {/* Quick Stats Skeleton */}

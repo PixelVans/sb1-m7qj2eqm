@@ -8,7 +8,7 @@ import { useSettings } from '@/lib/store';
 export default function ContactPage() {
   const [firstName, setFirstName] = useState('');
   const [email, setEmail] = useState('');
-  const [category, setCategory] = useState('technical');
+  const [service, setService] = useState('other');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const { theme } = useSettings();
@@ -35,7 +35,7 @@ export default function ContactPage() {
       toast.success('Message sent successfully!');
       setFirstName('');
       setEmail('');
-      setCategory('technical');
+      setService('technical');
       setMessage('');
     } catch (error) {
       console.error('EmailJS error:', error);
@@ -113,8 +113,8 @@ export default function ContactPage() {
             <select
               id="category"
               name="category"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
+              value={service}
+              onChange={(e) => setService(e.target.value)}
               className={`w-full rounded-lg border-0 py-2 px-3 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-purple-500 sm:text-sm appearance-none ${inputBg}`}
             >
               <option value="technical">Technical Issue</option>

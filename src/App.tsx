@@ -4,7 +4,7 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { Routes, Route, Navigate,useNavigate } from 'react-router-dom';
 import DJDashboard from '@/pages/DJDashboard';
-
+import DashboardSkeleton from './components/skeleton/DashboardSkeleton.tsx';
 import EventsPage from '@/pages/EventsPage';
 import EventDetails from '@/pages/EventDetails';
 import AttendeeView from '@/pages/AttendeeView';
@@ -146,7 +146,7 @@ useEffect(() => {
         <MainLayout>
           <Routes>
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
-            <Route path="/dashboard" element={<DJDashboard />} />
+            <Route path="/dashboard" element={<DashboardSkeleton theme={theme} />} />
             <Route path="/events" element={<EventsPage />} />
             <Route path="/events/:eventId" element={<EventDetails />} />
             <Route path="/settings" element={<Settings />} />
