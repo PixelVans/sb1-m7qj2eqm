@@ -8,7 +8,6 @@ import { useSettings } from '@/lib/store';
 export default function ContactPage() {
   const [firstName, setFirstName] = useState('');
   const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
   const [category, setCategory] = useState('technical');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
@@ -36,7 +35,6 @@ export default function ContactPage() {
       toast.success('Message sent successfully!');
       setFirstName('');
       setEmail('');
-      setPhone('');
       setCategory('technical');
       setMessage('');
     } catch (error) {
@@ -76,12 +74,13 @@ export default function ContactPage() {
           {/* First Name */}
           <div>
             <label htmlFor="firstName" className={`block text-sm font-medium ${labelColor} mb-1`}>
-              First Name (optional)
+            Contact Name
             </label>
             <input
               type="text"
               id="firstName"
               name="first_name"
+              required
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
               className={`w-full rounded-lg border-0 py-2 px-3 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-purple-500 sm:text-sm ${inputBg}`}
@@ -92,12 +91,13 @@ export default function ContactPage() {
           {/* Email */}
           <div>
             <label htmlFor="email" className={`block text-sm font-medium ${labelColor} mb-1`}>
-              Email (optional)
+            Contact Email
             </label>
             <input
               type="email"
               id="email"
               name="email"
+              required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className={`w-full rounded-lg border-0 py-2 px-3 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-purple-500 sm:text-sm ${inputBg}`}
@@ -105,23 +105,7 @@ export default function ContactPage() {
             />
           </div>
 
-          {/* Phone */}
-          <div>
-            <label htmlFor="phone" className={`block text-sm font-medium ${labelColor} mb-1`}>
-              Phone (optional)
-            </label>
-            <input
-              type="tel"
-              id="phone"
-              name="phone"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              className={`w-full rounded-lg border-0 py-2 px-3 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-purple-500 sm:text-sm ${inputBg}`}
-              placeholder="+XXXXXXXXXX"
-            />
-          </div>
-
-          {/* Category */}
+         {/* Category */}
           <div>
             <label htmlFor="category" className={`block text-sm font-medium ${labelColor} mb-1`}>
               What is your message about?
@@ -142,7 +126,7 @@ export default function ContactPage() {
 
           {/* Message */}
           <div>
-            <label htmlFor="message" className={`block text-sm font-medium ${labelColor} mb-1 pt-4`}>
+            <label htmlFor="message" className={`block text-sm font-medium ${labelColor} mb-3 pt-4`}>
               Describe your message and we will get back to you ASAP
             </label>
             <textarea
