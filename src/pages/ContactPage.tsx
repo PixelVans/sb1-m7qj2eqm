@@ -61,7 +61,7 @@ export default function ContactPage() {
           <MessageCircleIcon className="h-24 w-24 text-purple-500 mb-4 mx-auto " />
           <h1 className={`text-3xl font-semibold ${textColor} mx-auto`}>Contact Us</h1>
           <p className={`${subTextColor} mt-2`}>
-            We’d love to hear your thoughts or feedback!
+            We'd love to hear your thoughts or feedback!
           </p>
         </div>
 
@@ -126,8 +126,8 @@ export default function ContactPage() {
 
           {/* Message */}
           <div>
-            <label htmlFor="message" className={`block text-sm font-medium ${labelColor} mb-3 pt-4`}>
-              Describe your message and we will get back to you ASAP
+            <label htmlFor="message" className={`block text-sm text-slate-300 italic ${labelColor} mb-2 pt-4`}>
+            Share your message and we'll respond ASAP.
             </label>
             <textarea
               id="message"
