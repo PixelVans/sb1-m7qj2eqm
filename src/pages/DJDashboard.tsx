@@ -177,7 +177,7 @@ export default function DJDashboard() {
 
       {/* Welcome */}
       <div
-        className={`relative rounded-lg p-8 overflow-hidden onboarding-welcome ${
+        className={`relative rounded-lg p-4 sm:p-8 overflow-hidden onboarding-welcome ${
           theme === 'dark'
             ? 'bg-gradient-to-r from-purple-600/20 to-blue-500/20 shadow-black shadow-sm '
             : 'bg-white shadow-lg'
@@ -205,7 +205,7 @@ export default function DJDashboard() {
 
       {/* Getting Started Manual (fallback visual) */}
       {shouldShowTutorial &&  (
-  <div className="bg-white/5 rounded-lg p-6 onboarding-create-event">
+  <div className="bg-white/5 rounded-lg p-3 sm:p-6 onboarding-create-event">
     <div className="flex justify-between items-center mb-4">
       <h2 className="text-xl font-bold">Getting Started</h2>
       <button
@@ -250,7 +250,7 @@ export default function DJDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div
           onClick={() => navigate('/events?filter=active')}
-          className={`rounded-lg p-6 flex justify-between items-center  cursor-pointer onboarding-create-event ${
+          className={`rounded-lg p-3 sm:p-6 flex justify-between items-center  cursor-pointer onboarding-create-event ${
             theme === 'dark' ? 'bg-white/5 shadow-black shadow-md' : 'bg-white shadow-lg'
           } hover:bg-white/10 transition`}
         >
@@ -265,7 +265,7 @@ export default function DJDashboard() {
 
         <div
           onClick={() => setShowRequestsDialog(true)}
-          className={`rounded-lg p-6 flex justify-between  items-center cursor-pointer onboarding-requests ${
+          className={`rounded-lg p-3 sm:p-6 flex justify-between  items-center cursor-pointer onboarding-requests ${
             theme === 'dark' ? 'bg-white/5 shadow-black shadow-md' : 'bg-white shadow-lg'
           } hover:bg-white/10 transition`}
         >
@@ -282,7 +282,7 @@ export default function DJDashboard() {
       {/* Recent Events */}
       {recentEvents.length > 0 && (
         <div
-          className={`rounded-lg p-6 onboarding-recent-events ${
+          className={`rounded-lg p-4 sm:p-6 onboarding-recent-events ${
             theme === 'dark' ? 'bg-white/5' : 'bg-white shadow-lg'
           }`}
         >
@@ -327,7 +327,7 @@ export default function DJDashboard() {
 
           {/* Your Top Requests */}
           <div
-        className={`rounded-lg p-6  ${
+        className={`rounded-lg p-3 sm:p-6  ${
           theme === 'dark' ? 'bg-white/5 shadow-black shadow-sm' : 'bg-white shadow-lg'
         }`}
       >
@@ -361,7 +361,7 @@ export default function DJDashboard() {
 
       {/* Top Requests */}
       <div
-        className={`rounded-lg p-6 onboarding-top-requests ${
+        className={`rounded-lg p-3 sm:p-6 onboarding-top-requests ${
           theme === 'dark' ? 'bg-white/5' : 'bg-white shadow-lg'
         }`}
       >
