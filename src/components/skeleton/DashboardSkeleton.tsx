@@ -17,7 +17,7 @@ export default function DashboardSkeleton({ theme }: DashboardSkeletonProps) {
           theme === 'dark'
             ? 'bg-gradient-to-r from-purple-600/20 to-blue-500/20 shadow-black shadow-sm '
             : 'bg-white shadow-lg'
-        } w-full`}
+        } `}
           ><div className="flex">
           <div className="h-12 w-48 sm:w-60 mb-4 rounded animate-pulse bg-gray-300/30"></div>        
           <div className="h-8 w-28 ml-3 mt-3 mb-4 rounded animate-pulse bg-yellow-700 blur-sm"></div>        
@@ -28,13 +28,13 @@ export default function DashboardSkeleton({ theme }: DashboardSkeletonProps) {
       </div>
 
       {/* Quick Stats Skeleton */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {[1, 2].map((_, idx) => (
           <div
             key={idx}
             className={`rounded-lg p-6 flex justify-between items-center onboarding-create-event cursor-pointer ${
               theme === 'dark' ? 'bg-white/5 shadow-black shadow-md' : 'bg-white shadow-lg'
-            } w-full`}
+            } `}
           >
             <div>
               <div className="h-6 w-6 mb-2 rounded bg-purple-500/50 animate-pulse"></div>
@@ -46,7 +46,7 @@ export default function DashboardSkeleton({ theme }: DashboardSkeletonProps) {
       </div>
 
       {/* Recent Events Skeleton */}
-      <div className={`rounded-lg p-6 onboarding-recent-events ${baseBg} w-full`}>
+      <div className={`rounded-lg p-6 onboarding-recent-events ${baseBg} `}>
         <div className="flex justify-between items-center mb-4 w-full">
           <div className="h-6 w-40 rounded bg-gray-300/30 animate-pulse"></div>
           <div className="h-6 w-20 rounded bg-gray-300/30 animate-pulse"></div>
@@ -73,7 +73,7 @@ export default function DashboardSkeleton({ theme }: DashboardSkeletonProps) {
       {[true, false].map((_, idx) => (
         <div
           key={idx}
-          className={`rounded-lg p-6 ${baseBg} w-full`}
+          className={`rounded-lg p-6 ${baseBg} `}
         >
           <div className="h-6 w-64 mb-4 rounded bg-gray-300/30 animate-pulse"></div>
           <div className="space-y-3">
