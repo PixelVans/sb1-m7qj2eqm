@@ -9,7 +9,7 @@ export default function DashboardSkeleton({ theme }: DashboardSkeletonProps) {
   const textBg = theme === 'dark' ? 'bg-gray-600' : 'bg-gray-300/30';
 
   return (
-    <div className="space-y-8 animate-pulse">
+    <div className="space-y-8 animate-pulse mx-auto px-2 sm:px-0">
      
       {/* Welcome Skeleton */}
       <div

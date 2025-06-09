@@ -126,7 +126,7 @@ export function MainLayout({ children }: MainLayoutProps) {
       <div className="flex-1 flex flex-col">
         <div className={`h-16 border-b border-border flex items-center p-3 lg:px-8 shadow-sm ${theme === 'dark' ? 'shadow-slate-700 ' : 'shadow-slate-400'}`}>
           <div className="lg:hidden mr-2">
-            <button onClick={() => setMobileOpen(true)} className="p-2 hover:bg-accent rounded-md">
+            <button onClick={() => setMobileOpen(true)} className=" hover:bg-accent rounded-md">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
@@ -135,9 +135,9 @@ export function MainLayout({ children }: MainLayoutProps) {
 
           <div className="flex-1" />
 
-          <div className="relative overflow-hidden h-6 mr-1 lg:mr-9 w-full" />
+          <div className="relative overflow-hi w-full" />
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 mr-2">
             <Button variant="ghost" size="sm" className="w-9 px-0" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
               {theme === 'dark' ? <Sun className="h-5 w-5 text-yellow-400" /> : <Moon className="h-5 w-5 text-purple-400" />}
             </Button>
@@ -145,7 +145,7 @@ export function MainLayout({ children }: MainLayoutProps) {
             {/* Notifications */}
             <div className="relative" ref={bellRef}>
               <button
-                className="p-2 hover:bg-accent rounded-full relative"
+                className="p-2 hover:bg-accent rounded-full relative mr-2 mt-1"
                 onClick={() => setNotifOpen(!notifOpen)}
               >
                 <BellIcon className="h-5 w-5 text-muted-foreground" />
