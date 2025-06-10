@@ -13,7 +13,7 @@ export default function DashboardSkeleton({ theme }: DashboardSkeletonProps) {
      
       {/* Welcome Skeleton */}
       <div
-        className={`relative rounded-lg p-8 overflow-hidden onboarding-welcome ${
+        className={`relative rounded-lg p-4 sm:p-8 overflow-hidden onboarding-welcome ${
           theme === 'dark'
             ? 'bg-gradient-to-r from-purple-600/20 to-blue-500/20 shadow-black shadow-sm '
             : 'bg-white shadow-lg'
@@ -32,7 +32,7 @@ export default function DashboardSkeleton({ theme }: DashboardSkeletonProps) {
         {[1, 2].map((_, idx) => (
           <div
             key={idx}
-            className={`rounded-lg p-6 flex justify-between items-center onboarding-create-event cursor-pointer ${
+            className={`rounded-lg p-4 sm:p-6 flex justify-between items-center onboarding-create-event cursor-pointer ${
               theme === 'dark' ? 'bg-white/5 shadow-black shadow-md' : 'bg-white shadow-lg'
             } `}
           >
@@ -46,7 +46,7 @@ export default function DashboardSkeleton({ theme }: DashboardSkeletonProps) {
       </div>
 
       {/* Recent Events Skeleton */}
-      <div className={`rounded-lg p-6 onboarding-recent-events ${baseBg} `}>
+      <div className={`rounded-lg p-4 sm:p-6 onboarding-recent-events ${baseBg} `}>
         <div className="flex justify-between items-center mb-4 w-full">
           <div className="h-6 w-32 sm:w-40 rounded bg-gray-300/30 animate-pulse"></div>
           <div className="h-6 w-20 rounded bg-gray-300/30 animate-pulse"></div>
@@ -73,7 +73,7 @@ export default function DashboardSkeleton({ theme }: DashboardSkeletonProps) {
       {[true, false].map((_, idx) => (
         <div
           key={idx}
-          className={`rounded-lg p-6 ${baseBg} `}
+          className={`rounded-lg p-4 sm:p-6 ${baseBg} `}
         >
           <div className="h-6 w-52 sm:w-64 mb-4 rounded bg-gray-300/30 animate-pulse"></div>
           <div className="space-y-3">
