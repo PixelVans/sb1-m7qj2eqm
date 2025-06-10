@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Homepage -->
+  <url>
+    <loc>https://wheresmysong.com/</loc>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Public routes -->
+  <url>
+    <loc>https://wheresmysong.com/login</loc>
+  </url>
+  <url>
+    <loc>https://wheresmysong.com/success</loc>
+  </url>
+  <url>
+    <loc>https://wheresmysong.com/failure</loc>
+  </url>
+  <url>
+    <loc>https://wheresmysong.com/reset-password</loc>
+  </url>
+  <url>
+    <loc>https://wheresmysong.com/start-free-trial</loc>
+  </url>
+  <url>
+    <loc>https://wheresmysong.com/upgrade-plan</loc>
+  </url>
+
+  <!-- Dashboard / app pages -->
+  <url>
+    <loc>https://wheresmysong.com/dashboard</loc>
+  </url>
+  <url>
+    <loc>https://wheresmysong.com/events</loc>
+  </url>
+  <url>
+    <loc>https://wheresmysong.com/events/sample-event</loc>
+  </url>
+  <url>
+    <loc>https://wheresmysong.com/settings</loc>
+  </url>
+  <url>
+    <loc>https://wheresmysong.com/contact</loc>
+  </url>
+  <url>
+    <loc>https://wheresmysong.com/notifications</loc>
+  </url>
+
+</urlset>
