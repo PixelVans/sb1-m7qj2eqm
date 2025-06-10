@@ -72,9 +72,11 @@ const handleSelectPlan = async (plan: 'free' | 'pro') => {
   try {
     if (plan === 'pro') {
       const stripe = await stripePromise;
-
+     
       // Send request to your backend to create a Stripe Checkout session and upgrade the user to pro on payment success
-      const response = await fetch('https://heydj-pro.onrender.com/create-checkout-session', {
+      // https://heydj-pro.onrender.com/create-checkout-session
+      const response = await fetch('https://wheresmysong.onrender.com/create-checkout-session', {
+        
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

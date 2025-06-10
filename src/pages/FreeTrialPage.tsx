@@ -25,7 +25,7 @@ export default function FreeTrialPage() {
       const now = new Date();
       const expires = new Date(now);
       //expires.setDate(expires.getDate() + 7);
-      expires.setMinutes(expires.getMinutes() + 400);
+      expires.setMinutes(expires.getMinutes() + 1);
 
       // Format ISO strings
       const subscriptionStart = now.toISOString();
