@@ -43,7 +43,7 @@ export default function FreeTrialPage() {
 
       if (error) throw error;
 
-      toast.success('7-day free trial started! Enjoy full access. test');
+      toast.success('7-day free trial started! Enjoy full access.');
 
       //redirect to dashboard after short delay
       setTimeout(() => {
