@@ -24,8 +24,8 @@ export default function FreeTrialPage() {
       // Get current time and expiration date (7 days later)
       const now = new Date();
       const expires = new Date(now);
-      //expires.setDate(expires.getDate() + 7);
-      expires.setMinutes(expires.getMinutes() + 2);
+      expires.setDate(expires.getDate() + 7);
+      //expires.setMinutes(expires.getMinutes() + 2); (testing expiry)
 
       // Format ISO strings
       const subscriptionStart = now.toISOString();

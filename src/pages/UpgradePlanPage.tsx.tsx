@@ -61,7 +61,7 @@ export default function UpgradePlanPage() {
 
     try {
       const stripe = await stripePromise;
-      //const response = await fetch('https://heydj-pro.onrender.com/create-checkout-session'
+      //const response = await fetch('https://heydj-pro.onrender.com/create-checkout-session' (test mode)
       const response = await fetch('https://wheresmysong.onrender.com/create-checkout-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

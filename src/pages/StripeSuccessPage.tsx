@@ -42,7 +42,7 @@ export default function StripeSuccessPage() {
         toast.error('Could not update subscription. Try logging out and in again.');
       } finally {
         setLoading(false);
-        setShowConfetti(true);
+        //setShowConfetti(true);
 
         let timeLeft = 3;
         setCountdown(timeLeft);
