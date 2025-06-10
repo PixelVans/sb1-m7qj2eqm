@@ -66,7 +66,7 @@ export default function LandingPage() {
           <div className="flex items-center gap-8">
             <div className="flex items-center gap-2">
               <img src={logoUrl} alt="Hey DJ" className="sm:h-8 sm:w-8 h-7 w-7" />
-              <span className=" text-md lg:text-2xl font-bold">Hey DJ... (Test)</span>
+              <span className=" text-md lg:text-2xl font-bold">Hey DJ</span>
             </div>
             <div className="hidden md:flex items-center gap-6">
               <a href="#features" className="text-sm font-medium hover:text-primary transition-colors">
