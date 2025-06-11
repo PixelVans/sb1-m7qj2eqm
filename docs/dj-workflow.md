@@ -10,7 +10,7 @@
   - Mobile device for QR code testing
 
 - **Software Setup**
-  - Login to Hey DJ platform
+  - Login to WheresMySong platform
   - Test internet connectivity
   - Verify Supabase real-time connection
   - Enable notifications for song requests
@@ -226,7 +226,7 @@
 - QR code displays
 
 ### Software
-- Hey DJ platform access
+- WheresMySong platform access
 - Backup offline system
 - Analytics tools
 - Communication apps

@@ -24,7 +24,7 @@ app.use(express.json());
 
 // Root route
 app.get('/', (req, res) => {
-  res.send('Hey DJ backend with Stripe and Supabase!');
+  res.send('WheresMySong backend with Stripe and Supabase!');
 });
 
 // Create Checkout Session
@@ -49,7 +49,7 @@ app.post('/create-checkout-session', async (req, res) => {
           price_data: {
             currency: 'usd',
             product_data: {
-              name: `Hey DJ Pro (${period})`,
+              name: `WheresMySong Pro (${period})`,
             },
             unit_amount: amount,
           },
@@ -159,7 +159,7 @@ app.post('/webhook', async (req, res) => {
       {
         user_id: userId,
         title: 'Payment Failed',
-        message: `Your Hey DJ Pro (${period}) subscription payment failed. Please try again.`,
+        message: `Your WheresMySong Pro (${period}) subscription payment failed. Please try again.`,
         read: false,
       },
     ]);

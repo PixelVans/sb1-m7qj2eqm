@@ -156,7 +156,7 @@ export default function Login() {
         <div className="flex flex-col items-center mb-4">
         
           <Music2Icon className="h-12 w-12 text-purple-500 mb-4" />
-          <h1 className="text-3xl font-bold text-white">Hey DJ</h1>
+          <h1 className="text-3xl font-bold text-white">WheresMySong</h1>
           <p className="text-gray-400 mt-2">Your party, your playlist</p>
         </div>
 

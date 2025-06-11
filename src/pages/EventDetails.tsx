@@ -366,7 +366,7 @@ export default function EventDetails() {
       ctx.fillStyle = '#ffffff';
       ctx.font = 'bold 60px system-ui';
       ctx.textAlign = 'center';
-      ctx.fillText('Hey DJ', width / 2, 100);
+      ctx.fillText('WheresMySong', width / 2, 100);
 
       // Get QR code SVG
       const qrSvg = qrRef.current.querySelector('svg');

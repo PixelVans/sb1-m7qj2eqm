@@ -31,7 +31,7 @@ const features = [
 
 const testimonials = [
   {
-    quote: "Hey DJ has completely transformed how I handle song requests. No more paper slips or shouted requests - it's all organized and digital now.",
+    quote: "WheresMySong has completely transformed how I handle song requests. No more paper slips or shouted requests - it's all organized and digital now.",
     author: "DJ Mike Thompson",
     role: "Club DJ",
     rating: 5,
@@ -65,8 +65,8 @@ export default function LandingPage() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-8">
             <div className="flex items-center gap-2">
-              <img src={logoUrl} alt="Hey DJ" className="sm:h-8 sm:w-8 h-7 w-7" />
-              <span className=" text-md lg:text-2xl font-bold">Hey DJ</span>
+              <img src={logoUrl} alt="WheresMySong" className="sm:h-8 sm:w-8 h-7 w-7" />
+              <span className=" text-md lg:text-2xl font-bold">WheresMySong</span>
             </div>
             <div className="hidden md:flex items-center gap-6">
               <a href="#features" className="text-sm font-medium hover:text-primary transition-colors">
@@ -200,7 +200,7 @@ export default function LandingPage() {
               Ready to Transform Your DJ Experience?
             </h2>
             <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Join thousands of DJs who are already using Hey DJ to create unforgettable events.
+              Join thousands of DJs who are already using WheresMySong to create unforgettable events.
               Start your free trial today.
             </p>
             <Link to="/login">
@@ -217,8 +217,8 @@ export default function LandingPage() {
       <footer className="container mx-auto px-6 py-12 border-t border-border">
         <div className="flex flex-col md:flex-row justify-between items-center gap-8">
           <div className="flex items-center gap-2">
-            <img src={logoUrl} alt="Hey DJ" className="h-6 w-6" />
-            <span className="text-xl font-bold">Hey DJ</span>
+            <img src={logoUrl} alt="WheresMySong" className="h-6 w-6" />
+            <span className="text-xl font-bold">WheresMySong</span>
           </div>
           <div className="flex gap-8 text-sm text-muted-foreground">
             <a href="#features" className="hover:text-primary transition-colors">Features</a>
@@ -227,7 +227,7 @@ export default function LandingPage() {
             <a href="#" className="hover:text-primary transition-colors">Privacy</a>
           </div>
           <div className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Hey DJ. All rights reserved.
+            © {new Date().getFullYear()} WheresMySong. All rights reserved.
           </div>
         </div>
       </footer>

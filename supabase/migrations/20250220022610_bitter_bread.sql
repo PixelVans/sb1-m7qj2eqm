@@ -1,5 +1,5 @@
 /*
-  # Initial Schema Setup for Hey DJ
+  # Initial Schema Setup for WheresMySong
 
   1. New Tables
     - `events`

@@ -13,7 +13,7 @@ const plans = [
   {
     name: 'Free',
     price: '$0',
-    description: 'Perfect for trying out Hey DJ',
+    description: 'Perfect for trying out WheresMySong',
     features: [
       '1 Event',
       'Basic song requests',
@@ -118,7 +118,7 @@ const handleSelectPlan = async (plan: 'free' | 'pro') => {
     resetEventsCreated();
     setShowConfetti(true);
 
-    toast.success(`Welcome to Hey DJ Free!`, {
+    toast.success(`Welcome to WheresMySong Free!`, {
       description: 'You can now create your first event',
     });
 

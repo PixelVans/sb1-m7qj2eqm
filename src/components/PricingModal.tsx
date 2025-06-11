@@ -20,7 +20,7 @@ const plans = [
   {
     name: 'Free',
     price: '$0',
-    description: 'Perfect for trying out Hey DJ',
+    description: 'Perfect for trying out WheresMySong',
     features: [
       '1 Event',
       'Basic song requests',
