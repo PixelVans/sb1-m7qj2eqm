@@ -49,7 +49,7 @@ const { theme,  } = useSettings();
         <div className="flex items-center gap-2">
           <a href="/" className="flex gap-2">
             <img src={logoUrl} alt="WheresMySong" className="h-8 w-8" />
-            <span className="text-2xl font-bold font-rajdhani">WheresMySong</span>
+            <span className="text-xl font-bold font-rajdhani">WheresMySong</span>
           </a>
         </div>
 

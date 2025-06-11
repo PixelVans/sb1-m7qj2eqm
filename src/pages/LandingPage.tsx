@@ -91,7 +91,7 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section className="container mx-auto px-6 md:px-0 mt-5">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-7xl font-semibold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-600">
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-600">
             Your Crowd, Your Playlist
           </h1>
 
@@ -191,7 +191,7 @@ export default function LandingPage() {
       </section>
 
       {/* CTA */}
-      <section className="container mx-auto px-6 py-24">
+      <section className="container mx-auto px-6 md:px-12 py-24">
         <div className="bg-gradient-to-r from-primary/20 to-purple-600/20 rounded-2xl p-12 text-center relative overflow-hidden">
           <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IHgxPSI4MS4yNyUiIHkxPSI4MS4yNyUiIHgyPSIwJSIgeTI9IjAlIiBpZD0iYSI+PHN0b3Agc3RvcC1jb2xvcj0iI0ZGRiIgc3RvcC1vcGFjaXR5PSIwIiBvZmZzZXQ9IjAlIi8+PHN0b3Agc3RvcC1jb2xvcj0iI0ZGRiIgc3RvcC1vcGFjaXR5PSIuMDUiIG9mZnNldD0iMTAwJSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxwYXRoIGZpbGw9InVybCgjYSkiIGQ9Ik0wIDBoMjB2MjBIMHoiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPjwvc3ZnPg==')] opacity-50"></div>
           <div className="relative">
