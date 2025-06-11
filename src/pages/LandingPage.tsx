@@ -152,7 +152,7 @@ export default function LandingPage() {
             <div 
               key={feature.title} 
               className={`gradient-bg-card p-8 rounded-xl shadow-card hover-lift ${
-                index % 2 === 0 ? 'md:translate-y-8' : ''
+                index % 2 === 0 ? '' : ''
               }`}
             >
               <div className="flex items-start gap-6">
