@@ -66,7 +66,7 @@ export default function LandingPage() {
           <div className="flex items-center gap-8">
             <div className="flex items-center gap-2">
               <img src={logoUrl} alt="WheresMySong" className="sm:h-8 sm:w-8 h-7 w-7" />
-              <span className=" text-md lg:text-2xl font-bold">WheresMySong</span>
+              <span className=" text-md lg:text-xl font-bold">WheresMySong</span>
             </div>
             <div className="hidden md:flex items-center gap-6">
               <a href="#features" className="text-sm font-medium hover:text-primary transition-colors">
@@ -91,12 +91,12 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section className="container mx-auto px-6 md:px-0 mt-5">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-6xl font-semibold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-600">
+          <h1 className="text-4xl md:text-7xl font-semibold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-600">
             Your Crowd, Your Playlist
           </h1>
 
           {/* Hero Image */}
-          <div className="relative w-full max-w-sm mx-auto mb-2 md:mb-8">
+          <div className="relative w-full max-w-sm mx-auto mb-2 md:mb-8 md:mt-3">
             <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-purple-600/20 rounded-full filter blur-3xl"></div>
             <img
               src="/logo.png"
@@ -104,7 +104,7 @@ export default function LandingPage() {
               className="relative w-4/5 h-auto rounded-lg shadow-xl mx-auto"
             />
           </div>
-
+           
           <p className="text-xl md:text-2xl text-muted-foreground mb-6 md:mb-8">
             Transform how you handle song requests with our smart DJ platform. 
             Let your audience engage through QR codes and watch the magic happen in real-time.
@@ -125,7 +125,7 @@ export default function LandingPage() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-24 md:px-12 ">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-24 md:px-12 lg:px-20 ">
           <div className="gradient-bg-card p-6 rounded-xl shadow-card">
             <div className="text-4xl font-bold text-primary mb-2">
               <CountUp start={5000} end={10000} duration={3} delay={2} className='text-4xl font-bold text-primary mb-2'/>+</div>
@@ -143,7 +143,7 @@ export default function LandingPage() {
       </section>
 
       {/* Features */}
-      <section id="features" className="container mx-auto px-6 md:px-12 lg:px-16 py-24">
+      <section id="features" className="container mx-auto px-6 md:px-12 lg:px-20 py-24">
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">
           Everything You Need to Rock the Party
         </h2>
@@ -168,7 +168,7 @@ export default function LandingPage() {
       </section>
 
       {/* Testimonials */}
-      <section className="container mx-auto px-6 md:px-12 lg:px-16 py-24">
+      <section className="container mx-auto px-6 md:px-12 lg:px-20 py-24">
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">
           Loved by DJs Worldwide
         </h2>
@@ -191,7 +191,7 @@ export default function LandingPage() {
       </section>
 
       {/* CTA */}
-      <section className="container mx-auto px-6 md:px-12 lg:px-16 py-24">
+      <section className="container mx-auto px-6 py-24">
         <div className="bg-gradient-to-r from-primary/20 to-purple-600/20 rounded-2xl p-12 text-center relative overflow-hidden">
           <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IHgxPSI4MS4yNyUiIHkxPSI4MS4yNyUiIHgyPSIwJSIgeTI9IjAlIiBpZD0iYSI+PHN0b3Agc3RvcC1jb2xvcj0iI0ZGRiIgc3RvcC1vcGFjaXR5PSIwIiBvZmZzZXQ9IjAlIi8+PHN0b3Agc3RvcC1jb2xvcj0iI0ZGRiIgc3RvcC1vcGFjaXR5PSIuMDUiIG9mZnNldD0iMTAwJSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxwYXRoIGZpbGw9InVybCgjYSkiIGQ9Ik0wIDBoMjB2MjBIMHoiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPjwvc3ZnPg==')] opacity-50"></div>
           <div className="relative">
