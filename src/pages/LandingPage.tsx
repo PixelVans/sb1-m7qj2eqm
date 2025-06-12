@@ -90,9 +90,9 @@ export default function LandingPage() {
 
       {/* Hero Section */}
       <section className="container mx-auto px-6 md:px-0 mt-5">
-        <div className="max-w-7xl mx-auto text-center">
+        <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-600">
-            Your Crowd, Your Playlist
+            Your Crowd, Your Playlist 
           </h1>
 
           {/* Hero Image */}
@@ -109,7 +109,7 @@ export default function LandingPage() {
             Transform how you handle song requests with our smart DJ platform. 
             Let your audience engage through QR codes and watch the magic happen in real-time.
           </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4 lg:mt-3">
+          <div className="flex flex-col sm:flex-row justify-center gap-6 sm:gap-8 lg:mt-3">
             <Link to="/login">
               <Button size="lg" className="w-full sm:w-auto">
                 Start Free Trial
