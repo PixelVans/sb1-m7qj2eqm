@@ -8,6 +8,7 @@ import type { Database } from '@/lib/supabase';
 import { toast } from 'sonner';
 import { useDebouncedCallback } from '@/hooks/useDebounce'; 
 import { useSettings } from '@/lib/store';
+import AttendeeViewSkeleton from '@/components/skeleton/AttendeeViewSkeleton';
 
 type Event = Database['public']['Tables']['events']['Row'] & {
   created_by: string;
@@ -296,12 +297,9 @@ export default function AttendeeView() {
   }
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-[#121212]">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500"></div>
-      </div>
-    );
+    return <AttendeeViewSkeleton />;
   }
+  
 
   if (error || !event) {
     return (
