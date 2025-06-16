@@ -1,11 +1,11 @@
-import React from 'react';
+
 import CountUp from 'react-countup';
 import { Link } from 'react-router-dom';
-import { QrCode, BarChart2, Zap, Check, ArrowRight, Star, Users, Sparkles } from 'lucide-react';
+import { QrCode, BarChart2, Zap, ArrowRight, Star, Users, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { supabase } from '@/lib/supabase';
-import { getAssetUrl, getLogoUrl } from '@/lib/utils';
-import logoUrl from '../assets/djr.png'
+import { getAssetUrl,  } from '@/lib/utils';
+
+
 const features = [
   {
     icon: QrCode,
@@ -51,12 +51,8 @@ const testimonials = [
 ];
 
 export default function LandingPage() {
-  const heroImageUrl = supabase.storage
-    .from('assets')
-    .getPublicUrl('hero-pic.png')
-    .data.publicUrl;
-  
-  const logoUrl = getAssetUrl('mascot.png');
+  const heroImageUrl = getAssetUrl('wheresmysong3d.png');
+  const logoUrl = getAssetUrl('wheresmysong3d.png');
 
   return (
     <div className="min-h-screen bg-gradient-welcome">
@@ -96,12 +92,12 @@ export default function LandingPage() {
           </h1>
 
           {/* Hero Image */}
-          <div className="relative w-full max-w-sm mx-auto mb-2 md:mb-8 md:mt-3">
+          <div className="relative w-full max-w-sm mx-auto mb-2 md:mb-8 md:mt-3 lg:mt-12">
             <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-purple-600/20 rounded-full filter blur-3xl"></div>
             <img
-              src="/logo.png"
+              src={heroImageUrl}
               alt="DJ Platform"
-              className="relative w-4/5 h-auto rounded-lg shadow-xl mx-auto"
+              className="relative w-4/5 h-auto rounded-lg shadow-xl mx-auto "
             />
           </div>
            
@@ -125,25 +121,25 @@ export default function LandingPage() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-24 md:px-12 lg:px-20 ">
-          <div className="gradient-bg-card p-6 rounded-xl shadow-card">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-24  lg:px-20 ">
+          <div className="bg-gradient-to-b from-white to-purple-300 p-6 rounded-xl shadow-card">
             <div className="text-4xl font-bold text-primary mb-2">
               <CountUp start={5000} end={10000} duration={3} delay={2} className='text-4xl font-bold text-primary mb-2'/>+</div>
-            <div  className="text-slate-800 text-xl font-bold">Events Powered</div>
+            <div  className="text-slate-900 text-xl font-bold">Events Powered</div>
           </div>
-          <div className="gradient-bg-card p-6 rounded-xl shadow-card">
+          <div className="bg-gradient-to-b from-white to-purple-300 p-6 rounded-xl shadow-card">
             <div className="text-4xl font-bold text-primary mb-2">1M+</div>
-            <div className="text-slate-800 text-xl font-bold">Song Requests</div>
+            <div className="text-slate-900 text-xl font-bold">Song Requests</div>
           </div>
-          <div className="gradient-bg-card p-6 rounded-xl shadow-card">
+          <div className="bg-gradient-to-b from-white to-purple-300 p-6 rounded-xl shadow-card">
             <div className="text-4xl font-bold text-primary mb-2">98%</div>
-            <div className="text-slate-800 text-xl font-bold">Happy DJs</div>
+            <div className="text-slate-900 text-xl font-bold">Happy DJs</div>
           </div>
         </div>
       </section>
 
       {/* Features */}
-      <section id="features" className="container mx-auto px-6 md:px-12 lg:px-20 py-24">
+      <section id="features" className="container mx-auto px-6  lg:px-20 py-24">
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">
           Everything You Need to Rock the Party
         </h2>
@@ -151,15 +147,15 @@ export default function LandingPage() {
           {features.map((feature, index) => (
             <div 
               key={feature.title} 
-              className={`gradient-bg-card p-8 rounded-xl shadow-card hover-lift ${
+              className={`bg-gradient-to-b from-white to-purple-300 p-8 rounded-xl shadow-card hover-lift ${
                 index % 2 === 0 ? '' : ''
               }`}
             >
               <div className="flex items-start gap-6">
                 <feature.icon className="sm:h-12 sm:w-12 text-primary flex-shrink-0" />
                 <div>
-                  <h3 className="text-xl text-slate-900 font-rajdhani font-bold mb-4">{feature.title}</h3>
-                  <p className="text-slate-800 text-xl font-semibold">{feature.description}</p>
+                  <h3 className="text-xl text-slate-900  font-bold mb-4">{feature.title}</h3>
+                  <p className="text-slate-900 text-xl font-semibold">{feature.description}</p>
                 </div>
               </div>
             </div>
@@ -168,19 +164,19 @@ export default function LandingPage() {
       </section>
 
       {/* Testimonials */}
-      <section className="container mx-auto px-6 md:px-12 lg:px-20 py-24">
+      <section className="container mx-auto px-6  lg:px-20 py-24">
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">
           Loved by DJs Worldwide
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {testimonials.map((testimonial, index) => (
-            <div  key={index} className="gradient-bg-card p-8 rounded-xl shadow-card">
+            <div  key={index} className="bg-gradient-to-b from-white to-purple-300 p-8 rounded-xl shadow-card">
               <div className="flex gap-1 mb-4">
                 {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                  <Star key={i} className="h-5 w-5 fill-yellow-500 text-yellow-500" />
                 ))}
               </div>
-              <blockquote className="text-lg mb-6 text-slate-800 font-semibold">{testimonial.quote}</blockquote>
+              <blockquote className="text-lg mb-6 text-slate-900 font-semibold">{testimonial.quote}</blockquote>
               <div>
                 <div className="font-semibold text-slate-900">{testimonial.author}</div>
                 <div className="text-sm text-slate-900">{testimonial.role}</div>
@@ -191,7 +187,7 @@ export default function LandingPage() {
       </section>
 
       {/* CTA */}
-      <section className="container mx-auto px-6 md:px-12 py-24">
+      <section className="container mx-auto px-6 lg:px-12 py-12 sm:py-24">
         <div className="bg-gradient-to-r from-primary/20 to-purple-600/20 rounded-2xl p-12 text-center relative overflow-hidden">
           <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IHgxPSI4MS4yNyUiIHkxPSI4MS4yNyUiIHgyPSIwJSIgeTI9IjAlIiBpZD0iYSI+PHN0b3Agc3RvcC1jb2xvcj0iI0ZGRiIgc3RvcC1vcGFjaXR5PSIwIiBvZmZzZXQ9IjAlIi8+PHN0b3Agc3RvcC1jb2xvcj0iI0ZGRiIgc3RvcC1vcGFjaXR5PSIuMDUiIG9mZnNldD0iMTAwJSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxwYXRoIGZpbGw9InVybCgjYSkiIGQ9Ik0wIDBoMjB2MjBIMHoiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPjwvc3ZnPg==')] opacity-50"></div>
           <div className="relative">
