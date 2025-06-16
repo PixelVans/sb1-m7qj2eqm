@@ -85,9 +85,9 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="container mx-auto px-2 sm:px-6 md:px-0 mt-5">
+      <section className="container mx-auto px-4 sm:px-6 md:px-0 mt-5">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-600">
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-500">
             Your Crowd, Your Playlist 
           </h1>
 
@@ -122,16 +122,16 @@ export default function LandingPage() {
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-24  lg:px-20 ">
-          <div className="bg-gradient-to-b from-white to-purple-300 p-6 rounded-xl shadow-card">
+          <div className="bg-gradient-to-b from-white to-purple-200 p-6 rounded-xl shadow-card">
             <div className="text-4xl font-bold text-primary mb-2">
               <CountUp start={5000} end={10000} duration={3} delay={2} className='text-4xl font-bold text-primary mb-2'/>+</div>
             <div  className="text-slate-900 text-xl font-bold">Events Powered</div>
           </div>
-          <div className="bg-gradient-to-b from-white to-purple-300 p-6 rounded-xl shadow-card">
+          <div className="bg-gradient-to-b from-white to-purple-200 p-6 rounded-xl shadow-card">
             <div className="text-4xl font-bold text-primary mb-2">1M+</div>
             <div className="text-slate-900 text-xl font-bold">Song Requests</div>
           </div>
-          <div className="bg-gradient-to-b from-white to-purple-300 p-6 rounded-xl shadow-card">
+          <div className="bg-gradient-to-b from-white to-purple-200 p-6 rounded-xl shadow-card">
             <div className="text-4xl font-bold text-primary mb-2">98%</div>
             <div className="text-slate-900 text-xl font-bold">Happy DJs</div>
           </div>
@@ -139,7 +139,7 @@ export default function LandingPage() {
       </section>
 
       {/* Features */}
-      <section id="features" className="container mx-auto px-2 sm:px-6 lg:px-20 py-24">
+      <section id="features" className="container mx-auto px-4 sm:px-6 lg:px-20 py-24">
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">
           Everything You Need to Rock the Party
         </h2>
@@ -147,7 +147,7 @@ export default function LandingPage() {
           {features.map((feature, index) => (
             <div 
               key={feature.title} 
-              className={`bg-gradient-to-b from-white to-purple-300 p-8 rounded-xl shadow-card hover-lift ${
+              className={`bg-gradient-to-b from-white to-purple-200 p-8 rounded-xl shadow-card hover-lift ${
                 index % 2 === 0 ? '' : ''
               }`}
             >
@@ -164,13 +164,13 @@ export default function LandingPage() {
       </section>
 
       {/* Testimonials */}
-      <section className="container mx-auto px-2 sm:px-6  lg:px-20 py-24">
+      <section className="container mx-auto px-4 sm:px-6  lg:px-20 py-24">
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">
           Loved by DJs Worldwide
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {testimonials.map((testimonial, index) => (
-            <div  key={index} className="bg-gradient-to-b from-white to-purple-300 p-8 rounded-xl shadow-card">
+            <div  key={index} className="bg-gradient-to-b from-white to-purple-200 p-8 rounded-xl shadow-card">
               <div className="flex gap-1 mb-4">
                 {[...Array(testimonial.rating)].map((_, i) => (
                   <Star key={i} className="h-5 w-5 fill-yellow-500 text-yellow-500" />
@@ -187,7 +187,7 @@ export default function LandingPage() {
       </section>
 
       {/* CTA */}
-      <section className="container mx-auto px-2 sm:px-6 lg:px-12 py-12 sm:py-24">
+      <section className="container mx-auto px-4 sm:px-6 lg:px-12 py-12 sm:py-24">
         <div className="bg-gradient-to-r from-primary/20 to-purple-600/20 rounded-2xl p-12 text-center relative overflow-hidden">
           <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IHgxPSI4MS4yNyUiIHkxPSI4MS4yNyUiIHgyPSIwJSIgeTI9IjAlIiBpZD0iYSI+PHN0b3Agc3RvcC1jb2xvcj0iI0ZGRiIgc3RvcC1vcGFjaXR5PSIwIiBvZmZzZXQ9IjAlIi8+PHN0b3Agc3RvcC1jb2xvcj0iI0ZGRiIgc3RvcC1vcGFjaXR5PSIuMDUiIG9mZnNldD0iMTAwJSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxwYXRoIGZpbGw9InVybCgjYSkiIGQ9Ik0wIDBoMjB2MjBIMHoiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPjwvc3ZnPg==')] opacity-50"></div>
           <div className="relative">
@@ -210,7 +210,7 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="container mx-auto px-2 sm:px-6 py-12 border-t border-border">
+      <footer className="container mx-auto px-4 sm:px-6 py-12 border-t border-border">
         <div className="flex flex-col md:flex-row justify-between items-center gap-8">
           <div className="flex items-center gap-2">
             <img src={logoUrl} alt="WheresMySong" className="h-6 w-6" />
