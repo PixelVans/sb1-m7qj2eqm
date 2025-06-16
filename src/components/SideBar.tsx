@@ -3,10 +3,11 @@
 import { Link, useLocation } from 'react-router-dom';
 import {
   LayoutDashboardIcon, CalendarDaysIcon, SettingsIcon,
-  RocketIcon, SparklesIcon, HeadsetIcon
+   HeadsetIcon
 } from 'lucide-react';
-import {  getLogoUrl } from '@/lib/utils';
+
 import { useSettings } from '@/lib/store';
+import { getAssetUrl,  } from '@/lib/utils';
 
 interface SidebarProps {
   subscription: any;
@@ -16,7 +17,7 @@ interface SidebarProps {
 
 export function Sidebar({ subscription, onClose, isMobile = false }: SidebarProps) {
   const location = useLocation();
-  const logoUrl = getLogoUrl();
+ const logoUrl = getAssetUrl('wheresmysong3d.png');
  // const dj = getAssetUrl('djr.png');
 const { theme,  } = useSettings(); 
     
