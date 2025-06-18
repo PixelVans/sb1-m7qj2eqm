@@ -206,7 +206,7 @@ export default function LandingPage() {
 
       {/* CTA */}
       <section className="container mx-auto px-4 sm:px-6 lg:px-12 py-12 sm:py-24">
-        <div className="bg-slate-900 rounded-2xl p-12 text-center relative overflow-hidden">
+        <div className="bg-slate-800 sm:bg-slate-900 rounded-2xl p-4 sm:p-12 text-center relative overflow-hidden">
           <div className="absolute inset-0 "></div>
           <div className="relative">
             <Sparkles className="h-12 w-12 text-primary mx-auto mb-6" />
