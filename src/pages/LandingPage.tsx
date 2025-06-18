@@ -31,22 +31,25 @@ const features = [
 
 const testimonials = [
   {
-    quote: "WheresMySong has completely transformed how I handle song requests. No more paper slips or shouted requests - it's all organized and digital now.",
-    author: "DJ Mike Thompson",
-    role: "Club DJ",
+    quote: "I used this app for a wedding gig last weekend. A game changer. ",
+    author: "Mike Toney.",
+    role: "Club & Wedding DJ",
     rating: 5,
+    image: "/images/djs/dj3.jpg"
   },
-  {
-    quote: "The real-time voting system is genius. I can instantly see what songs are trending with the crowd.",
-    author: "DJ Sarah Rodriguez",
-    role: "Wedding DJ",
-    rating: 5,
-  },
-  {
-    quote: "Finally, an app that understands what DJs actually need. The analytics help me prepare better for each event.",
-    author: "DJ Chris Parker",
+ {
+    quote: "I like that it doesn’t just collect requests, it shows trends. I played a corporate event and could tell what genre the crowd leaned into. Super helpful for adapting the setlist.",
+    author: "Chris P.",
     role: "Event DJ",
     rating: 5,
+    image: "/images/djs/dj2.jpeg"
+  }, {
+    quote: "Honestly, I wasn’t sure at first. But after trying it out at a birthday party, the live voting was a hit. People enjoyed it too.",
+    author: "Jenna Lee.",
+    role: "Private Events DJ",
+    rating: 5,
+    image: "/images/djs/dj1.jpg"
+   
   },
 ];
 
@@ -124,11 +127,11 @@ export default function LandingPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-24  lg:px-20 ">
           <div className="bg-gradient-to-b from-white to-purple-200 p-6 rounded-xl shadow-card">
             <div className="text-4xl font-bold text-primary mb-2">
-              <CountUp start={5000} end={10000} duration={3} delay={2} className='text-4xl font-bold text-primary mb-2'/>+</div>
+              <CountUp start={964} end={1426} duration={3} delay={2} className='text-4xl font-bold text-primary mb-2'/>+</div>
             <div  className="text-slate-900 text-xl font-bold">Events Powered</div>
           </div>
           <div className="bg-gradient-to-b from-white to-purple-200 p-6 rounded-xl shadow-card">
-            <div className="text-4xl font-bold text-primary mb-2">1M+</div>
+            <div className="text-4xl font-bold text-primary mb-2">23K+</div>
             <div className="text-slate-900 text-xl font-bold">Song Requests</div>
           </div>
           <div className="bg-gradient-to-b from-white to-purple-200 p-6 rounded-xl shadow-card">
@@ -168,18 +171,33 @@ export default function LandingPage() {
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">
           Loved by DJs Worldwide
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 ">
           {testimonials.map((testimonial, index) => (
-            <div  key={index} className="bg-gradient-to-b from-white to-purple-200 p-8 rounded-xl shadow-card">
-              <div className="flex gap-1 mb-4">
-                {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star key={i} className="h-5 w-5 fill-yellow-500 text-yellow-500" />
-                ))}
-              </div>
-              <blockquote className="text-lg mb-6 text-slate-800 font-semibold">{testimonial.quote}</blockquote>
+            <div
+              key={index}
+              className="flex flex-col justify-between bg-gradient-to-b from-white to-purple-200 p-8 rounded-xl shadow-card h-full"
+            >
               <div>
-                <div className="font-semibold text-slate-900">{testimonial.author}</div>
-                <div className="text-sm text-slate-900">{testimonial.role}</div>
+                <div className="flex gap-1 mb-4">
+                  {[...Array(testimonial.rating)].map((_, i) => (
+                    <Star key={i} className="h-5 w-5 fill-yellow-500 text-yellow-500" />
+                  ))}
+                </div>
+                <blockquote className="text-lg mb-6 text-slate-800 font-semibold">
+                  {testimonial.quote}
+                </blockquote>
+              </div>
+
+              <div className="flex justify-between items-center mt-6">
+                <div>
+                  <div className="font-semibold text-slate-900">{testimonial.author}</div>
+                  <div className="text-sm text-slate-900">{testimonial.role}</div>
+                </div>
+                <img
+                  src={testimonial.image}
+                  alt={testimonial.author}
+                  className="w-12 h-12 rounded-full object-cover"
+                />
               </div>
             </div>
           ))}
@@ -188,8 +206,8 @@ export default function LandingPage() {
 
       {/* CTA */}
       <section className="container mx-auto px-4 sm:px-6 lg:px-12 py-12 sm:py-24">
-        <div className="bg-gradient-to-r from-primary/20 to-purple-600/20 rounded-2xl p-12 text-center relative overflow-hidden">
-          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IHgxPSI4MS4yNyUiIHkxPSI4MS4yNyUiIHgyPSIwJSIgeTI9IjAlIiBpZD0iYSI+PHN0b3Agc3RvcC1jb2xvcj0iI0ZGRiIgc3RvcC1vcGFjaXR5PSIwIiBvZmZzZXQ9IjAlIi8+PHN0b3Agc3RvcC1jb2xvcj0iI0ZGRiIgc3RvcC1vcGFjaXR5PSIuMDUiIG9mZnNldD0iMTAwJSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxwYXRoIGZpbGw9InVybCgjYSkiIGQ9Ik0wIDBoMjB2MjBIMHoiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPjwvc3ZnPg==')] opacity-50"></div>
+        <div className="bg-slate-900 rounded-2xl p-12 text-center relative overflow-hidden">
+          <div className="absolute inset-0 "></div>
           <div className="relative">
             <Sparkles className="h-12 w-12 text-primary mx-auto mb-6" />
             <h2 className="text-3xl md:text-4xl font-bold mb-6">
