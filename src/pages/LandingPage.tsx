@@ -252,7 +252,7 @@ export default function LandingPage() {
       </div>
 
         {/* Plan Card */}
-        <div className="mx-auto w-fit px-12 border border-border rounded-xl py-12  space-y-6 bg-gradient-to-b from-slate-200 to-purple-200 lg:to-purple-300 relative">
+        <div className="mx-auto w-fit px-12 border border-border rounded-xl py-12  space-y-6 bg-gradient-to-b from-slate-200 to-purple-200 lg:to-purple-400 relative">
           <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-xs px-3 py-2 rounded-full font-medium">
             Most Popular
           </div>
