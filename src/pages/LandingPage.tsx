@@ -64,7 +64,6 @@ const plan = {
     'Pre-event song requests',
     'Basic analytics',
     'Priority support',
-    'Custom event URLs',
   ],
  
 };
