@@ -106,7 +106,7 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section className="container mx-auto px-4 sm:px-6 md:px-0 mt-5">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-300">
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-200 sm:to-purple-300">
             Your Crowd, Your Playlist 
           </h1>
 
@@ -221,7 +221,7 @@ export default function LandingPage() {
       </section>
 
       {/* Pricing */}
-      <section id="pricing" className="max-w-5xl mx-auto px-4 py-16 text-center space-y-8 ">
+      <section id="pricing" className="max-w-5xl mx-auto px-6 lg:px-20 py-16 text-center space-y-8 ">
       <div>
         <h2 className="text-3xl md:text-4xl font-bold">Simple Pricing</h2>
         <p className="text-muted-foreground my-2 mt-4 text-lg sm:text-xl">
