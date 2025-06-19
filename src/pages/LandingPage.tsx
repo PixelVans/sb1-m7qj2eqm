@@ -106,7 +106,7 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section className="container mx-auto px-4 sm:px-6 md:px-0 mt-5">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-200 sm:to-purple-300">
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-200 lg:to-purple-300">
             Your Crowd, Your Playlist 
           </h1>
 
@@ -141,16 +141,16 @@ export default function LandingPage() {
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-24  lg:px-20 ">
-          <div className="bg-gradient-to-b from-slate-200 to-purple-200 p-6 rounded-xl shadow-card">
+          <div className="bg-gradient-to-b from-slate-200 to-purple-200 lg:to-purple-300 p-6 rounded-xl shadow-card">
             <div className="text-4xl font-bold text-primary mb-2">
               <CountUp start={964} end={1426} duration={3} delay={2} className='text-4xl font-bold text-primary mb-2'/>+</div>
             <div  className="text-slate-900 text-xl font-bold">Events Powered</div>
           </div>
-          <div className="bg-gradient-to-b from-slate-200 to-purple-200 p-6 rounded-xl shadow-card">
+          <div className="bg-gradient-to-b from-slate-200 to-purple-200 lg:to-purple-300 p-6 rounded-xl shadow-card">
             <div className="text-4xl font-bold text-primary mb-2">23K+</div>
             <div className="text-slate-900 text-xl font-bold">Song Requests</div>
           </div>
-          <div className="bg-gradient-to-b from-slate-200 to-purple-200 p-6 rounded-xl shadow-card">
+          <div className="bg-gradient-to-b from-slate-200 to-purple-200 lg:to-purple-300 p-6 rounded-xl shadow-card">
             <div className="text-4xl font-bold text-primary mb-2">98%</div>
             <div className="text-slate-900 text-xl font-bold">Happy DJs</div>
           </div>
@@ -166,7 +166,7 @@ export default function LandingPage() {
           {features.map((feature, index) => (
             <div 
               key={feature.title} 
-              className={`bg-gradient-to-b from-slate-200 to-purple-200 p-8 rounded-xl shadow-card hover-lift ${
+              className={`bg-gradient-to-b from-slate-200 to-purple-200 lg:to-purple-300 p-8 rounded-xl shadow-card hover-lift ${
                 index % 2 === 0 ? '' : ''
               }`}
             >
@@ -191,7 +191,7 @@ export default function LandingPage() {
           {testimonials.map((testimonial, index) => (
             <div
               key={index}
-              className="flex flex-col justify-between bg-gradient-to-b from-slate-200 to-purple-200 p-8 rounded-xl shadow-card h-full"
+              className="flex flex-col justify-between bg-gradient-to-b from-slate-200 to-purple-200 lg:to-purple-300 p-8 rounded-xl shadow-card h-full"
             >
               <div>
                 <div className="flex gap-1 mb-4">
@@ -252,7 +252,7 @@ export default function LandingPage() {
       </div>
 
         {/* Plan Card */}
-        <div className="mx-auto max-w-xl border border-border rounded-xl py-12  space-y-6 bg-gradient-to-b from-slate-200 to-purple-200 relative">
+        <div className="mx-auto max-w-xl border border-border rounded-xl py-12  space-y-6 bg-gradient-to-b from-slate-200 to-purple-200 lg:to-purple-300 relative">
           <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-xs px-3 py-1 rounded-full font-medium">
             Most Popular
           </div>
