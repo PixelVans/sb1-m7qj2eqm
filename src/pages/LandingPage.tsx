@@ -58,7 +58,7 @@ const plan = {
   priceMonthly: '$9.99',
   priceYearly: '$99.99',
   savePercent: 17,
-  description: 'Everything you need for regular gigs',
+  description: 'Essential tools to streamline your gigs',
   features: [
     'Unlimited events',
     'Pre-event song requests',
@@ -212,7 +212,7 @@ export default function LandingPage() {
                 <img
                   src={testimonial.image}
                   alt={testimonial.author}
-                  className="w-12 h-12 rounded-full object-cover"
+                  className="w-12 h-12 rounded-full object-cover ring-[3px] ring-purple-500"
                 />
               </div>
             </div>
@@ -221,7 +221,7 @@ export default function LandingPage() {
       </section>
 
       {/* Pricing */}
-      <section id="pricing" className="max-w-5xl mx-auto px-6 lg:px-20 py-16 text-center space-y-8 ">
+      <section id="pricing" className="max-w-5xl mx-auto px-4 lg:px-20 py-16 text-center space-y-8 ">
       <div>
         <h2 className="text-3xl md:text-4xl font-bold">Simple Pricing</h2>
         <p className="text-muted-foreground my-2 mt-4 text-lg sm:text-xl">
@@ -252,8 +252,8 @@ export default function LandingPage() {
       </div>
 
         {/* Plan Card */}
-        <div className="mx-auto max-w-xl border border-border rounded-xl py-12  space-y-6 bg-gradient-to-b from-slate-200 to-purple-200 lg:to-purple-300 relative">
-          <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-xs px-3 py-1 rounded-full font-medium">
+        <div className="mx-auto w-fit px-12 border border-border rounded-xl py-12  space-y-6 bg-gradient-to-b from-slate-200 to-purple-200 lg:to-purple-300 relative">
+          <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-xs px-3 py-2 rounded-full font-medium">
             Most Popular
           </div>
 
@@ -276,16 +276,16 @@ export default function LandingPage() {
 
           <p className="text-xl sm:text-2xl text-gray-950 font-semibold text-center">{plan.description}</p>
 
-          <ul className="space-y-3 text-left max-w-xs mx-auto ">
+          <ul className="space-y-2 text-center max-w-xs mx-auto ">
             {plan.features.map((feature) => (
-              <li key={feature} className="flex items-start gap-2 text-lg text-gray-950">
-                <Check className="h-6 w-6 text-green-800 mt-0.5 flex-shrink-0" />
+              <li key={feature} className="flex  ml-9 text-center gap-2  text-base sm:text-lg text-gray-950">
+                <Check className="h-5 w-5 sm:h-6 sm:w-6 text-green-900 mt-0.5 flex-shrink-0" />
                 <span>{feature}</span>
               </li>
             ))}
           </ul>
 
-          <Sparkles className="absolute -top-4 -right-4 h-6 w-6 text-primary" />
+          <Sparkles className="hidden md:block absolute -top-12 -right-6 h-9 w-9 text-yellow-500" />
         </div>
       </section>
       
