@@ -1,7 +1,7 @@
-
+import { useState } from 'react';
 import CountUp from 'react-countup';
 import { Link } from 'react-router-dom';
-import { QrCode, BarChart2, Zap, ArrowRight, Star, Users, Sparkles } from 'lucide-react';
+import { QrCode, BarChart2, Zap, ArrowRight, Star, Users, Sparkles, Check, CreditCard,} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getAssetUrl,  } from '@/lib/utils';
 
@@ -53,9 +53,25 @@ const testimonials = [
   },
 ];
 
+const plan = {
+  name: 'Pro',
+  priceMonthly: '$9.99',
+  priceYearly: '$99.99',
+  savePercent: 17,
+  description: 'Everything you need for regular gigs',
+  features: [
+    'Unlimited events',
+    'Pre-event song requests',
+    'Basic analytics',
+    'Priority support',
+    'Custom event URLs',
+  ],
+ 
+};
+
 export default function LandingPage() {
-  const heroImageUrl = getAssetUrl('wheresmysong3d.png');
   const logoUrl = getAssetUrl('wheresmysong3d.png');
+  const [isYearly, setIsYearly] = useState(false);
 
   return (
     <div className="min-h-screen bg-gradient-welcome">
@@ -125,16 +141,16 @@ export default function LandingPage() {
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-24  lg:px-20 ">
-          <div className="bg-gradient-to-b from-white to-purple-200 p-6 rounded-xl shadow-card">
+          <div className="bg-gradient-to-b from-slate-200 to-purple-200 p-6 rounded-xl shadow-card">
             <div className="text-4xl font-bold text-primary mb-2">
               <CountUp start={964} end={1426} duration={3} delay={2} className='text-4xl font-bold text-primary mb-2'/>+</div>
             <div  className="text-slate-900 text-xl font-bold">Events Powered</div>
           </div>
-          <div className="bg-gradient-to-b from-white to-purple-200 p-6 rounded-xl shadow-card">
+          <div className="bg-gradient-to-b from-slate-200 to-purple-200 p-6 rounded-xl shadow-card">
             <div className="text-4xl font-bold text-primary mb-2">23K+</div>
             <div className="text-slate-900 text-xl font-bold">Song Requests</div>
           </div>
-          <div className="bg-gradient-to-b from-white to-purple-200 p-6 rounded-xl shadow-card">
+          <div className="bg-gradient-to-b from-slate-200 to-purple-200 p-6 rounded-xl shadow-card">
             <div className="text-4xl font-bold text-primary mb-2">98%</div>
             <div className="text-slate-900 text-xl font-bold">Happy DJs</div>
           </div>
@@ -150,7 +166,7 @@ export default function LandingPage() {
           {features.map((feature, index) => (
             <div 
               key={feature.title} 
-              className={`bg-gradient-to-b from-white to-purple-200 p-8 rounded-xl shadow-card hover-lift ${
+              className={`bg-gradient-to-b from-slate-200 to-purple-200 p-8 rounded-xl shadow-card hover-lift ${
                 index % 2 === 0 ? '' : ''
               }`}
             >
@@ -175,7 +191,7 @@ export default function LandingPage() {
           {testimonials.map((testimonial, index) => (
             <div
               key={index}
-              className="flex flex-col justify-between bg-gradient-to-b from-white to-purple-200 p-8 rounded-xl shadow-card h-full"
+              className="flex flex-col justify-between bg-gradient-to-b from-slate-200 to-purple-200 p-8 rounded-xl shadow-card h-full"
             >
               <div>
                 <div className="flex gap-1 mb-4">
@@ -203,6 +219,76 @@ export default function LandingPage() {
           ))}
         </div>
       </section>
+
+      {/* Pricing */}
+      <section id="pricing" className="max-w-5xl mx-auto px-4 py-16 text-center space-y-8 ">
+      <div>
+        <h2 className="text-3xl md:text-4xl font-bold">Simple Pricing</h2>
+        <p className="text-muted-foreground my-2 mt-4 text-lg sm:text-xl">
+        One plan. All features. Start with a 7-day free trial — no credit card required.
+        </p>
+      </div>
+
+      {/* Billing Toggle */}
+      <div className="flex justify-center">
+        <div className="bg-white/5 rounded-full p-1 flex gap-1">
+          <button
+            className={`px-4 py-2 rounded-full text-sm transition-colors ${
+              !isYearly ? 'bg-primary text-white' : 'text-gray-400 hover:text-white'
+            }`}
+            onClick={() => setIsYearly(false)}
+          >
+            Monthly
+          </button>
+          <button
+            className={`px-4 py-2 rounded-full text-sm transition-colors ${
+              isYearly ? 'bg-primary text-white' : 'text-gray-400 hover:text-white'
+            }`}
+            onClick={() => setIsYearly(true)}
+          >
+            Yearly
+          </button>
+        </div>
+      </div>
+
+        {/* Plan Card */}
+        <div className="mx-auto max-w-xl border border-border rounded-xl py-12  space-y-6 bg-gradient-to-b from-slate-200 to-purple-200 relative">
+          <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-xs px-3 py-1 rounded-full font-medium">
+            Most Popular
+          </div>
+
+          <h3 className="text-xl font-semibold text-gray-900">{plan.name}</h3>
+
+          <div className="mt-2 flex items-baseline justify-center">
+            <span className="text-3xl font-bold text-gray-900">
+              {isYearly ? plan.priceYearly : plan.priceMonthly}
+            </span>
+            <span className="text-lg text-gray-900 ml-1 font-semibold">
+              /{isYearly ? 'year' : 'month'}
+            </span>
+          </div>
+
+          {isYearly && (
+            <div className="text-md text-green-800 text-center font-semibold">
+              Save {plan.savePercent}% with yearly billing
+            </div>
+          )}
+
+          <p className="text-xl sm:text-2xl text-gray-950 font-semibold text-center">{plan.description}</p>
+
+          <ul className="space-y-3 text-left max-w-xs mx-auto ">
+            {plan.features.map((feature) => (
+              <li key={feature} className="flex items-start gap-2 text-lg text-gray-950">
+                <Check className="h-6 w-6 text-green-800 mt-0.5 flex-shrink-0" />
+                <span>{feature}</span>
+              </li>
+            ))}
+          </ul>
+
+          <Sparkles className="absolute -top-4 -right-4 h-6 w-6 text-primary" />
+        </div>
+      </section>
+      
 
       {/* CTA */}
       <section className="container mx-auto px-4 sm:px-6 lg:px-12 py-12 sm:py-24">
@@ -236,7 +322,7 @@ export default function LandingPage() {
           </div>
           <div className="flex gap-8 text-sm text-muted-foreground">
             <a href="#features" className="hover:text-primary transition-colors">Features</a>
-            <Link to="/pricing" className="hover:text-primary transition-colors">Pricing</Link>
+            <a href="#pricing" className="hover:text-primary transition-colors">Pricing</a>
             <a href="#" className="hover:text-primary transition-colors">Terms</a>
             <a href="#" className="hover:text-primary transition-colors">Privacy</a>
           </div>
