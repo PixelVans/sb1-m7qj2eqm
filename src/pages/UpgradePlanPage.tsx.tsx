@@ -18,11 +18,9 @@ const plans = [
     features: [
       'Unlimited events',
       'Pre-event song requests',
-      'Custom branding',
       'Basic analytics',
       'Priority support',
-      'Custom event URLs',
-    ],
+     ],
     cta: 'Go Pro',
     popular: true,
     plan: 'pro' as const,
@@ -61,7 +59,7 @@ export default function UpgradePlanPage() {
 
     try {
       const stripe = await stripePromise;
-      //const response = await fetch('https://heydj-pro.onrender.com/create-checkout-session' (test mode)
+      
       const response = await fetch('https://wheresmysong.onrender.com/create-checkout-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

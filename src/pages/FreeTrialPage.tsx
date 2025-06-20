@@ -5,6 +5,11 @@ import { Timer } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { loadStripe } from '@stripe/stripe-js';
+
+
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 export default function FreeTrialPage() {
   const features = [
@@ -34,7 +39,7 @@ export default function FreeTrialPage() {
       // Update Supabase user metadata
       const { error } = await supabase.auth.updateUser({
         data: {
-          subscription_plan: 'trial', 
+          subscription_plan: 'trial',
           subscription_period: 'weekly',
           subscription_start: subscriptionStart,
           subscription_expires: subscriptionExpires,
@@ -98,3 +103,5 @@ export default function FreeTrialPage() {
     </div>
   );
 }
+
+

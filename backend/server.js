@@ -16,16 +16,14 @@ const supabase = createClient(
 // Enable CORS
 app.use(cors());
 
-// Mount raw body parser for Stripe webhook
-app.post('/webhook', express.raw({ type: 'application/json' }));
-
 // Use JSON parser for all other routes
 app.use(express.json());
 
 // Root route
 app.get('/', (req, res) => {
-  res.send('WheresMySong backend with Stripe and Supabase!');
+  res.send(`© ${new Date().getFullYear()} WheresMySong. All rights reserved.`);
 });
+
 
 // Create Checkout Session
 app.post('/create-checkout-session', async (req, res) => {
@@ -56,8 +54,8 @@ app.post('/create-checkout-session', async (req, res) => {
           quantity: 1,
         },
       ],
-      success_url: 'https://heydjtest.vercel.app/success',
-      cancel_url: 'https://heydjtest.vercel.app/failure',
+      success_url: 'https://wheresmysong.com/success',
+      cancel_url: 'https://wheresmysong.com/failure',
       metadata: {
         userId,
         plan,
@@ -76,11 +74,8 @@ app.post('/create-checkout-session', async (req, res) => {
 
 
 
-
-
-
 // Stripe Webhook Handler
-app.post('/webhook', async (req, res) => {
+app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
   const sig = req.headers['stripe-signature'];
 
   let event;
@@ -135,7 +130,7 @@ app.post('/webhook', async (req, res) => {
         {
           user_id: userId,
           title: `Hey ${name}, A payment of ${formattedAmount} was made to your account`,
-          message: `Your Pro (${period}) subscription is now active and will expire on ${formattedExpiry}. Enjoy all the premium features!`,
+          message: `Your ${plan === 'trial' ? 'free trial' : 'Pro'} (${period}) subscription is now active and will expire on ${formattedExpiry}. Enjoy all the premium features!`,
           read: false,
         },
       ]);
@@ -203,6 +198,7 @@ app.post('/check-user-exists', async (req, res) => {
     return res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 
 
 

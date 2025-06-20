@@ -129,7 +129,7 @@ export default function Settings() {
               onClick={() => setShowDowngradeConfirm(true)}
               className="w-full"
             >
-              Downgrade to Free Plan
+              Cancel Subscription
             </Button>
           </div>
         </div>

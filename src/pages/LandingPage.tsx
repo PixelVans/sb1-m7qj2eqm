@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import CountUp from 'react-countup';
 import { Link } from 'react-router-dom';
-import { QrCode, BarChart2, Zap, ArrowRight, Star, Users, Sparkles, Check, CreditCard,} from 'lucide-react';
+import { QrCode, BarChart2, Zap, ArrowRight, Star, Users, Sparkles, Check, } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getAssetUrl,  } from '@/lib/utils';
 
