@@ -86,9 +86,9 @@ export default function LandingPage() {
               <a href="#features" className="text-sm font-medium hover:text-primary transition-colors">
                 Features
               </a>
-              <Link to="/pricing" className="text-sm font-medium hover:text-primary transition-colors">
+              <a href="#pricing" className="text-sm font-medium hover:text-primary transition-colors">
                 Pricing
-              </Link>
+              </a>
             </div>
           </div>
           <div className="flex items-center gap-4">
@@ -140,16 +140,21 @@ export default function LandingPage() {
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-24  lg:px-20 ">
-          <div className="bg-gradient-to-b from-slate-200 to-purple-200 lg:to-purple-300 p-6 rounded-xl shadow-card">
-            <div className="text-4xl font-bold text-primary mb-2">
+          <div  className="bg-gradient-to-b from-slate-200 to-purple-200 lg:to-purple-300 p-6 rounded-xl shadow-card">
+            <div
+              
+              className="text-4xl font-bold text-primary mb-2">
               <CountUp start={964} end={1426} duration={3} delay={2} className='text-4xl font-bold text-primary mb-2'/>+</div>
             <div  className="text-slate-900 text-xl font-bold">Events Powered</div>
           </div>
-          <div className="bg-gradient-to-b from-slate-200 to-purple-200 lg:to-purple-300 p-6 rounded-xl shadow-card">
+          <div
+            className="bg-gradient-to-b from-slate-200 to-purple-200 lg:to-purple-300 p-6 rounded-xl shadow-card">
             <div className="text-4xl font-bold text-primary mb-2">23K+</div>
             <div className="text-slate-900 text-xl font-bold">Song Requests</div>
           </div>
-          <div className="bg-gradient-to-b from-slate-200 to-purple-200 lg:to-purple-300 p-6 rounded-xl shadow-card">
+          <div
+           
+            className="bg-gradient-to-b from-slate-200 to-purple-200 lg:to-purple-300 p-6 rounded-xl shadow-card">
             <div className="text-4xl font-bold text-primary mb-2">98%</div>
             <div className="text-slate-900 text-xl font-bold">Happy DJs</div>
           </div>
@@ -163,7 +168,8 @@ export default function LandingPage() {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           {features.map((feature, index) => (
-            <div 
+            <div
+              data-aos="fade"
               key={feature.title} 
               className={`bg-gradient-to-b from-slate-200 to-purple-200 lg:to-purple-300 p-8 rounded-xl shadow-card hover-lift ${
                 index % 2 === 0 ? '' : ''
@@ -189,6 +195,7 @@ export default function LandingPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 ">
           {testimonials.map((testimonial, index) => (
             <div
+              data-aos="fade-left"
               key={index}
               className="flex flex-col justify-between bg-gradient-to-b from-slate-200 to-purple-200 lg:to-purple-300 p-8 rounded-xl shadow-card h-full"
             >

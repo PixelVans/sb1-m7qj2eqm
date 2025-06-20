@@ -47,6 +47,11 @@
     --input: 217.2 32.6% 17.5%;
     --ring: 263.4 70% 50.4%;
   }
+
+  body {
+    overflow-x: hidden;
+  }
+  
 }
 
 @layer base {
