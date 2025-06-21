@@ -5,6 +5,8 @@ import { useSettings } from '@/lib/store';
 import { Moon, Sun, Eye, Hash, AlertTriangle } from 'lucide-react';
 import { ProfileDialog } from '@/components/ProfileDialog';
 import { MembershipStatus } from '@/components/MembershipStatus';
+import { useAuth } from '@/hooks/useAuth';
+import { toast } from 'sonner';
 import {
   Dialog,
   DialogContent,
@@ -22,21 +24,44 @@ export default function Settings() {
     setTheme,
     setShowVoteCount,
     setRequestLimit,
-    setPlan,
     subscription,
-    resetEventsCreated,
+    
   } = useSettings();
 
   const isDark = theme === 'dark';
   const [profileOpen, setProfileOpen] = useState(false);
   const [showDowngradeConfirm, setShowDowngradeConfirm] = useState(false);
-
-  const handleDowngrade = () => {
-    // setPlan(null);
-    // resetEventsCreated();
-    // setShowDowngradeConfirm(false);
-    // toast.success('Successfully unsubscribed from pro plan');
+  const [isCancelling, setIsCancelling] = useState(false);
+  const { user,  } = useAuth();
+ 
+ 
+  const handleDowngrade = async () => {
+    setIsCancelling(true);
+    try {
+      const response = await fetch('http://localhost:5000/cancel-subscription', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId: user?.id }),
+      });
+  
+      const result = await response.json();
+  
+      if (result.success) {
+        toast.success('Successfully scheduled cancellation of your Pro plan. You’ll retain access until the end of the billing period.');
+        setShowDowngradeConfirm(false); // Close dialog on success
+      } else {
+        toast.error(result.error || 'Failed to cancel subscription');
+      }
+    } catch (err) {
+      toast.error('Something went wrong while cancelling subscription.');
+      console.error(err);
+    } finally {
+      setIsCancelling(false);
+    }
   };
+  
 
   const bgClass = isDark ? 'bg-white/5' : 'bg-gray-100';
   const textPrimary = isDark ? 'text-white' : 'text-gray-900';
@@ -155,32 +180,21 @@ export default function Settings() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <AlertTriangle className="h-5 w-5 text-destructive" />
-              Confirm Downgrade
+              Cancel Pro Subscription
             </DialogTitle>
           </DialogHeader>
           <div className="py-4">
             <p className="text-sm text-muted-foreground mb-4">
-              Are you sure you want to downgrade to the free plan? This will:
+            Are you sure you want to cancel your Pro plan? You’ll still retain access until the end of your current billing period.
             </p>
-            <ul className="space-y-2 text-sm">
-              <li className="flex items-center gap-2 text-destructive">
-                • Limit you to only one event
-              </li>
-              <li className="flex items-center gap-2 text-destructive">
-                • Remove access to pro features
-              </li>
-              <li className="flex items-center gap-2 text-destructive">
-                • Disable pre-event requests
-              </li>
-            </ul>
           </div>
           <DialogFooter>
             <Button variant="ghost" onClick={() => setShowDowngradeConfirm(false)}>
               Cancel
             </Button>
-            <Button variant="destructive" onClick={handleDowngrade}>
-              Confirm Downgrade
-            </Button>
+            <Button variant="destructive" onClick={handleDowngrade} disabled={isCancelling}>
+            {isCancelling ? 'Cancelling...' : 'Confirm Cancel Subscription'}
+          </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

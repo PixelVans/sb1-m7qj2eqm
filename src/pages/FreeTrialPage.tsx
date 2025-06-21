@@ -24,44 +24,34 @@ export default function FreeTrialPage() {
 
   const handleStartTrial = async () => {
     setLoading(true);
-
+  
     try {
-      // Get current time and expiration date (7 days later)
-      const now = new Date();
-      const expires = new Date(now);
-      expires.setDate(expires.getDate() + 7);
-      //expires.setMinutes(expires.getMinutes() + 2); (testing expiry)
-
-      // Format ISO strings
-      const subscriptionStart = now.toISOString();
-      const subscriptionExpires = expires.toISOString();
-
-      // Update Supabase user metadata
-      const { error } = await supabase.auth.updateUser({
-        data: {
-          subscription_plan: 'trial',
-          subscription_period: 'weekly',
-          subscription_start: subscriptionStart,
-          subscription_expires: subscriptionExpires,
-        },
+      const user = await supabase.auth.getUser();
+      const userId = user.data.user?.id;
+      const email = user.data.user?.email;
+  
+      if (!userId || !email) throw new Error('Missing user info');
+  
+      const response = await fetch('http://localhost:5000/start-trial', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, email }),
       });
-
-      if (error) throw error;
-
-      toast.success('7-day free trial started! Enjoy full access.');
-
-      //redirect to dashboard after short delay
-      setTimeout(() => {
-        navigate('/dashboard');
-      }, 500);
-
+  
+      const result = await response.json();
+  
+      if (!result.url) throw new Error('No Stripe URL returned');
+  
+      const stripe = await stripePromise;
+      window.location.href = result.url; // or use `stripe.redirectToCheckout({ sessionId })` if using client-only mode
     } catch (error) {
-      console.error('Error starting free trial:', error);
-      toast.error('Failed to start free trial. Please try again.');
+      console.error('Error starting Stripe trial:', error);
+      toast.error('Could not start trial. Please try again.');
     } finally {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="lg:min-h-screen flex items-center justify-center bg-gradient-to-r from-black to-gray-900 text-white px-4">

@@ -25,6 +25,45 @@ app.get('/', (req, res) => {
 });
 
 
+app.post('/start-trial', async (req, res) => {
+  const { userId, email } = req.body;
+
+  if (!userId || !email) {
+    return res.status(400).json({ error: 'Missing userId or email' });
+  }
+
+  try {
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      mode: 'subscription',
+      customer_email: email,
+      line_items: [
+        {
+          price: 'price_xxx', // ← your Pro plan price ID
+          quantity: 1,
+        },
+      ],
+      subscription_data: {
+        trial_period_days: 7,
+        metadata: {
+          user_id: userId,
+        },
+      },
+      success_url: 'http://localhost:5173/success',
+      cancel_url: 'http://localhost:5173/faulure',
+    });
+
+    return res.json({ url: session.url });
+  } catch (err) {
+    console.error('Error creating Stripe session:', err);
+    return res.status(500).json({ error: 'Could not create Stripe session' });
+  }
+});
+
+
+
+
+
 // Create Checkout Session
 app.post('/create-checkout-session', async (req, res) => {
   const { plan, period, email, userId, name } = req.body;
@@ -41,7 +80,7 @@ app.post('/create-checkout-session', async (req, res) => {
   try {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
-      mode: 'payment',
+      mode: 'subscription',
       line_items: [
         {
           price_data: {
@@ -50,6 +89,9 @@ app.post('/create-checkout-session', async (req, res) => {
               name: `WheresMySong Pro (${period})`,
             },
             unit_amount: amount,
+            recurring: {
+              interval: period === 'yearly' ? 'year' : 'month',  // 👈 Automatic subscription
+            },
           },
           quantity: 1,
         },
@@ -94,47 +136,54 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
   const { userId, plan, period, name = '' } = session.metadata || {};
 
   if (event.type === 'checkout.session.completed') {
-    console.log(`Payment success for ${userId}: ${plan} (${period})`);
-
-    const startDate = new Date();
-    const expiresDate = new Date(startDate);
-    if (period === 'monthly') {
-      expiresDate.setMonth(expiresDate.getMonth() + 1);
-    } else if (period === 'yearly') {
-      expiresDate.setFullYear(expiresDate.getFullYear() + 1);
-    }
-
-    const amountPaid = (session.amount_total / 100).toFixed(2);
-    const formattedAmount = `$${amountPaid}`;
-    const formattedExpiry = expiresDate.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-
+    const subscriptionId = session.subscription;
+    const { userId, plan, period, name = '' } = session.metadata || {};
+  
+    // Load full subscription info from Stripe (to get trial_end if available)
+    const stripeSubscription = await stripe.subscriptions.retrieve(subscriptionId);
+  
+    const startDate = new Date(stripeSubscription.start_date * 1000);
+    const expiresDate = stripeSubscription.trial_end
+      ? new Date(stripeSubscription.trial_end * 1000)
+      : (() => {
+          const temp = new Date(startDate);
+          if (period === 'monthly') temp.setMonth(temp.getMonth() + 1);
+          else if (period === 'yearly') temp.setFullYear(temp.getFullYear() + 1);
+          return temp;
+        })();
+  
+    const subscriptionPlan = stripeSubscription.trial_end ? 'trial' : plan;
+  
     const { error } = await supabase.auth.admin.updateUserById(userId, {
       user_metadata: {
-        subscription_plan: plan,
-        subscription_period: period,
+        subscription_id: subscriptionId,
+        subscription_plan: subscriptionPlan,
+        subscription_period: stripeSubscription.trial_end ? 'weekly' : period,
         subscription_start: startDate.toISOString(),
         subscription_expires: expiresDate.toISOString(),
       },
     });
-
+  
     if (error) {
       console.error('Supabase update failed:', error.message);
     } else {
       console.log('Supabase user metadata updated');
-
+  
+      const isTrial = subscriptionPlan === 'trial';
+  
       const { error: notifError } = await supabase.from('notifications').insert([
         {
           user_id: userId,
-          title: `Hey ${name}, A payment of ${formattedAmount} was made to your account`,
-          message: `Your ${plan === 'trial' ? 'free trial' : 'Pro'} (${period}) subscription is now active and will expire on ${formattedExpiry}. Enjoy all the premium features!`,
+          title: isTrial
+            ? `Hey ${name}, Your 7-day free trial has started`
+            : `Hey ${name}, A payment of $${(session.amount_total / 100).toFixed(2)} was made to your account`,
+          message: isTrial
+            ? `You have full access to WheresMySong Pro until ${expiresDate.toDateString()}`
+            : `Your Pro (${period}) subscription is now active and will expire on ${expiresDate.toDateString()}. Enjoy all the premium features!`,
           read: false,
         },
       ]);
-
+  
       if (notifError) {
         console.error('Notification insert failed:', notifError.message);
       } else {
@@ -142,6 +191,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
       }
     }
   }
+  
 
   if (event.type === 'checkout.session.expired') {
     console.warn(`Session expired for user ${userId}`);
@@ -172,33 +222,52 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
 
 
 
-// Check if user exists by email
-app.post('/check-user-exists', async (req, res) => {
-  const { email } = req.body;
+app.post('/cancel-subscription', async (req, res) => {
+  const { userId } = req.body;
 
-  if (!email) {
-    return res.status(400).json({ error: 'Email is required' });
+  if (!userId) {
+    return res.status(400).json({ error: 'Missing userId' });
   }
 
   try {
-    // Fetch all users
-    const { data, error } = await supabase.auth.admin.listUsers();
+    // 1. Get user metadata
+    const { data: userData, error: userError } = await supabase.auth.admin.getUserById(userId);
 
-    if (error) {
-      console.error('Error fetching user list:', error);
-      return res.status(500).json({ error: 'Failed to fetch user list' });
+    if (userError || !userData?.user?.user_metadata?.subscription_id) {
+      return res.status(404).json({ error: 'Subscription not found for user.' });
     }
 
-    // check for user with matching email
-    const userExists = data.users.some((user) => user.email === email);
+    const subscriptionId = userData.user.user_metadata.subscription_id;
+   
+    const userName = userData.user.user_metadata?.dj_name || 'there';
 
-    return res.json({ userExists });
+    const period = userData.user.user_metadata?.subscription_period || '';
+
+    // 2. Cancel on Stripe
+    const deletedSubscription = await stripe.subscriptions.update(subscriptionId, {
+      cancel_at_period_end: true,
+    });
+
+    // 3. Insert notification
+    const { error: notifError } = await supabase.from('notifications').insert([
+      {
+        user_id: userId,
+        title: `Your ${period} subscription has been canceled`,
+        message: `Hi ${userName}, your Pro (${period}) plan has been successfully canceled. You'll retain access until the end of your billing period.`,
+        read: false,
+      },
+    ]);
+
+    if (notifError) {
+      console.error('Failed to insert notification:', notifError.message);
+    }
+
+    return res.status(200).json({ success: true });
   } catch (err) {
-    console.error('Server error:', err);
+    console.error('Cancel subscription error:', err);
     return res.status(500).json({ error: 'Internal server error' });
   }
 });
-
 
 
 
