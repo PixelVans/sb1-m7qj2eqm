@@ -39,18 +39,18 @@ app.post('/start-trial', async (req, res) => {
       customer_email: email,
       line_items: [
         {
-          price: 'price_xxx', // ← your Pro plan price ID
+          price: 'price_1RcPuBRoTuW6EzfZLjDwnUVr', // Monthly
           quantity: 1,
         },
       ],
       subscription_data: {
-        trial_period_days: 7,
+        trial_end: Math.floor(Date.now() / 1000) + 2 * 60, // ⏱️ Trial ends in 2 min
         metadata: {
           user_id: userId,
         },
       },
       success_url: 'http://localhost:5173/success',
-      cancel_url: 'http://localhost:5173/faulure',
+      cancel_url: 'http://localhost:5173/failure',
     });
 
     return res.json({ url: session.url });
@@ -64,17 +64,21 @@ app.post('/start-trial', async (req, res) => {
 
 
 
+
 // Create Checkout Session
 app.post('/create-checkout-session', async (req, res) => {
   const { plan, period, email, userId, name } = req.body;
 
-  let amount = 0;
-  if (plan === 'pro') {
-    amount = period === 'yearly' ? 9999 : 999;
-  }
+  // Map of your Stripe Price IDs (from Stripe dashboard)
+  const priceMap = {
+    monthly: 'price_1RcPuBRoTuW6EzfZLjDwnUVr',
+    yearly: 'price_1RcPx8RoTuW6EzfZY4AJR1QC',
+  };
 
-  if (amount === 0) {
-    return res.status(400).json({ error: 'Invalid plan or billing period' });
+  const selectedPrice = priceMap[period];
+
+  if (!selectedPrice) {
+    return res.status(400).json({ error: 'Invalid billing period' });
   }
 
   try {
@@ -83,16 +87,7 @@ app.post('/create-checkout-session', async (req, res) => {
       mode: 'subscription',
       line_items: [
         {
-          price_data: {
-            currency: 'usd',
-            product_data: {
-              name: `WheresMySong Pro (${period})`,
-            },
-            unit_amount: amount,
-            recurring: {
-              interval: period === 'yearly' ? 'year' : 'month',  // 👈 Automatic subscription
-            },
-          },
+          price: selectedPrice, // ✅ use pre-configured price ID
           quantity: 1,
         },
       ],
@@ -113,6 +108,8 @@ app.post('/create-checkout-session', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+
 
 
 
