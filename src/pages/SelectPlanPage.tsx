@@ -143,8 +143,10 @@ export default function SelectPlanPage() {
           Upgrade Your DJ Experience
         </h1>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          Choose the perfect plan for your needs and take your events to the next level
-        </p>
+        {isNewUser
+          ? 'Start your 7-day free trial. Full access, cancel anytime.'
+          : 'Choose the perfect plan for your needs and take your events to the next level.'}
+      </p>
       </div>
 
       {/* Billing Toggle */}

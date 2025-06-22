@@ -231,7 +231,7 @@ export default function LandingPage() {
       <div>
         <h2 className="text-3xl md:text-4xl font-bold">Simple Pricing</h2>
         <p className="text-muted-foreground my-2 mt-4 text-lg sm:text-xl">
-        One plan. All features. Start with a 7-day free trial — no credit card required.
+        One plan. All features. Start with a 7-day free trial
         </p>
       </div>
 
