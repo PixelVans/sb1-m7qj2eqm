@@ -79,7 +79,6 @@ export default function SelectPlanPage() {
       if (result?.error) throw result.error;
 
     } catch (error: any) {
-      console.error('Error selecting plan:', error);
       toast.error('Failed to select your plan. Please try again');
     } finally {
       setLoading(false);
