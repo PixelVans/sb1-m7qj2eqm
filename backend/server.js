@@ -16,101 +16,6 @@ const supabase = createClient(
 // Enable CORS
 app.use(cors());
 
-// Use JSON parser for all other routes
-app.use(express.json());
-
-// Root route
-app.get('/', (req, res) => {
-  res.send(`© ${new Date().getFullYear()} WheresMySong. All rights reserved.`);
-});
-
-
-app.post('/start-trial', async (req, res) => {
-  const { userId, email } = req.body;
-
-  if (!userId || !email) {
-    return res.status(400).json({ error: 'Missing userId or email' });
-  }
-
-  try {
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      mode: 'subscription',
-      customer_email: email,
-      line_items: [
-        {
-          price: 'price_1RcPuBRoTuW6EzfZLjDwnUVr', // Monthly
-          quantity: 1,
-        },
-      ],
-      subscription_data: {
-        trial_end: Math.floor(Date.now() / 1000) + 2 * 60, // ⏱️ Trial ends in 2 min
-        metadata: {
-          user_id: userId,
-        },
-      },
-      success_url: 'http://localhost:5173/success',
-      cancel_url: 'http://localhost:5173/failure',
-    });
-
-    return res.json({ url: session.url });
-  } catch (err) {
-    console.error('Error creating Stripe session:', err);
-    return res.status(500).json({ error: 'Could not create Stripe session' });
-  }
-});
-
-
-
-
-
-
-// Create Checkout Session
-app.post('/create-checkout-session', async (req, res) => {
-  const { plan, period, email, userId, name } = req.body;
-
-  // Map of your Stripe Price IDs (from Stripe dashboard)
-  const priceMap = {
-    monthly: 'price_1RcPuBRoTuW6EzfZLjDwnUVr',
-    yearly: 'price_1RcPx8RoTuW6EzfZY4AJR1QC',
-  };
-
-  const selectedPrice = priceMap[period];
-
-  if (!selectedPrice) {
-    return res.status(400).json({ error: 'Invalid billing period' });
-  }
-
-  try {
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      mode: 'subscription',
-      line_items: [
-        {
-          price: selectedPrice, // ✅ use pre-configured price ID
-          quantity: 1,
-        },
-      ],
-      success_url: 'https://wheresmysong.com/success',
-      cancel_url: 'https://wheresmysong.com/failure',
-      metadata: {
-        userId,
-        plan,
-        period,
-        email,
-        name,
-      },
-    });
-
-    res.json({ id: session.id });
-  } catch (error) {
-    console.error('Stripe error:', error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
-
-
 
 
 // Stripe Webhook Handler
@@ -215,54 +120,60 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
 
   res.status(200).json({ received: true });
 });
+// Use JSON parser for all other routes
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+
+// Root route
+app.get('/', (req, res) => {
+  res.send(`© ${new Date().getFullYear()} WheresMySong. All rights reserved.`);
+});
 
 
 
 
-app.post('/cancel-subscription', async (req, res) => {
-  const { userId } = req.body;
+// Create Checkout Session
+app.post('/create-checkout-session', async (req, res) => {
+  const { plan, period, email, userId, name } = req.body;
 
-  if (!userId) {
-    return res.status(400).json({ error: 'Missing userId' });
+  // Map of your Stripe Price IDs (from Stripe dashboard)
+  const priceMap = {
+    monthly: 'price_1RcPuBRoTuW6EzfZLjDwnUVr',
+    yearly: 'price_1RcPx8RoTuW6EzfZY4AJR1QC',
+  };
+
+  const selectedPrice = priceMap[period];
+
+  if (!selectedPrice) {
+    return res.status(400).json({ error: 'Invalid billing period' });
   }
 
   try {
-    // 1. Get user metadata
-    const { data: userData, error: userError } = await supabase.auth.admin.getUserById(userId);
-
-    if (userError || !userData?.user?.user_metadata?.subscription_id) {
-      return res.status(404).json({ error: 'Subscription not found for user.' });
-    }
-
-    const subscriptionId = userData.user.user_metadata.subscription_id;
-   
-    const userName = userData.user.user_metadata?.dj_name || 'there';
-
-    const period = userData.user.user_metadata?.subscription_period || '';
-
-    // 2. Cancel on Stripe
-    const deletedSubscription = await stripe.subscriptions.update(subscriptionId, {
-      cancel_at_period_end: true,
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      mode: 'subscription',
+      line_items: [
+        {
+          price: selectedPrice, // ✅ use pre-configured price ID
+          quantity: 1,
+        },
+      ],
+      success_url: 'http://localhost:5173/success',
+      cancel_url: 'http://localhost:5173/failure',
+      metadata: {
+        userId,
+        plan,
+        period,
+        email,
+        name,
+      },
     });
 
-    // 3. Insert notification
-    const { error: notifError } = await supabase.from('notifications').insert([
-      {
-        user_id: userId,
-        title: `Your ${period} subscription has been canceled`,
-        message: `Hi ${userName}, your Pro (${period}) plan has been successfully canceled. You'll retain access until the end of your billing period.`,
-        read: false,
-      },
-    ]);
-
-    if (notifError) {
-      console.error('Failed to insert notification:', notifError.message);
-    }
-
-    return res.status(200).json({ success: true });
-  } catch (err) {
-    console.error('Cancel subscription error:', err);
-    return res.status(500).json({ error: 'Internal server error' });
+    res.json({ id: session.id });
+  } catch (error) {
+    console.error('Stripe error:', error);
+    res.status(500).json({ error: error.message });
   }
 });
 
