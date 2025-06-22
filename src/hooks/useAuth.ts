@@ -73,7 +73,7 @@ export function useAuth() {
             });
 
             // Redirect to start-free-trial page for new users
-            navigate('/start-free-trial');
+            navigate('/select-plan');
           } catch (error) {
             logger.error('Error updating user after Apple sign-in:', { error });
             toast.error('Failed to complete sign-in process');

@@ -8,7 +8,7 @@ import { useSettings } from '@/lib/store';
 import { toast } from 'sonner';
 
 export default function StripeSuccessPage() {
-  const [showConfetti, setShowConfetti] = useState(false);
+  const [showConfetti,] = useState(false);
   const [loading, setLoading] = useState(true);
   const [countdown, setCountdown] = useState(3);
 
@@ -35,7 +35,7 @@ export default function StripeSuccessPage() {
           throw new Error('Failed to refresh user session');
         }
 
-        const plan = data.user.user_metadata?.subscription_plan || 'free';
+        const plan = data.user.user_metadata?.subscription_plan || null;
         setPlan(plan);
         resetEventsCreated();
       } catch (err) {

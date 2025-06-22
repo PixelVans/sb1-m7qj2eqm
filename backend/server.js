@@ -13,7 +13,6 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
-// Enable CORS
 app.use(cors());
 
 
@@ -56,15 +55,26 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
   
     const subscriptionPlan = stripeSubscription.trial_end ? 'trial' : plan;
   
-    const { error } = await supabase.auth.admin.updateUserById(userId, {
-      user_metadata: {
-        subscription_id: subscriptionId,
-        subscription_plan: subscriptionPlan,
-        subscription_period: stripeSubscription.trial_end ? 'weekly' : period,
-        subscription_start: startDate.toISOString(),
-        subscription_expires: expiresDate.toISOString(),
-      },
-    });
+    const { data: userData, error: fetchError } = await supabase.auth.admin.getUserById(userId);
+
+      if (fetchError || !userData) {
+        console.error('Failed to fetch user:', fetchError?.message || 'No user data found');
+        return res.sendStatus(500);
+      }
+
+      const existingMetadata = userData.user?.user_metadata || {};
+
+      const { error } = await supabase.auth.admin.updateUserById(userId, {
+        user_metadata: {
+          ...existingMetadata,
+          trial_used: true,
+          subscription_id: subscriptionId,
+          subscription_plan: subscriptionPlan,
+          subscription_period: stripeSubscription.trial_end ? 'weekly' : period,
+          subscription_start: startDate.toISOString(),
+          subscription_expires: expiresDate.toISOString(),
+        },
+      });
   
     if (error) {
       console.error('Supabase update failed:', error.message);
@@ -120,6 +130,9 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
 
   res.status(200).json({ received: true });
 });
+
+
+
 // Use JSON parser for all other routes
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -137,10 +150,19 @@ app.get('/', (req, res) => {
 app.post('/create-checkout-session', async (req, res) => {
   const { plan, period, email, userId, name } = req.body;
 
-  // Map of your Stripe Price IDs (from Stripe dashboard)
+  // Get user metadata to check if they've used a trial
+  const { data: user, error } = await supabase.auth.admin.getUserById(userId);
+
+  if (error || !user) {
+    return res.status(500).json({ error: 'User not found' });
+  }
+
+  const trialUsed = user.user.user_metadata?.trial_used === true;
+ 
+  //pricing from stripe
   const priceMap = {
-    monthly: 'price_1RcPuBRoTuW6EzfZLjDwnUVr',
-    yearly: 'price_1RcPx8RoTuW6EzfZY4AJR1QC',
+    monthly: 'price_1RcvTDJu6e4DMNIyQmO8cfLk', 
+    yearly: 'price_1RcvUwJu6e4DMNIy5XHGfB5j',
   };
 
   const selectedPrice = priceMap[period];
@@ -150,17 +172,17 @@ app.post('/create-checkout-session', async (req, res) => {
   }
 
   try {
-    const session = await stripe.checkout.sessions.create({
+    const sessionOptions = {
       payment_method_types: ['card'],
       mode: 'subscription',
       line_items: [
         {
-          price: selectedPrice, // ✅ use pre-configured price ID
+          price: selectedPrice,
           quantity: 1,
         },
       ],
-      success_url: 'http://localhost:5173/success',
-      cancel_url: 'http://localhost:5173/failure',
+      success_url: 'https://wheresmysong.com/success',
+      cancel_url: 'https://wheresmysong.com/failure',
       metadata: {
         userId,
         plan,
@@ -168,12 +190,76 @@ app.post('/create-checkout-session', async (req, res) => {
         email,
         name,
       },
-    });
+      subscription_data: {
+        metadata: {
+          userId,
+          plan,
+          period,
+          email,
+          name,
+        },
+      },
+    };
+
+    
+    if (!trialUsed) {
+      sessionOptions.subscription_data.trial_period_days = 7;
+    }
+
+    const session = await stripe.checkout.sessions.create(sessionOptions);
 
     res.json({ id: session.id });
   } catch (error) {
     console.error('Stripe error:', error);
     res.status(500).json({ error: error.message });
+  }
+});
+
+
+
+
+
+//Cancel Subscription
+app.post('/cancel-subscription', express.json(), async (req, res) => {
+  const { userId } = req.body;
+
+  // Fetch user to get their subscription ID
+  const { data: userData, error: fetchError } = await supabase.auth.admin.getUserById(userId);
+
+  if (fetchError || !userData) {
+    return res.status(500).json({ error: 'User not found' });
+  }
+
+  const subscriptionId = userData.user?.user_metadata?.subscription_id;
+
+  if (!subscriptionId) {
+    return res.status(400).json({ error: 'No subscription ID found' });
+  }
+
+  try {
+    // Cancel at period end
+    const canceled = await stripe.subscriptions.update(subscriptionId, {
+      cancel_at_period_end: true,
+    });
+    const { data: userData, error: fetchError } = await supabase.auth.admin.getUserById(userId);
+
+    if (fetchError || !userData) {
+      console.error('Failed to fetch user:', fetchError?.message || 'No user data found');
+      return res.sendStatus(500);
+    }
+
+    const existingMetadata = userData.user?.user_metadata || {};
+    await supabase.auth.admin.updateUserById(userId, {
+      user_metadata: {
+        ...existingMetadata,
+        subscription_cancelled: true, 
+      },
+    });
+
+    return res.json({ success: true, canceled });
+  } catch (err) {
+    console.error('Error canceling subscription:', err);
+    return res.status(500).json({ error: 'Failed to cancel subscription' });
   }
 });
 

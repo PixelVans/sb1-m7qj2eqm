@@ -4,7 +4,6 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { Routes, Route, Navigate,useNavigate } from 'react-router-dom';
 import DJDashboard from '@/pages/DJDashboard';
-
 import EventsPage from '@/pages/EventsPage';
 import EventDetails from '@/pages/EventDetails';
 import AttendeeView from '@/pages/AttendeeView';
@@ -22,12 +21,15 @@ import { MainLayout } from '@/layouts/MainLayout';
 import  StripeFailurePage  from '@/pages/StripeFailurePage';
 import StripeSuccessPage from "@/pages/StripeSuccessPage"
 import UpgradePlanPage from './pages/UpgradePlanPage.tsx';
-import FreeTrialPage from './pages/FreeTrialPage.tsx';
 import { supabase } from './lib/supabase.ts';
+import SelectPlanPage from './pages/SelectPlanPage.tsx';
+import { useLocation } from 'react-router-dom';
 
 export default function App() {
   const { user } = useAuth();
   const { theme, subscription } = useSettings();
+  const location = useLocation();
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -45,7 +47,7 @@ export default function App() {
         const expires = new Date(expiresAt);
         const isExpired = now > expires;
   
-        // Update Zustand store accordingly — keep plan, set expired flag inside subscription
+        // Update Zustand store accordingly. keep plan, set expired flag inside subscription
         useSettings.getState().setPlan(plan, expiresAt, isExpired);
       }
     };
@@ -75,16 +77,20 @@ export default function App() {
 
   // Redirect to /pricing if user is logged in but plan is not selected
 useEffect(() => {
+  const onSuccessPage = location.pathname.includes('/success');
 
-  if (user && (!subscription || !subscription.plan || subscription.plan === null )) {
-    navigate('/start-free-trial');
+  if (!onSuccessPage && user && (!subscription || !subscription.plan)) {
+    navigate('/select-plan');
   }
-}, [user, subscription, navigate]);
+}, [user, subscription, navigate, location]);
+  
+
+  
   
   // Redirect to /upgrade if user is logged in but plan is expired  
   useEffect(() => {
     if (user && subscription?.expired) {
-      navigate('/upgrade-plan');
+      navigate('/select-plan');
     }
   }, [subscription, navigate]);
   
@@ -137,7 +143,7 @@ useEffect(() => {
     <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route path="/success" element={<StripeSuccessPage />} />
       <Route path="/failure" element={<StripeFailurePage />} />
-      <Route path="/start-free-trial" element={<FreeTrialPage />} />
+      <Route path="/select-plan" element={<SelectPlanPage />} />
       <Route path="/upgrade-plan" element={<UpgradePlanPage />} />
     {/*Routes inside MainLayout */}
     <Route

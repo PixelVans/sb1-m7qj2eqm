@@ -61,7 +61,7 @@ export default function Login() {
           description: 'You can start your free trial to continue.',
         });
         setPlan(null);
-        navigate('/start-free-trial');
+        navigate('/select-plan');
       }
     } catch (error: any) {
       logger.error('Authentication error:', { error });

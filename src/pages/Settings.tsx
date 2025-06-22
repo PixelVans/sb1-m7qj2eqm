@@ -14,7 +14,10 @@ import {
   DialogTitle,
   DialogFooter,
 } from '@/components/ui/dialog';
+import { supabase } from '@/lib/supabase';
 
+const { data: updatedUser } = await supabase.auth.getUser();
+const isCancelled = updatedUser?.user?.user_metadata?.subscription_cancelled === true;
 
 export default function Settings() {
   const {
@@ -33,34 +36,44 @@ export default function Settings() {
   const [showDowngradeConfirm, setShowDowngradeConfirm] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
   const { user,  } = useAuth();
+
+
  
- 
-  const handleDowngrade = async () => {
+  const cancelSubscription = async () => {
     setIsCancelling(true);
+  
     try {
-      const response = await fetch('http://localhost:5000/cancel-subscription', {
+      const res = await fetch('https://wheresmysong.onrender.com/cancel-subscription', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: user?.id }),
       });
   
-      const result = await response.json();
+      const result = await res.json();
   
       if (result.success) {
-        toast.success('Successfully scheduled cancellation of your Pro plan. You’ll retain access until the end of the billing period.');
-        setShowDowngradeConfirm(false); // Close dialog on success
+        toast.success('Subscription will be canceled at the end of your billing cycle.');
+        await supabase.from('notifications').insert([
+          {
+            user_id: user?.id,
+            title: 'Subscription Cancelled',
+            message: 'Your plan has been cancelled. You’ll retain access until the end of your billing period.',
+            read: false,
+          },
+        ]);
+        toast.success('Subscription will be canceled at the end of your billing cycle.');
+        setShowDowngradeConfirm(false);
       } else {
-        toast.error(result.error || 'Failed to cancel subscription');
+        throw new Error(result.error || 'Cancellation failed');
       }
     } catch (err) {
-      toast.error('Something went wrong while cancelling subscription.');
       console.error(err);
+      toast.error('Something went wrong while canceling your subscription.');
     } finally {
       setIsCancelling(false);
     }
   };
+  
   
 
   const bgClass = isDark ? 'bg-white/5' : 'bg-gray-100';
@@ -141,21 +154,31 @@ export default function Settings() {
       </div>
 
       {/* Plan Management */}
-      {subscription?.plan === 'pro' && (
+      {subscription?.plan && (
         <div className={`${bgClass} rounded-lg p-6`}>
           <h2 className={`text-xl font-bold mb-6 ${textPrimary}`}>Plan Management</h2>
           <div className="space-y-4">
             <p className={`text-sm ${textSecondary}`}>
-              You are currently on the Pro plan. You can downgrade to the free plan,
-              but please note that this will limit you to one event.
+              You are currently on the <strong>{subscription?.plan}</strong> plan. You can cancel your subscription at any time,
+              and you’ll continue to have access to Pro features until the end of your current billing period.
             </p>
-            <Button
-              variant="destructive"
-              onClick={() => setShowDowngradeConfirm(true)}
-              className="w-full"
-            >
-              Cancel Subscription
-            </Button>
+            {!isCancelled ? (
+          <Button
+            variant="destructive"
+            onClick={() => setShowDowngradeConfirm(true)}
+            className="w-full"
+          >
+            Cancel Subscription
+          </Button>
+        ) : (
+          <Button
+            variant="outline"
+            disabled
+            className="w-full text-muted-foreground"
+          >
+            Subscription Cancelled
+          </Button>
+        )}
           </div>
         </div>
       )}
@@ -176,23 +199,23 @@ export default function Settings() {
 
       {/* Downgrade Confirmation Dialog */}
       <Dialog open={showDowngradeConfirm} onOpenChange={setShowDowngradeConfirm}>
-        <DialogContent>
+        <DialogContent >
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-destructive" />
-              Cancel Pro Subscription
+              <AlertTriangle className="h-5 w-5 text-red-500" />
+              Cancel  Subscription
             </DialogTitle>
           </DialogHeader>
           <div className="py-4">
-            <p className="text-sm text-muted-foreground mb-4">
-            Are you sure you want to cancel your Pro plan? You’ll still retain access until the end of your current billing period.
+            <p className="text-sm text-slate-400 mb-4">
+            Cancel your Pro plan? You'll keep access until the end of your billing period.
             </p>
           </div>
           <DialogFooter>
             <Button variant="ghost" onClick={() => setShowDowngradeConfirm(false)}>
               Cancel
             </Button>
-            <Button variant="destructive" onClick={handleDowngrade} disabled={isCancelling}>
+            <Button variant="destructive" onClick={cancelSubscription} disabled={isCancelling}>
             {isCancelling ? 'Cancelling...' : 'Confirm Cancel Subscription'}
           </Button>
           </DialogFooter>
