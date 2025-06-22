@@ -72,7 +72,8 @@ export default function Settings() {
             read: false,
           },
         ]);
-        toast.success('Subscription will be canceled at the end of your billing cycle.');
+        
+        setIsCancelled(true); 
         setShowDowngradeConfirm(false);
       } else {
         throw new Error(result.error || 'Cancellation failed');
