@@ -9,10 +9,10 @@ export default function StripeFailurePage() {
       <div className="bg-white/5 backdrop-blur-lg rounded-2xl shadow-2xl p-10 max-w-xl text-center space-y-6 border border-white/10">
         <XCircleIcon className="h-20 w-20 text-red-500 mx-auto animate-pulse" />
         <h1 className="text-3xl font-bold text-white font-rajdhani">
-          Payment Failed
+          Transaction Failed
         </h1>
         <p className="text-gray-300 text-base">
-          Unfortunately, your payment didn’t go through. This could be due to a declined card or network issue.
+        Transaction failed. This may be due to a declined card or network issue.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link to="/pricing">

@@ -12,7 +12,10 @@ export default function StripeSuccessPage() {
   const [loading, setLoading] = useState(true);
   const [countdown, setCountdown] = useState(3);
 
-  const { setPlan, resetEventsCreated, theme } = useSettings();
+  const { setPlan, resetEventsCreated, theme, subscription, } = useSettings();
+  const isTrial = subscription?.plan == 'trial'
+  console.log(isTrial)
+
   const isDark = theme === 'dark';
 
   const textColor = isDark ? 'text-white' : 'text-gray-900';
@@ -69,10 +72,12 @@ export default function StripeSuccessPage() {
       >
         <CheckCircle2Icon className="h-20 w-20 text-green-400 mx-auto" />
         <h1 className={`text-3xl font-bold font-rajdhani ${textColor}`}>
-          Payment Successful!
+          {isTrial ? 'Trial Started!' : 'Payment Successful!'}
         </h1>
         <p className={`text-base ${subTextColor}`}>
-          Thank you for your purchase. You have now upgraded to Pro.
+          {isTrial
+            ? 'Your free trial has started. Enjoy exploring Pro features!'
+            : 'Thank you for your purchase. You have now upgraded to Pro.'}
         </p>
 
         {loading ? (

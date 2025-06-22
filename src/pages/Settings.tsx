@@ -79,7 +79,8 @@ export default function Settings() {
       }
     } catch (err) {
       console.error(err);
-      toast.error('Something went wrong while canceling your subscription.');
+      toast.error('Failed to cancel subscription. Check your network and try again.');
+
     } finally {
       setIsCancelling(false);
     }
