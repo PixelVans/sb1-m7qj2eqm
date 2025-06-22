@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { useSettings } from '@/lib/store';
@@ -16,10 +16,10 @@ import {
 } from '@/components/ui/dialog';
 import { supabase } from '@/lib/supabase';
 
-const { data: updatedUser } = await supabase.auth.getUser();
-const isCancelled = updatedUser?.user?.user_metadata?.subscription_cancelled === true;
+
 
 export default function Settings() {
+
   const {
     theme,
     showVoteCount,
@@ -36,7 +36,18 @@ export default function Settings() {
   const [showDowngradeConfirm, setShowDowngradeConfirm] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
   const { user,  } = useAuth();
+  const [isCancelled, setIsCancelled] = useState(false);
 
+  useEffect(() => {
+    const checkSubscriptionStatus = async () => {
+      const { data: updatedUser } = await supabase.auth.getUser();
+      const cancelled =
+        updatedUser?.user?.user_metadata?.subscription_cancelled === true;
+      setIsCancelled(cancelled);
+    };
+
+    checkSubscriptionStatus();
+  }, []);
 
  
   const cancelSubscription = async () => {
