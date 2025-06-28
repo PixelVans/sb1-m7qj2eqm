@@ -41,6 +41,7 @@ export default function SelectPlanPage() {
   const [tapCount, setTapCount] = useState(0);
   const [showFreeCodeModal, setShowFreeCodeModal] = useState(false);
   const [freeCodeInput, setFreeCodeInput] = useState('');
+  const [freeCodeError, setFreeCodeError] = useState('');
   const isNewUser = user?.user_metadata?.subscription_plan === undefined;
  const [showExpiredModal, setShowExpiredModal] = useState(subscription?.expired === true);
 
@@ -164,7 +165,11 @@ export default function SelectPlanPage() {
           <div className="bg-background border border-border shadow-xl rounded-2xl p-8 w-[90%] max-w-sm text-center space-y-6">
           <Shield className="text-yellow-500 flex w-full h-9" />
 
-          <h2 className="text-xl  mt-3 text-yellow-100 ">Authorized Access Only!</h2>
+            <h2 className="text-xl  mt-3 text-yellow-100 ">Authorized Access Only!</h2>
+            {freeCodeError && (
+                <p className="text-sm text-red-400 font-bold">{freeCodeError}</p>
+              )}
+
           <input
               type="text"
               value={freeCodeInput}
@@ -172,7 +177,7 @@ export default function SelectPlanPage() {
               placeholder="Enter Acess code"
               className="w-full px-4 py-2 border border-gray-300 rounded-md bg-white text-black placeholder-gray-500 uppercase"
             />
-
+           
           <Button
             className="w-full"
             onClick={async () => {
@@ -195,7 +200,7 @@ export default function SelectPlanPage() {
                   window.location.href = '/dashboard';
                 }
               } else {
-                toast.error('Invalid code');
+                setFreeCodeError('Access denied. Invalid code');
               }
             }}
           >
@@ -203,8 +208,11 @@ export default function SelectPlanPage() {
           </Button>
           <Button
             variant="ghost"
-            className="text-red-400 text-sm"
-            onClick={() => setShowFreeCodeModal(false)}
+            className="text-red-500 text-sm"
+            onClick={() => {
+              setShowFreeCodeModal(false);
+              setFreeCodeError('');
+            }}
           >
             Cancel
           </Button>
