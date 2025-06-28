@@ -181,8 +181,8 @@ export default function SelectPlanPage() {
           <Button
             className="w-full"
             onClick={async () => {
-              if (freeCodeInput.trim() === 'wheresmysong100' && user) {
-                const { error } = await supabase.auth.updateUser({
+              if (freeCodeInput.trim().toLowerCase() === 'wheresmysong100') {
+                 const { error } = await supabase.auth.updateUser({
                   data: {
                     subscription_plan: 'lifetime',
                     subscription_period: 'unlimited',
