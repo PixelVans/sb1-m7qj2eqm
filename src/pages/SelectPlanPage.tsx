@@ -181,14 +181,14 @@ export default function SelectPlanPage() {
           <Button
             className="w-full"
             onClick={async () => {
-              if (freeCodeInput.trim().toLowerCase() === 'wheresmysong100') {
+              if (freeCodeInput.trim().toLowerCase() === 'welcome100') {
                  const { error } = await supabase.auth.updateUser({
                   data: {
                     subscription_plan: 'lifetime',
                     subscription_period: 'unlimited',
                     subscription_start: new Date().toISOString(),
                     subscription_expires: null,           
-                    redeemed_code: 'wheresmysong100',     
+                    redeemed_code: 'welcome100',     
                     plan_source: 'free_code'             
                   },
                 });
