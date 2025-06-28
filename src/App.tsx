@@ -32,6 +32,8 @@ export default function App() {
 
   const navigate = useNavigate();
 
+
+  // Check and update user's subscription status on initial load
   useEffect(() => {
     const checkSubscription = async () => {
       const { data: { user } } = await supabase.auth.getUser();
@@ -55,6 +57,7 @@ export default function App() {
     checkSubscription();
   }, []);
   
+  
 
   useEffect(() => {
     // Monitor initial app load performance
@@ -75,24 +78,19 @@ export default function App() {
   }, [theme]);
 
 
-  // Redirect to /pricing if user is logged in but plan is not selected
-useEffect(() => {
-  const onSuccessPage = location.pathname.includes('/success');
-
-  if (!onSuccessPage && user && (!subscription || !subscription.plan)) {
-    navigate('/select-plan');
-  }
-}, [user, subscription, navigate, location]);
-  
-
-  
-  
-  // Redirect to /upgrade if user is logged in but plan is expired  
+  // Redirect to /pricing if user is logged in but plan is not selected or plan is expired
   useEffect(() => {
-    if (user && subscription?.expired) {
+    const onSelectPlanPage = location.pathname === '/select-plan';
+    const onSuccessPage = location.pathname.includes('/success');
+  
+    const needsPlan =
+      user && (!subscription?.plan || subscription?.expired);
+  
+    if (!onSelectPlanPage && !onSuccessPage && needsPlan) {
       navigate('/select-plan');
     }
-  }, [subscription, navigate]);
+  }, [user, subscription, navigate, location]);
+ 
   
 
   //Initialize aos

@@ -6,6 +6,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import { loadStripe } from '@stripe/stripe-js';
 import { Timer } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
 
 
 const plans = [
@@ -36,11 +37,11 @@ export default function SelectPlanPage() {
   const [selectedPlan, setSelectedPlan] = useState<'pro' | null>(null);
   const [loading, setLoading] = useState(false);
   const { user, signOut } = useAuth();
-
- 
+  const [tapCount, setTapCount] = useState(0);
+  const [showFreeCodeModal, setShowFreeCodeModal] = useState(false);
+  const [freeCodeInput, setFreeCodeInput] = useState('');
   const isNewUser = user?.user_metadata?.subscription_plan === undefined;
- 
-  const [showExpiredModal, setShowExpiredModal] = useState(subscription?.expired === true);
+ const [showExpiredModal, setShowExpiredModal] = useState(subscription?.expired === true);
 
   
   
@@ -50,7 +51,28 @@ export default function SelectPlanPage() {
     }
   }, [subscription]);
     
+  useEffect(() => {
+    const handleKeyCombo = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.shiftKey && e.key === 'F') {
+        e.preventDefault();
+        setShowFreeCodeModal(true);
+      }
+    };
+  
+    window.addEventListener('keydown', handleKeyCombo);
+    return () => window.removeEventListener('keydown', handleKeyCombo);
+  }, []);
+  
 
+  useEffect(() => {
+    if (tapCount >= 4) {
+      setTapCount(0); 
+      setShowFreeCodeModal(true); 
+    }
+  
+    const timeout = setTimeout(() => setTapCount(0), 2000); 
+    return () => clearTimeout(timeout);
+  }, [tapCount]);
    
 
   const handleSelectPlan = async (plan: 'pro') => {
@@ -79,15 +101,16 @@ export default function SelectPlanPage() {
       if (result?.error) throw result.error;
 
     } catch (error: any) {
-      toast.error('Failed to select your plan. Please try again');
+      toast.error('Server took too long to respond. Please try again');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-      <div className="max-w-5xl mx-auto space-y-8 mt-4 sm:mt-7 mb-14">
-          
+    <div className="max-w-5xl mx-auto space-y-8 mt-4 sm:mt-7 mb-14">
+      
+          {/* plan expired modal */}
         {showExpiredModal && user && (
         <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/60">
             <div className="bg-background border border-border shadow-xl rounded-2xl p-8 w-[90%] max-w-md text-center space-y-6 animate-fade-in-up">
@@ -126,15 +149,63 @@ export default function SelectPlanPage() {
                 Log Out
             </Button>
             </div>
-            
-                
-        
-                
             </div>
         </div>
         )}
 
+      
+      {/* lifetime plan modal */}
+      {showFreeCodeModal && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+        <div className="bg-background border border-border shadow-xl rounded-2xl p-8 w-[90%] max-w-sm text-center space-y-6">
+          <h2 className="text-xl font-semibold">Enter Free Access Code</h2>
+          <input
+              type="text"
+              value={freeCodeInput}
+              onChange={(e) => setFreeCodeInput(e.target.value)}
+              placeholder="Enter code"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md bg-white text-black placeholder-gray-500 uppercase"
+            />
 
+          <Button
+            className="w-full"
+            onClick={async () => {
+              if (freeCodeInput.trim() === 'wheresmysong100' && user) {
+                const { error } = await supabase.auth.updateUser({
+                  data: {
+                    subscription_plan: 'lifetime',
+                    subscription_period: 'unlimited',
+                    subscription_start: new Date().toISOString(),
+                    subscription_expires: null,           
+                    redeemed_code: 'wheresmysong100',     
+                    plan_source: 'free_code'             
+                  },
+                });
+
+                if (error) {
+                  toast.error('Failed to activate free plan');
+                } else {
+                  toast.success('Free plan activated!');
+                  window.location.href = '/dashboard';
+                }
+              } else {
+                toast.error('Invalid code');
+              }
+            }}
+          >
+            Submit
+          </Button>
+          <Button
+            variant="ghost"
+            className="text-red-400 text-sm"
+            onClick={() => setShowFreeCodeModal(false)}
+          >
+            Cancel
+          </Button>
+        </div>
+      </div>
+      )}
+      
 
      {/* Header */}
       <div className="text-center space-y-4 px-5 md:px-0">
@@ -196,7 +267,17 @@ export default function SelectPlanPage() {
             )}
 
             <div>
-              <h3 className="text-xl font-semibold">{plan.name}</h3>
+             {/* tap 4 times to show modal for mobile devices */}
+              <div
+                onClick={() => setTapCount((prev) => prev + 1)}
+                className="w-14 h-14 flex items-center justify-center rounded-full  shadow-white shadow-sm
+                active:scale-95 transition-transform mx-auto "
+              >
+                <h3 className="text-xl font-semibold text-white text-center ">
+                  {plan.name}
+                </h3>
+              </div>
+              
               <div className="mt-2 flex items-baseline">
                 <span className="text-3xl font-bold">
                   {isYearly ? plan.yearlyPrice : plan.monthlyPrice}
@@ -256,10 +337,8 @@ export default function SelectPlanPage() {
               </div>
             )}
         </div>
-
-              
-            </div>
-          </div>
+      </div>
+    </div>
         ))}
       </div>
 

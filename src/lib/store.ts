@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
 interface SubscriptionPlan {
-  plan: 'trial' | 'pro' | null;
+  plan: 'trial' | 'pro'| 'lifetime' | null;
   eventsCreated: number;
   expiresAt: string | null;
   expired: boolean;
@@ -20,10 +20,11 @@ interface SettingsState {
   setRequestLimit: (limit: number) => void;
   incrementEventsCreated: () => void;
   setPlan: (
-    plan: 'trial' | 'pro' | null,
+    plan: 'trial' | 'pro' | 'lifetime' | null,
     expiresAt?: string | null,
     expired?: boolean
   ) => void;
+  
   resetEventsCreated: () => void;
   canCreateEvent: () => boolean;
   checkAndExpirePlan: () => void;
@@ -55,15 +56,28 @@ export const useSettings = create<SettingsState>()(
         }
       },
 
-      setPlan: (plan, expiresAt = null, expired = false) =>
-        set(() => ({
+      setPlan: (plan, expiresAt = null, expired = false) => {
+        if (plan === 'lifetime') {
+          return set(() => ({
+            subscription: {
+              plan,
+              eventsCreated: 0,
+              expiresAt: null,
+              expired: false,
+            },
+          }));
+        }
+      
+        return set(() => ({
           subscription: {
             plan,
             eventsCreated: 0,
             expiresAt,
             expired,
           },
-        })),
+        }));
+      },
+      
 
       resetEventsCreated: () => {
         const { subscription } = get();

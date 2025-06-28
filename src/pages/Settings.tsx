@@ -79,8 +79,7 @@ export default function Settings() {
         throw new Error(result.error || 'Cancellation failed');
       }
     } catch (err) {
-      console.error(err);
-      toast.error('Failed to cancel subscription. Check your network and try again.');
+      toast.error('Failed to cancel subscription. No subscription ID was found');
 
     } finally {
       setIsCancelling(false);
@@ -167,34 +166,44 @@ export default function Settings() {
       </div>
 
       {/* Plan Management */}
-      {subscription?.plan && (
-        <div className={`${bgClass} rounded-lg p-6`}>
-          <h2 className={`text-xl font-bold mb-6 ${textPrimary}`}>Plan Management</h2>
-          <div className="space-y-4">
-            <p className={`text-sm ${textSecondary}`}>
-              You are currently on the <strong>{subscription?.plan}</strong> plan. You can cancel your subscription at any time,
-              and you’ll continue to have access to Pro features until the end of your current billing period.
-            </p>
-            {!isCancelled ? (
-          <Button
-            variant="destructive"
-            onClick={() => setShowDowngradeConfirm(true)}
-            className="w-full"
-          >
-            Cancel Subscription
-          </Button>
-        ) : (
-          <Button
-            variant="outline"
-            disabled
-            className="w-full text-muted-foreground"
-          >
-            Subscription Cancelled
-          </Button>
-        )}
-          </div>
-        </div>
+     {/* Plan Management */}
+{subscription?.plan && (
+  <div className={`${bgClass} rounded-lg p-6`}>
+    <h2 className={`text-xl font-bold mb-6 ${textPrimary}`}>Plan Management</h2>
+    <div className="space-y-4">
+      {subscription.plan === 'lifetime' ? (
+        <p className={`text-sm ${textSecondary}`}>
+          You are currently on the <strong>Lifetime</strong> plan with unlimited access. No cancellation is required.
+        </p>
+      ) : (
+        <>
+          <p className={`text-sm ${textSecondary}`}>
+            You are currently on the <strong>{subscription?.plan}</strong> plan. You can cancel your subscription at any time,
+            and you’ll continue to have access to Pro features until the end of your current billing period.
+          </p>
+          {!isCancelled ? (
+            <Button
+              variant="destructive"
+              onClick={() => setShowDowngradeConfirm(true)}
+              className="w-full"
+            >
+              Cancel Subscription
+            </Button>
+          ) : (
+            <Button
+              variant="outline"
+              disabled
+              className="w-full text-muted-foreground"
+            >
+              Subscription Cancelled
+            </Button>
+          )}
+        </>
       )}
+    </div>
+  </div>
+)}
+
 
       {/* Profile Section */}
       <div className={`${bgClass} rounded-lg p-6`}>

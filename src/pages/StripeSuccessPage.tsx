@@ -11,7 +11,7 @@ export default function StripeSuccessPage() {
   const [showConfetti,] = useState(false);
   const [loading, setLoading] = useState(true);
   const [countdown, setCountdown] = useState(3);
-
+ 
   const { setPlan, resetEventsCreated, theme, subscription, } = useSettings();
   const isTrial = subscription?.plan == 'trial'
   console.log(isTrial)
