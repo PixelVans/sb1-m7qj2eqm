@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Check, X, Rocket, CreditCard, Sparkles, InfoIcon } from 'lucide-react';
+import { Check, X, Rocket, CreditCard, ShieldCheck, InfoIcon, Ban, Shield, ShieldAlert} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useSettings } from '@/lib/store';
 import { useAuth } from '@/hooks/useAuth';
@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import { loadStripe } from '@stripe/stripe-js';
 import { Timer } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
+
 
 
 const plans = [
@@ -108,12 +109,13 @@ export default function SelectPlanPage() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8 mt-4 sm:mt-7 mb-14">
+    <div className="max-w-5xl mx-auto space-y-5 mt-4 sm:mt-5 mb-9 ">
       
           {/* plan expired modal */}
         {showExpiredModal && user && (
         <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/60">
-            <div className="bg-background border border-border shadow-xl rounded-2xl p-8 w-[90%] max-w-md text-center space-y-6 animate-fade-in-up">
+          <div className="bg-background border border-border shadow-xl rounded-2xl p-8 w-[90%] max-w-md text-center 
+            space-y-6 animate-fade-in-up">
             <Rocket className="w-12 h-12 text-primary mx-auto" />
 
             <h2 className="text-xl font-semibold">
@@ -128,7 +130,8 @@ export default function SelectPlanPage() {
 
             <p className="text-sm text-muted-foreground">
                 {subscription?.plan === 'pro'
-                ? `To continue enjoying Pro features, please choose a plan. Your previous subscription was on a ${user.user_metadata?.subscription_period || 'monthly'} basis.`
+                ? `To continue enjoying Pro features, please choose a plan. Your previous subscription was on a 
+                ${user.user_metadata?.subscription_period || 'monthly'} basis.`
                 : 'To keep using the app and unlock all features, please choose a plan that suits you.'}
             </p>
 
@@ -157,8 +160,10 @@ export default function SelectPlanPage() {
       {/* lifetime plan modal */}
       {showFreeCodeModal && (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-        <div className="bg-background border border-border shadow-xl rounded-2xl p-8 w-[90%] max-w-sm text-center space-y-6">
-          <h2 className="text-xl font-semibold">Enter Free Access Code</h2>
+          <div className="bg-background border border-border shadow-xl rounded-2xl p-8 w-[90%] max-w-sm text-center space-y-6">
+          <Shield className="text-yellow-500 flex w-full h-9" />
+
+          <h2 className="text-xl  mt-3 text-yellow-100 ">Authorized Access Only!</h2>
           <input
               type="text"
               value={freeCodeInput}
@@ -210,10 +215,12 @@ export default function SelectPlanPage() {
      {/* Header */}
       <div className="text-center space-y-4 px-5 md:px-0">
        
-      <h1 className=" text-2xl sm:text-3xl font-bold">
-          Upgrade Your DJ Experience
-        </h1>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+        <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-purple-50 via-yellow-200 to-purple-50 
+      bg-clip-text text-transparent">
+        Upgrade Your DJ Experience
+      </h1>
+
+        <p className="text-lg text-muted-foreground max-w-2xl mx-auto ">
         {isNewUser
           ? 'Start your 7-day free trial. Full access, cancel anytime.'
           : 'Choose the perfect plan for your needs and take your events to the next level.'}
@@ -256,12 +263,13 @@ export default function SelectPlanPage() {
                 : selectedPlan === plan.plan
                 ? 'border-primary'
                 : 'border-border bg-card'
-            } p-9 px-14 sm:px-20 space-y-6 cursor-pointer transition-all hover:scale-[1.02] ${
+            } p-9 mt-3 px-14 sm:px-20 space-y-6 cursor-pointer transition-all hover:scale-[1.02] ${
               loading ? 'opacity-50 pointer-events-none' : ''
             }`}
           >
             {plan.popular && (
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-xs px-3 py-1 rounded-full font-medium">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-xs px-3 py-2 
+              rounded-full font-medium">
                 Most Popular
               </div>
             )}
@@ -307,12 +315,7 @@ export default function SelectPlanPage() {
             </ul>
 
             <div className="relative">
-              {selectedPlan === plan.plan && (
-                <div className="absolute inset-0 border-2 border-primary rounded-lg -m-2 pointer-events-none">
-                  <Sparkles className="absolute -top-3 -right-3 h-6 w-6 text-primary" />
-                </div>
-              )}
-              <Button
+             <Button
                 onClick={(e) => {
                   e.stopPropagation();
                   handleSelectPlan(plan.plan);
@@ -329,7 +332,7 @@ export default function SelectPlanPage() {
               </Button>
               <div className="w-full flex justify-center">
             {isNewUser && (
-              <div className="flex items-center gap-2 text-sm text-muted-foreground px-4 py-4 rounded-md max-w-[250px] text-center">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground px-4 mt-4 rounded-md max-w-[250px] text-center">
                 <InfoIcon className="w-4 h-4 text-blue-500 flex-shrink-0" />
                 <span className="text-center">
                   You won’t be charged today. enjoy a 7-day free trial first.
