@@ -109,9 +109,9 @@ export default function SelectPlanPage() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto space-y-5 mt-4 sm:mt-5 mb-9 ">
+    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-2 space-y-4">
       
-          {/* plan expired modal */}
+      {/* plan expired modal */}
         {showExpiredModal && user && (
         <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/60">
           <div className="bg-background border border-border shadow-xl rounded-2xl p-8 w-[90%] max-w-md text-center 
@@ -320,7 +320,7 @@ export default function SelectPlanPage() {
                   e.stopPropagation();
                   handleSelectPlan(plan.plan);
                 }}
-                className="w-full bg-primary hover:bg-primary/90 gap-2"
+                className="w-full bg-primary hover:bg-primary/90 gap-2 mt-2"
                 disabled={loading || (!isNewUser && plan.plan === subscription?.plan)}
               >
                 { !isNewUser ?<CreditCard className="h-4 w-4" />: <Timer className="h-4 w-4" />}
