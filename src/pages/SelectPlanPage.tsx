@@ -109,7 +109,7 @@ export default function SelectPlanPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-2 space-y-4">
+    <div className="min-h-screen flex flex-col items-center justify-center px-4 sm:py-2 sm:space-y-4">
       
       {/* plan expired modal */}
         {showExpiredModal && user && (
