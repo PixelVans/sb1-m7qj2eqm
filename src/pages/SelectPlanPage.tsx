@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Check, X, Rocket, CreditCard, ShieldCheck, InfoIcon, Ban, Shield, ShieldAlert} from 'lucide-react';
+import { Check, X, Rocket, CreditCard,  InfoIcon,  Shield, } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useSettings } from '@/lib/store';
 import { useAuth } from '@/hooks/useAuth';
@@ -213,14 +213,14 @@ export default function SelectPlanPage() {
       
 
      {/* Header */}
-      <div className="text-center space-y-4 px-5 md:px-0">
+      <div className="text-center space-y-2 px-5 md:px-0">
        
         <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-purple-50 via-yellow-200 to-purple-50 
-      bg-clip-text text-transparent">
+      bg-clip-text text-transparent  sm:mt-5">
         Upgrade Your DJ Experience
       </h1>
 
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto ">
+        <p className="text-md sm:text-lg text-muted-foreground max-w-2xl mx-auto ">
         {isNewUser
           ? 'Start your 7-day free trial. Full access, cancel anytime.'
           : 'Choose the perfect plan for your needs and take your events to the next level.'}
@@ -228,7 +228,7 @@ export default function SelectPlanPage() {
       </div>
 
       {/* Billing Toggle */}
-      <div className="flex justify-center mb-8">
+      <div className="flex justify-center mb-5">
         <div className="bg-white/5 rounded-full p-1 flex gap-1">
           <button
             className={`px-4 py-2 rounded-full text-sm transition-colors ${
@@ -263,7 +263,7 @@ export default function SelectPlanPage() {
                 : selectedPlan === plan.plan
                 ? 'border-primary'
                 : 'border-border bg-card'
-            } p-9 mt-3 px-14 sm:px-20 space-y-6 cursor-pointer transition-all hover:scale-[1.02] ${
+            } p-9 mt-3 px-14 sm:px-20 space-y-4 cursor-pointer transition-all hover:scale-[1.02] ${
               loading ? 'opacity-50 pointer-events-none' : ''
             }`}
           >
@@ -279,7 +279,7 @@ export default function SelectPlanPage() {
               <div
                 onClick={() => setTapCount((prev) => prev + 1)}
                 className="w-14 h-14 flex items-center justify-center rounded-full  shadow-white shadow-sm
-                active:scale-95 transition-transform mx-auto "
+                active:scale-95 transition-transform mx-auto mb-5"
               >
                 <h3 className="text-xl font-semibold text-white text-center ">
                   {plan.name}
