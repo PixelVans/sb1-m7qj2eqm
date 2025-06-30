@@ -151,7 +151,7 @@ export default function Login() {
   
 
   return (
-    <div className="h-screen bg-[#121212] flex flex-col justify-center lg:py-5">
+    <div className="h-[100dvh] bg-[#121212] flex flex-col justify-center lg:py-5">
       <div className="mx-auto w-full max-w-md">
         <div className="flex flex-col items-center mb-4">
         
